@@ -1,0 +1,15 @@
+- content_for :paginate do
+  = will_paginate @users
+
+= render layout: 'shared/table' do
+  caption 车辆信息列表
+  thead
+    tr
+      th 车辆名称
+      th 车主名称
+      th 模块ID
+      th 位置(经纬度)
+      th 电量
+      th 行驶里程
+  tbody
+    = render partial: 'bike', collection: @users, as: :user

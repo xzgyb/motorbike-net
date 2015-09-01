@@ -1,0 +1,16 @@
+tr
+  td = user.name
+  td = user.email
+  td = user.points
+  td.user-operations
+    - unless current_user.email == user.email
+      = form_for(user, method: :put) do |f|
+        = label_tag do
+          = f.check_box :admin
+          | 管理员
+
+      = link_to('删除', user, 
+        class: 'btn btn-danger btn-xs', 
+        method: :delete,
+        data: {confirm: '您确定删除该用户吗?'})
+

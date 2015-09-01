@@ -1,0 +1,11 @@
+- content_for :content do
+    div.container-fluid
+      - if action_name != 'edit' && action_name != 'update'
+        div#user-panel.row
+          div.col-sm-offset-3.col-sm-6
+            == yield
+      - else
+        div.row
+          == yield
+
+== render template: 'layouts/application'

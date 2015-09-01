@@ -1,0 +1,19 @@
+zh-CN:
+  helpers:
+    label:
+      user:
+        email: '电子邮件'
+        name: '用户名'
+        password: '密码'
+        remember_me: '记住我'
+        password_confirmation: '确认密码' 
+        current_password: '当前密码'
+        module_id: '模块ID'
+  devise:
+    registrations:
+      edit:
+        unhappy: '心烦'
+        bike_name: '车辆名称'
+        bike_location: '位置(经纬度)'
+        bike_battery: '电量'
+        travel_mileage: '行驶里程'

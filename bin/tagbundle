@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+system("bundle check || bundle")
+require "bundler"
+
+paths = Bundler.load.specs.map(&:full_gem_path)
+system("ctags -R -f tags #{paths.join(' ')}")

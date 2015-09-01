@@ -1,0 +1,65 @@
+@import "bootstrap-sprockets";
+@import "bootstrap";
+@import "devise_bootstrap_views";
+@import "roll";
+
+.navbar {
+    background-color: #1095d5;
+    font-size: 20px;
+    .navbar-brand {
+        color: #fff;
+        font-size: 24px;
+        &:hover, &:focus {
+            color: #fff;
+        }
+    }
+    .container-fluid {
+        padding-top: 20px;
+        padding-bottom: 20px;
+    } 
+
+    a {
+        outline: none;
+    }
+}
+
+.navbar-default {
+    .navbar-nav > li > a {
+        color: #fff;
+        &:focus {
+            color: #fff;
+        }
+    }
+}
+
+#motorbike-pics {
+    margin-top: -20px;
+}
+
+#user-panel {
+    margin-top: 40px;
+}
+
+.table-striped>thead>tr {
+    background-color: #1095d5;
+    color: white;
+}
+
+.table-striped>tbody>tr:nth-child(even) {
+    background-color: #cceeff;
+}
+
+.user-operations {
+    text-align: center;
+    input[type="checkbox"] {
+        margin-right: 5px;
+    }
+
+    .btn {
+        margin-left: 20px;
+    }
+}
+
+form.edit_user {
+    display: inline;
+}

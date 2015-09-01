@@ -1,0 +1,33 @@
+nav.navbar.navbar-default
+    div.container-fluid
+      div.navbar-header
+        a.navbar-brand href='#' 
+          |东动电子
+      ul.nav.navbar-nav.navbar-right
+        - if user_signed_in?
+          li = link_to(edit_user_registration_path, class: 'roll') do
+            span data-title="#{current_user.name}" #{current_user.name}
+
+        li = link_to(root_path, class: 'roll') do
+            span data-title='首页' 首页
+
+        - if user_signed_in? && current_user.admin?
+          li = link_to(users_path, class: 'roll') do
+              span data-title='用户管理' 用户管理
+
+          li = link_to(bikes_path, class: 'roll') do
+              span data-title='车辆管理' 车辆管理
+
+        li: a.roll href='#'
+            span data-title='社区' 社区
+
+        - if user_signed_in?
+          li = link_to(destroy_user_session_path, method: :delete, class: 'roll') do
+            span data-title='退出' 退出
+        - else
+          li = link_to(new_user_session_path, class: 'roll') do
+              span data-title='登录' 登录
+          li = link_to(new_user_registration_path, class: 'roll') do
+              span data-title='注册' 注册 
+
+    

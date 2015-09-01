@@ -1,0 +1,17 @@
+div#motorbike-pics.carousel.slide data-ride='carousel'
+  ol.carousel-indicators
+    li.active data-target='#motorbike-pics' data-slide-to='0'
+    li data-target='#motorbike-pics' data-slide-to='1'
+    li data-target='#motorbike-pics' data-slide-to='2'
+
+  div.carousel-inner role='listbox'
+    div.item.active = image_tag('image1.jpg')
+    div.item = image_tag('image2.jpg')
+    div.item = image_tag('image3.jpg')
+  a.left.carousel-control href='#motorbike-pics' role='button' data-slide='prev'
+    span.glyphicon.glyphicon-chevron-left aria-hidden='true'
+  a.right.carousel-control href='#motorbike-pics' role='button' data-slide='next'
+    span.glyphicon.glyphicon-chevron-right aria-hidden='true'
+    
+
+
