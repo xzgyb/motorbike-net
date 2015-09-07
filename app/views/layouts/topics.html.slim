@@ -1,0 +1,7 @@
+- content_for :content do
+  div.container-fluid
+    div.row
+      div.col-sm-10.col-sm-offset-1
+        = yield
+
+== render template: 'layouts/application'

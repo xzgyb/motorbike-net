@@ -3,7 +3,7 @@ tr
   td = user.email
   td = user.points
   td.user-operations
-    - unless current_user.email == user.email
+    - unless current_user?(user)
       = form_for(user, method: :put) do |f|
         = label_tag do
           = f.check_box :admin

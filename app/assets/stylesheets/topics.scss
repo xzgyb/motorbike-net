@@ -1,0 +1,67 @@
+// Place all the styles related to the topics controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+ 
+.topics {
+    margin-top: 20px;
+
+    .user-name {
+        margin-right: 60px;
+    } 
+
+    .user-name, .update-time {
+        color: gray;
+        font-size: small;
+    }
+
+    h4 {
+        color: #1095d5;
+    }
+
+    .topic-operations {
+        margin-top: 20px;
+        .btn {
+            margin-right: 5px;
+        }
+    }
+
+}
+
+
+.topic {
+    .info {
+        font-size: small;
+        .item {
+            margin-right: 15px;
+        }
+    }
+
+    .panel-default > .panel-heading {
+        color: #777;
+    }
+
+    .pagination {
+        margin-top: 0;
+    }
+}
+
+#replies {
+    .reply {
+        padding: 10px 20px;
+        margin: 0px -15px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .info {
+        text-align: right;
+        color: #1095d5;
+        font-size: small;
+    }
+
+    .time {
+        color: #777;
+        font-size: x-small;
+        margin-right: 10px;
+        margin-left: 10px;
+    }
+}

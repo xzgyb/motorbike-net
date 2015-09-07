@@ -40,8 +40,9 @@ class User
   field :points, type: Integer, default: 0
   field :admin, type: Boolean, default: false
   
-  validates :name, presence: true
+  validates :name, presence: true, uniqueness: true
   validates :module_id, presence: true, uniqueness: true
   
   embeds_one :bike, autobuild: true
+  has_many :topics
 end

@@ -1,0 +1,13 @@
+div.reply
+  div == markdown(post.text)
+  div.info
+    span.time
+      = "#{time_ago_in_words(post.updated_at)}前回复"
+    = post.user.name
+    - if current_user?(post.user)
+      = link_to('编辑', edit_topic_post_path(post.topic, post),
+        class: 'btn  btn-xs')
+      = link_to('删除', topic_post_path(post.topic, post), 
+        class: 'btn  btn-xs', 
+        method: :delete,
+        data: {confirm: '您确定删除该回复吗?'})

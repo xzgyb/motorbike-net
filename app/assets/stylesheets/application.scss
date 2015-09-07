@@ -1,3 +1,4 @@
+//= require 'topics'
 @import "bootstrap-sprockets";
 @import "bootstrap";
 @import "devise_bootstrap_views";
@@ -63,3 +64,4 @@
 form.edit_user {
     display: inline;
 }
+

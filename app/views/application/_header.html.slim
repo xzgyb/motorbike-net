@@ -18,7 +18,7 @@ nav.navbar.navbar-default
           li = link_to(bikes_path, class: 'roll') do
               span data-title='车辆管理' 车辆管理
 
-        li: a.roll href='#'
+        li= link_to(topics_path, class: 'roll') do
             span data-title='社区' 社区
 
         - if user_signed_in?

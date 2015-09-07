@@ -5,6 +5,9 @@ Rails.application.routes.draw do
   
   resources :bikes, only: :index
   resources :users, only: [:index, :update, :destroy]
+  resources :topics do
+    resources :posts
+  end
 
   mount MotorbikeNet::API => '/'
   
