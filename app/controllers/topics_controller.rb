@@ -1,16 +1,13 @@
 class TopicsController < ApplicationController
   respond_to :html
-  before_action :set_topic, only: [:show, :destroy, :edit, :update]
-  before_action :check_user, only: [:destroy, :edit, :update]
+  load_and_authorize_resource
 
   def index
     @topics = Topic.recent_topics.paginate(page: params[:page], per_page: 30)
   end
 
   def show
-    @topic.views_count += 1
-    @topic.save
-
+    @topic.inc(views_count: 1)
     @posts = @topic.posts.paginate(page: params[:page], per_page: 30)
     @last_post = Topic.last_post(@topic)
 
@@ -46,15 +43,5 @@ class TopicsController < ApplicationController
   private
     def topic_params
       params.require(:topic).permit(:subject, :text)
-    end
-
-    def set_topic
-      @topic = Topic.find(params[:id])
-    end
-
-    def check_user
-      unless view_context.current_user?(@topic.user)
-        redirect_to topics_path
-      end      
     end
 end

@@ -4,9 +4,10 @@ div.reply
     span.time
       = "#{time_ago_in_words(post.updated_at)}前回复"
     = post.user.name
-    - if current_user?(post.user)
+    - if can? :edit, post
       = link_to('编辑', edit_topic_post_path(post.topic, post),
         class: 'btn  btn-xs')
+    - if can? :destroy, post
       = link_to('删除', topic_post_path(post.topic, post), 
         class: 'btn  btn-xs', 
         method: :delete,

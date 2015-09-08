@@ -60,6 +60,7 @@ GEM
     bson_ext (1.5.1)
     builder (3.2.2)
     byebug (6.0.2)
+    cancancan (1.12.0)
     coderay (1.1.0)
     coercible (1.0.0)
       descendants_tracker (~> 0.0.1)
@@ -229,6 +230,7 @@ DEPENDENCIES
   bootstrap-will_paginate
   bson_ext
   byebug
+  cancancan
   coffee-rails (~> 4.1.0)
   devise
   devise-bootstrap-views

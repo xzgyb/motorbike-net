@@ -1,6 +1,6 @@
 class PostsController < ApplicationController
-  before_action :set_topic, only: [:edit, :create, :destroy, :update]
-  before_action :set_post, only: [:edit, :destroy, :update]
+  load_resource :topic
+  load_and_authorize_resource
 
   def create
     @post = Post.new(post_params)
@@ -8,6 +8,8 @@ class PostsController < ApplicationController
     @post.topic = @topic
     @post.user  = current_user
     @post.save
+
+    @topic.touch
     
     redirect_to topic_path(@topic) 
   end
@@ -23,18 +25,11 @@ class PostsController < ApplicationController
 
   def update
     @post.update_attributes(post_params)
+    @topic.touch
     redirect_to topic_path(@topic)
   end
 
   private
-    def set_topic
-      @topic = Topic.find(params[:topic_id])
-    end
-
-    def set_post
-      @post = Post.find(params[:id])
-    end
-    
     def post_params
       params.require(:post).permit(:text)      
     end

@@ -5,7 +5,7 @@ tr
     span.update-time = topic.updated_at.strftime("更新于 %Y-%m-%d %H:%M:%S")
   td.col-sm-2
     span.badge = "#{topic.views_count}次阅读"
-    - if current_user?(topic.user)
+    - if can?(:edit, topic) && can?(:destroy, topic)
       div.topic-operations
         = link_to('编辑', edit_topic_path(topic),
           class: 'btn  btn-xs')

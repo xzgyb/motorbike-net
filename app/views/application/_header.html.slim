@@ -11,10 +11,10 @@ nav.navbar.navbar-default
         li = link_to(root_path, class: 'roll') do
             span data-title='首页' 首页
 
-        - if user_signed_in? && current_user.admin?
+        - if can? :manage, User
           li = link_to(users_path, class: 'roll') do
               span data-title='用户管理' 用户管理
-
+        - if can? :manage, Bike
           li = link_to(bikes_path, class: 'roll') do
               span data-title='车辆管理' 车辆管理
 

@@ -1,6 +1,5 @@
 class UsersController < ApplicationController
-  before_action :authenticate_user!
-  before_action :set_user, :check_admin, only: [:destroy, :update]
+  load_and_authorize_resource
   
   def index
     @users = User.order_by(['email']).paginate(page: params[:page], per_page: 30)
@@ -17,18 +16,8 @@ class UsersController < ApplicationController
   end
 
   private
-
-  def set_user
-    @user = User.find(params[:id])
-  end
-
-  def user_params
-    params.require(:user).permit(:admin)
-  end
-
-  def check_admin
-    unless current_user.admin?
-      redirect_to new_user_session_url
+    def user_params
+      params.require(:user).permit(:admin)
     end
-  end
+
 end

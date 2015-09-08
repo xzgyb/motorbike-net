@@ -22,6 +22,7 @@ gem 'will_paginate_mongoid'
 gem 'will-paginate-i18n'
 gem 'simple_form'
 gem 'redcarpet'
+gem 'cancancan'
 
 group :development, :test do
   gem 'byebug'
