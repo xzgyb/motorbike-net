@@ -16,7 +16,8 @@ div.topic
       = render @posts
   = will_paginate @posts
 
-= simple_form_for [@topic, @post] do |f|
-  = f.input :text, label: false, as: :text, :input_html => {rows: 10}
-  = f.button :submit
+- if can? :create, Post
+  = simple_form_for [@topic, @post] do |f|
+    = f.input :text, label: false, as: :text, :input_html => {rows: 10}
+    = f.button :submit
 
