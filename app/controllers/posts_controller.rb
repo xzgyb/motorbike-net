@@ -1,6 +1,7 @@
 class PostsController < ApplicationController
   load_resource :topic
   load_and_authorize_resource
+  decorates_assigned :post, :topic
 
   def create
     @post = Post.new(post_params)

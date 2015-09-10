@@ -1,8 +1,9 @@
 class UsersController < ApplicationController
   load_and_authorize_resource
+  decorates_assigned :users
   
   def index
-    @users = User.order_by(['email']).paginate(page: params[:page], per_page: 30)
+    @users = User.order_by(['email']).page(params[:page])
   end
 
   def destroy

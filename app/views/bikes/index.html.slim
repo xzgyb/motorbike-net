@@ -1,5 +1,5 @@
 - content_for :paginate do
-  = will_paginate @users
+  = paginate users
 
 = render layout: 'shared/table' do
   caption 车辆信息列表
@@ -12,4 +12,4 @@
       th 电量
       th 行驶里程
   tbody
-    = render partial: 'bike', collection: @users, as: :user
+    = render partial: 'bike', collection: users, as: :user

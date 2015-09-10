@@ -1,5 +1,5 @@
 - content_for :paginate do
-  = will_paginate @users
+  = paginate users
 
 = render layout: 'shared/table' do
   caption 用户信息列表
@@ -10,5 +10,5 @@
       th.col-sm-2 积分
       th.col-sm-2.user-operations 操作
   tbody
-    = render @users
+    = render users
 

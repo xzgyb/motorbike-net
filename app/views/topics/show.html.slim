@@ -1,23 +1,22 @@
 div.topic
   div.panel.panel-default
     div.panel-heading
-      h3 = @topic.subject
+      h3 = topic.subject
       div.info
-        span.item = "#{@topic.user.name}于#{time_ago_in_words(@topic.created_at)}前发布" 
-        - unless @last_post.nil?
-          span.item = "最后由#{@last_post.user.name}于#{time_ago_in_words(@last_post.updated_at)}前回复" 
-        span.item = "#{@topic.views_count}次阅读"
+        span.item = topic.published_time
+        span.item = topic.last_replied_time
+        span.item = topic.views_count
     div.panel-body
-      == markdown(@topic.text)
-
-  div#replies.panel.panel-default
-    div.panel-heading = "共#{@topic.posts.count}个回复"
-    div.panel-body
-      = render @posts
-  = will_paginate @posts
+      == markdown(topic.text)
+  div#replies
+    div.panel.panel-default
+      div.panel-heading = topic.total_replies_count 
+      div.panel-body
+        = render posts
+  = paginate posts
 
 - if can? :create, Post
-  = simple_form_for [@topic, @post] do |f|
+  = simple_form_for [topic, post] do |f|
     = f.input :text, label: false, as: :text, :input_html => {rows: 10}
     = f.button :submit
 

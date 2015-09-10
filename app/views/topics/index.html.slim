@@ -1,8 +1,8 @@
 table.topics.table.table-condensed
   tbody
-    = render @topics
+    = render topics
 - if can? :create, Topic 
   = link_to '发表新话题', new_topic_path, {class: 'btn btn-primary'}
 
 div.row
-  == will_paginate @topics 
+  == paginate topics 

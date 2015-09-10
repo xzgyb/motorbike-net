@@ -1,16 +1,15 @@
 class TopicsController < ApplicationController
   respond_to :html
   load_and_authorize_resource
+  decorates_assigned :topics, :topic, :post, :posts
 
   def index
-    @topics = Topic.recent_topics.paginate(page: params[:page], per_page: 30)
+    @topics = Topic.recent_topics.page(params[:page])
   end
 
   def show
     @topic.inc(views_count: 1)
-    @posts = @topic.posts.paginate(page: params[:page], per_page: 30)
-    @last_post = Topic.last_post(@topic)
-
+    @posts = @topic.posts.page(params[:page])
     @post = Post.new
   end
   

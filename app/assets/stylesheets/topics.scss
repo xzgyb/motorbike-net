@@ -31,13 +31,10 @@
 .topic {
     .info {
         font-size: small;
+        color: #777;
         .item {
             margin-right: 15px;
         }
-    }
-
-    .panel-default > .panel-heading {
-        color: #777;
     }
 
     .pagination {
@@ -50,6 +47,10 @@
         padding: 10px 20px;
         margin: 0px -15px;
         border-bottom: 1px solid #ddd;
+    }
+
+    .panel-default > .panel-heading {
+        color: #777;
     }
 
     .info {

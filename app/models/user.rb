@@ -44,5 +44,6 @@ class User
   validates :module_id, presence: true, uniqueness: true
   
   embeds_one :bike, autobuild: true
-  has_many :topics
+  has_many :topics, dependent: :delete
+  has_many :posts, dependent: :delete
 end
