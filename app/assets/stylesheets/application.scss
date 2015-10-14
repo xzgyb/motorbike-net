@@ -31,6 +31,18 @@
             color: #fff;
         }
     }
+
+    .navbar-nav > .open >a, 
+    .navbar-nav > .open > a:hover,
+    .navbar-nav > .open > a:focus {
+        background-color: transparent;
+        color: white;
+    }
+}
+
+.dropdown-menu li > a:hover {
+    background-color: #1095d5;
+    color: white;
 }
 
 #motorbike-pics {

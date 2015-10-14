@@ -10,4 +10,25 @@ module ApplicationHelper
     end
   end
 
+  def nav_user_item(user_name)
+    content_tag(:li, class: "dropdown") do
+      caption_tag = link_to('#', id: 'user-drop', 
+              'class' => 'dropdown-toggle roll',
+              'aria-expanded' => 'false',
+              'aria-haspopup' => 'true',
+              'role' => 'button',
+              'data-toggle' => 'dropdown') do
+        content_tag(:span, 'data-title' => user_name) { user_name }
+      end
+
+      items_tag = content_tag(:ul, 'class' => 'dropdown-menu',
+                                   'aria-labelledby' => 'user-drop') do
+        content_tag(:li) { link_to('用户信息', edit_user_registration_path) } +
+        tag(:li, class: 'divider', role: 'separator') +
+        content_tag(:li) { link_to('车辆信息', '#') }
+      end
+
+      caption_tag + items_tag
+    end
+  end
 end
