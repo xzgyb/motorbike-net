@@ -1,5 +1,5 @@
 GEM
-  remote: http://ruby.taobao.org/
+  remote: https://ruby.taobao.org/
   specs:
     actionmailer (4.2.3)
       actionpack (= 4.2.3)
@@ -91,6 +91,11 @@ GEM
     execjs (2.6.0)
     globalid (0.3.6)
       activesupport (>= 4.1.0)
+    gon (6.0.1)
+      actionpack (>= 3.0)
+      json
+      multi_json
+      request_store (>= 1.0)
     grape (0.13.0)
       activesupport
       builder
@@ -236,6 +241,7 @@ DEPENDENCIES
   devise
   devise-bootstrap-views
   draper
+  gon
   grape
   jbuilder (~> 2.0)
   jquery-rails

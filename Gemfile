@@ -1,4 +1,4 @@
-source 'http://ruby.taobao.org'
+source 'https://ruby.taobao.org'
 
 gem 'rails', '4.2.3'
 gem 'sqlite3'
@@ -21,6 +21,7 @@ gem 'simple_form'
 gem 'redcarpet'
 gem 'cancancan'
 gem 'draper'
+gem 'gon'
 
 group :development, :test do
   gem 'byebug'

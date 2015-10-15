@@ -1,3 +1,7 @@
+- map_url = "http://api.map.baidu.com/api?v=1.5&ak=FkzGxBN5OkreGxAnewbev4is"
+= javascript_include_tag map_url
+= Gon::Base.render_data
+
 div.row
   div.col-sm-4
     div.bike-basic-info
@@ -8,3 +12,42 @@ div.row
                         '行驶里程' => bike.travel_mileage)
       = bike_info_panel('诊断信息',
                         bike.diag_info) 
+
+  div.col-sm-8
+    div#map-tabs
+      ul.nav.nav-tabs role="tablist"
+        li.active role="prensentation"
+          a href="#map-location-tab" role="tab" data-toggle="tab" 车辆位置
+        li role="prensentation"
+          a href="#map-track-tab" role="tab" data-toggle="tab" 车辆轨迹
+
+      div#map-tab.tab-content
+        div#map-location-tab.tab-pane.fade.in.active role="tabpanel" 
+          div#bike-location-map.bike-map
+        div#map-track-tab.tab-pane.panel.panel-default role="tabpanel"
+          div#bike-track-map.bike-map
+
+
+coffee:
+  $(document).on 'page:change', ->
+      mapHeight = window.innerHeight - 200 
+      $("#bike-location-map").height(mapHeight)
+      $("#bike-track-map").height(mapHeight)
+
+      map = new BMap.Map("bike-location-map")
+
+      point = new BMap.Point(gon.longitude, gon.latitude)
+      
+      map.addControl(new BMap.NavigationControl())
+      map.addControl(new BMap.ScaleControl())    
+
+      marker = new BMap.Marker(point)
+      label = new BMap.Label(gon.user_name + "的位置", {offset: new BMap.Size(-30, 30)})
+      label.setStyle({color: "rgb(255,65,54)", fontWeight: "bold", fontSize: "18px", borderStyle: "none"})
+      marker.setLabel(label)
+
+      map.addOverlay(marker)
+
+      map.centerAndZoom(point, 19)
+
+
