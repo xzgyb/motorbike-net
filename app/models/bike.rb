@@ -7,5 +7,6 @@ class Bike
   field :latitude, type: Float, default: 0
   field :battery, type: Float, default: 0
   field :travel_mileage, type: Float, default: 0
+  field :diag_info, type: Hash, default: {}
 
 end

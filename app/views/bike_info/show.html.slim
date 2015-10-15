@@ -1,0 +1,10 @@
+div.row
+  div.col-sm-4
+    div.bike-basic-info
+      = bike_info_panel('车辆信息',
+                        '车辆名称' => bike.name,
+                        '位置(经纬度)' => bike.location,
+                        '电量' => bike.battery,
+                        '行驶里程' => bike.travel_mileage)
+      = bike_info_panel('诊断信息',
+                        bike.diag_info) 

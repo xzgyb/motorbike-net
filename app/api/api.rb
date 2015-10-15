@@ -9,18 +9,25 @@ module MotorbikeNet
      
       helpers do
         def bike_params
+          
           ActionController::Parameters.new(params).require(:bike).permit(
-            :name, :longitude, :latitude, :battery, :travel_mileage)
+            :name, :longitude, :latitude, :battery, :travel_mileage).tap do |whitelisted|
+              if params[:bike][:diag_info]
+                whitelisted[:diag_info] = params[:bike][:diag_info]
+              end
+            end
+          
         end
       end 
 
       params do
         requires :bike, type: Hash do
-          requires :name, type: String
-          requires :longitude, type: Float
-          requires :latitude, type: Float
-          requires :battery, type: Float
-          requires :travel_mileage, type: Float
+          optional :name, type: String
+          optional :longitude, type: Float
+          optional :latitude, type: Float
+          optional :battery, type: Float
+          optional :travel_mileage, type: Float
+          optional :diag_info, type: Hash
         end
       end
 

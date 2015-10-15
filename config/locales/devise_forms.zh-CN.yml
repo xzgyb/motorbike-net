@@ -13,7 +13,3 @@ zh-CN:
     registrations:
       edit:
         unhappy: '心烦'
-        bike_name: '车辆名称'
-        bike_location: '位置(经纬度)'
-        bike_battery: '电量'
-        travel_mileage: '行驶里程'
