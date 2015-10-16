@@ -21,6 +21,7 @@ gem 'simple_form'
 gem 'redcarpet'
 gem 'cancancan'
 gem 'draper'
+gem 'puma'
 gem 'gon'
 
 group :development, :test do
