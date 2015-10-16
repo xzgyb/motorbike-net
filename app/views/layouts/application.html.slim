@@ -5,6 +5,7 @@ html
       | MotorbikeNet
     = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true
     = javascript_include_tag 'application', 'data-turbolinks-track' => true
+    = javascript_include_tag "http://api.map.baidu.com/api?v=1.5&ak=FkzGxBN5OkreGxAnewbev4is"
     = csrf_meta_tags
   body
     == render 'header'
