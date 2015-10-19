@@ -44,20 +44,21 @@ displayBikeTrackMap = (container, locationPoints) ->
     map.addOverlay(polyline)
     map.centerAndZoom(lastPoint, 19)
 
-    $elem = $(".BMap_mask")
-    map.panBy($elem.width() / 2, $elem.height() / 2)
-
-# Display maps both.
-displayMaps = ->
-  # Default display bike location map.
-  displayBikeLocationMap("bike-location-map", gon.userName, gon.longitude, gon.latitude)
-
-  displayBikeTrackMap("bike-track-map", gon.travelTrackHistories)
-
-# Create map control and set event handlers.
-$ ->
+# Set bike maps size.
+setBikeMapsSize = ->
   mapHeight = window.innerHeight - 200 
   $("#bike-location-map").height(mapHeight)
   $("#bike-track-map").height(mapHeight)
 
-  displayMaps()
+# Create map control and set event handlers.
+$ ->
+  setBikeMapsSize()
+
+  # Default display bike location map.
+  displayBikeLocationMap("bike-location-map", gon.userName, gon.longitude, gon.latitude)
+
+  isBikeTrackMapShown = false
+  $('a[href="#map-track-tab"]').on 'shown.bs.tab', ->
+      if !isBikeTrackMapShown
+          displayBikeTrackMap("bike-track-map", gon.travelTrackHistories)
+          isBikeTrackMapShown = true
