@@ -7,7 +7,9 @@ createBMap = (container) ->
     return map
 
 # Display bike location map.
-displayBikeLocationMap = (map, userName, longitude, latitude) ->
+displayBikeLocationMap = (container, userName, longitude, latitude) ->
+    map = createBMap(container)
+
     point = new BMap.Point(longitude, latitude)
     marker = new BMap.Marker(point)
     label = new BMap.Label(userName + "的位置",
@@ -23,8 +25,10 @@ displayBikeLocationMap = (map, userName, longitude, latitude) ->
     map.centerAndZoom(point, 19)
 
 # Display bike track map.
-displayBikeTrackMap = (map, locationPoints) ->
-    points = new Array(locationPoints.length)
+displayBikeTrackMap = (container, locationPoints) ->
+    map = createBMap(container)
+
+    points = new Array()
     lastPoint = null
 
     for locationPoint in locationPoints
@@ -33,29 +37,27 @@ displayBikeTrackMap = (map, locationPoints) ->
         points.push(point)
 
     polyline = new BMap.Polyline(points, 
-        strokeColor: "blue",
-        strokeWeight: 6,
+        strokeColor: "#FF264F",
+        strokeWeight: 4,
         strokeOpacity: 0.5)
 
     map.addOverlay(polyline)
     map.centerAndZoom(lastPoint, 19)
-       
+
+    $elem = $(".BMap_mask")
+    map.panBy($elem.width() / 2, $elem.height() / 2)
+
+# Display maps both.
+displayMaps = ->
+  # Default display bike location map.
+  displayBikeLocationMap("bike-location-map", gon.userName, gon.longitude, gon.latitude)
+
+  displayBikeTrackMap("bike-track-map", gon.travelTrackHistories)
+
 # Create map control and set event handlers.
 $ ->
   mapHeight = window.innerHeight - 200 
   $("#bike-location-map").height(mapHeight)
   $("#bike-track-map").height(mapHeight)
 
-  bikeLocationMap = createBMap("bike-location-map")
-  bikeTrackMap = createBMap("bike-track-map")
-
-  #displayBikeTrackMap(bikeLocationMap, [
-  #        [123.474151, 41.769966]
-  #        [123.477882, 41.770017]
-  #      ])
-
-  displayBikeLocationMap(bikeLocationMap, gon.user_name, gon.longitude, gon.latitude)
-
-  $('a[href="#map-location-tab"]').on 'show.bs.tab', ->
-
-  $('a[href="#map-track-tab"]').on 'show.bs.tab', ->
+  displayMaps()

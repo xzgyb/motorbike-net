@@ -33,7 +33,21 @@ module MotorbikeNet
 
       put ':module_id' do
         user = User.find_by(module_id: params[:module_id])       
-        user.bike.update!(bike_params)
+        bike = user.bike
+
+        bike.assign_attributes(bike_params)
+
+        bike_data = params[:bike]
+
+        if bike_data.has_key?(:longitude) &&
+           bike_data.has_key?(:latitude)
+          
+           bike.travel_track_histories.push([bike_data[:longitude],
+                                             bike_data[:latitude]])
+        end
+
+        bike.save!
+
         {status: "success"}
       end
     end

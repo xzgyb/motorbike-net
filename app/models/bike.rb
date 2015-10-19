@@ -8,5 +8,5 @@ class Bike
   field :battery, type: Float, default: 0
   field :travel_mileage, type: Float, default: 0
   field :diag_info, type: Hash, default: {}
-
+  field :travel_track_histories, type: Array, default: []
 end

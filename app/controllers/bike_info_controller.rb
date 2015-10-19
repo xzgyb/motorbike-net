@@ -7,6 +7,7 @@ class BikeInfoController < ApplicationController
     @bike = user.bike
     gon.longitude = @bike.longitude
     gon.latitude  = @bike.latitude 
-    gon.user_name = user.name
+    gon.travelTrackHistories = @bike.travel_track_histories
+    gon.userName = user.name
   end
 end
