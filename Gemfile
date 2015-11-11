@@ -25,7 +25,7 @@ gem 'puma'
 gem 'gon'
 
 group :development, :test do
-  gem 'byebug'
+  #gem 'byebug'
   gem 'web-console', '~> 2.0'
   gem 'spring'
   gem 'better_errors'
