@@ -39,6 +39,8 @@ class User
   field :module_id, type: String, default: ""
   field :points, type: Integer, default: 0
   field :admin, type: Boolean, default: false
+  field :phone, type: String, default: ""
+  field :oauth_login_code, type: String, default: ""
   
   validates :name, presence: true, uniqueness: true
   validates :module_id, presence: true, uniqueness: true
@@ -46,4 +48,9 @@ class User
   embeds_one :bike, autobuild: true
   has_many :topics, dependent: :delete
   has_many :posts, dependent: :delete
+  has_many :oauth_applications, class_name: 'Doorkeeper::Application', as: :owner
+
+  def valid_oauth_login_code?(code)
+    oauth_login_code && oauth_login_code == code
+  end
 end

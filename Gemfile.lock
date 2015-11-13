@@ -1,3 +1,16 @@
+GIT
+  remote: git://github.com/doorkeeper-gem/doorkeeper-mongodb.git
+  revision: 3bd96e589c6e144162a1869d265fe00b623939fc
+  specs:
+    doorkeeper-mongodb (3.0.0)
+      doorkeeper (>= 3.0.0.rc1)
+
+GIT
+  remote: https://github.com/xzgyb/china_sms.git
+  revision: 68a6144bcf850659e3114bc19d58d5dc8f722569
+  specs:
+    china_sms (0.0.7)
+
 GEM
   remote: https://ruby.taobao.org/
   specs:
@@ -80,6 +93,8 @@ GEM
       thread_safe (~> 0.1)
       warden (~> 1.2.3)
     devise-bootstrap-views (0.0.5)
+    doorkeeper (3.0.1)
+      railties (>= 3.2)
     draper (2.1.0)
       actionpack (>= 3.0)
       activemodel (>= 3.0)
@@ -236,9 +251,12 @@ DEPENDENCIES
   bootstrap-sass (~> 3.3.5)
   bson_ext
   cancancan
+  china_sms!
   coffee-rails (~> 4.1.0)
   devise
   devise-bootstrap-views
+  doorkeeper
+  doorkeeper-mongodb!
   draper
   gon
   grape
