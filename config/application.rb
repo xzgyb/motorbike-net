@@ -29,7 +29,5 @@ module MotorbikeNet
     config.i18n.default_locale = "zh-CN" 
 
     # Do not swallow errors in after_commit/after_rollback callbacks.
-    config.paths.add File.join('app', 'api'), glob: File.join('**', '*.rb')
-    config.autoload_paths += Dir[Rails.root.join('app', 'api', '*')]
   end
 end
