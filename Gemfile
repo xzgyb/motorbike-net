@@ -32,4 +32,10 @@ group :development, :test do
   gem 'web-console', '~> 2.0'
   gem 'spring'
   gem 'better_errors'
+  gem 'capistrano'
+end
+
+group :development do
+  gem 'mina'
+  gem 'mina-puma', git: 'https://github.com/xzgyb/mina-puma.git'
 end
