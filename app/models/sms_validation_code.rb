@@ -10,7 +10,7 @@ class SmsValidationCode
   field :phone, type: String
   field :expires_in, type: Integer
 
-  DEFAULT_EXPIRS_IN = 10 * 60  # Default expire time is 10 seconds.
+  DEFAULT_EXPIRS_IN = 10 * 60  # Default expire time is 10 minutes.
 
   class << self
     # generate a sms validation code object, then save.
