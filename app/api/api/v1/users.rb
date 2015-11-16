@@ -31,7 +31,7 @@ module Api::V1
           respond_ok
         else
           Rails.logger.error "Send sms error: result code is #{result[:code]}"
-          respond_error(error: result[:code])
+          error!("获取短信校验码失败，错误代码=#{result[:code]}")
         end
       end
 
@@ -45,27 +45,29 @@ module Api::V1
         validation_code_object = SmsValidationCode.find(phone, validation_code)
         
         if validation_code_object.nil?
-          respond_error(error: "不存在此校验码，请重新获取！")
-        elsif validation_code_object.expired?
-          validation_code_object.destroy
-          respond_error(error: "校验码已过期，请重新获取！")
-        else
-          user = User.where(phone: phone).first
-          if user.nil?
-            user = User.new(phone: phone,
-                            oauth_login_code: SecureRandom.hex(10))
-
-            if user.save(validate: false)
-              validation_code_object.destroy
-              respond_ok(oauth_login_code: user.oauth_login_code)
-            else
-              respond_error(error: '用户注册失败!')
-            end
-          else
-            validation_code_object.destroy
-            respond_error(error: '该用户已存在，无法注册！')
-          end
+          error!("不存在此校验码，请重新获取！")
         end
+
+        if validation_code_object.expired?
+          validation_code_object.destroy
+          error!("校验码已过期，请重新获取！")
+        end
+
+        user = User.where(phone: phone).first
+        if user
+          validation_code_object.destroy
+          error!('该用户已存在，无法注册！')
+        end
+
+        user = User.new(phone: phone,
+                        oauth_login_code: SecureRandom.hex(10))
+
+        if not user.save(validate: false)
+          error!('用户注册失败!')
+        end
+
+        validation_code_object.destroy
+        respond_ok(oauth_login_code: user.oauth_login_code)
       end
 
       get :test do
