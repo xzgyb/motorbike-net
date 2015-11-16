@@ -16,5 +16,6 @@ Rails.application.routes.draw do
   mount Api::Dispatch => '/'
 
   root 'home#index'
+  get  '/doc', to: 'home#doc'
   match '*path', via: :all, to: redirect('/')
 end
