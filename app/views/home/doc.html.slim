@@ -2,34 +2,34 @@ div.container
   markdown:
     # API文档
     ----
-    ### 1. 创建OAUTH应用
-    访问http://115.28.1.131:3000/oauth/applications, 点击 New Application按钮,
+    ### 1. 创建oauth应用
+    访问`http://115.28.1.131:3000/oauth/applications`, 点击 New Application按钮,
     Name随意填，Redirect uri填写urn:ietf:wg:oauth:2.0:oob，然后submit.
     记住Application Id和Secret.
 
     ### 2. 获取手机校验码
-    GET /api/v1/users/validation_code?phone=手机号type=校验码类型
+    `GET /api/v1/users/validation_code?phone=手机号type=校验码类型`
 
     * phone即为要获取校验码的手机号。
     * type为获取校验码的类型，1为获取注册用的校验码，2为获取登录用的校验码，3为获取重置密码的校验码,
       不同的type值会有不同的短信内容, 目前仅使用1.
-    * 如果调用成功，返回{"ok":1}, 如果调用失败，返回{"error": "错误原因"}
-    * 调用实例：curl --request GET http://115.28.1.131:3000/api/v1/users/validation_code?phone=13812345678&type=1
+    * 如果调用成功，返回`{"ok":1}`, 如果调用失败，返回`{"error": "错误原因"}`
+    * 调用实例：   `curl --request GET http://115.28.1.131:3000/api/v1/users/validation_code?phone=13812345678&type=1`
     * 服务器向云信发送请求的时间间隔为1分钟，1分钟内重复发送校验码请求，将失败.
     * 校验码的有效期为10分钟，超过10分钟注册，将失败。
 
     ### 3. 注册用户
-    POST /api/v1/users/register
+    `POST /api/v1/users/register`
 
     * POST数据部分包括2个参数，phone：手机号，validation_code：手机上收到的短信校验码
-    * 如果调用成功，返回{"ok":1,oauth_login_code:"oauth登陆码"},如果调用失败，
-      返回{"error": "错误原因"}.
+    * 如果调用成功，返回`{"ok":1,oauth\_login\_code:"oauth登陆码"}`,如果调用失败，
+      返回`{"error": "错误原因"}`.
       这个oauth登陆码需要保存起来，为了下一步oauth登录用。
-    * 调用实例：curl -H 'Content-Type:application/json' --request POST -d '{"phone":"13812345678","validation_code":"904283"}' http://localhost:3000/api/v1/users/register.
+    * 调用实例：   `curl -H 'Content-Type:application/json' --request POST -d '{"phone":"13812345678","validation_code":"904283"}' http://localhost:3000/api/v1/users/register.`
 
     ### 4. oauth登录
     使用第1步获取的Application Id和Secret，用手机号作为oauth密码登录方式的用户名，
-    用第3步获取oauth_login_code作为oauth密码登录方式的密码, 进行oauth登录，具体用法可参见相关的第三方库使用说明.
+    用第3步获取oauth\_login\_code作为oauth密码登录方式的密码, 进行oauth登录，具体用法可参见相关的第三方库使用说明.
     如果oauth登录成功，则返回token，refresh_token，expires_in，expires_in为超时时间，服务器端设置为1天.
     如果oauth登录失败，返回{"error": "错误原因"}.
 
