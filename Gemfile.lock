@@ -13,7 +13,7 @@ GIT
 
 GIT
   remote: https://github.com/xzgyb/mina-puma.git
-  revision: 4bf7a250c91795f5b627930a4bdfcf64adb41698
+  revision: f2ad911195d35faa1663c533f490e096dd74816e
   specs:
     mina-puma (0.2.0)
       mina
