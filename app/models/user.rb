@@ -33,7 +33,10 @@ class User
   # field :failed_attempts, type: Integer, default: 0 # Only if lock strategy is :failed_attempts
   # field :unlock_token,    type: String # Only if unlock strategy is :email or :both
   # field :locked_at,       type: Time
-  
+
+  # Indicate that updating user operation whether is from api request.
+  attr_accessor :api_request
+
   ## Custom
   field :name, type: String, default: ""
   field :module_id, type: String, default: ""
@@ -52,5 +55,10 @@ class User
 
   def valid_oauth_login_code?(code)
     oauth_login_code && oauth_login_code == code
+  end
+
+  protected
+  def email_required?
+    api_request ? false : true
   end
 end

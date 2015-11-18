@@ -84,8 +84,13 @@ module Api::V1
       end
       put :update do
         doorkeeper_authorize!
-        current_user.update_attributes!(user_params)
-        respond_ok
+
+        current_user.api_request = true
+        if not current_user.update(user_params)
+          error!(current_user.errors.full_messages.join(', '))
+        else
+          respond_ok
+        end
       end
 
       # Get validation code api temporary.
