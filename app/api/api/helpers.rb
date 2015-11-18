@@ -1,8 +1,11 @@
 module Api
   module Helpers
     def respond_ok(response = {})
-      response.empty? ? {ok: 1}
-                      : {ok: 1}.merge(response)
+      {result: 1}.merge(response)
+    end
+
+    def respond_error(error_message)
+      {result: 0, error: error_message}
     end
 
     def current_user

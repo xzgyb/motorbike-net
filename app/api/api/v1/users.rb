@@ -37,7 +37,7 @@ module Api::V1
           respond_ok
         else
           Rails.logger.error "Send sms error: result code is #{result[:code]}"
-          error!("获取短信校验码失败，错误代码=#{result[:code]}")
+          respond_error("获取短信校验码失败，错误代码=#{result[:code]}")
         end
       end
 
@@ -51,25 +51,25 @@ module Api::V1
         validation_code_object = SmsValidationCode.find(phone, validation_code)
         
         if validation_code_object.nil?
-          error!("不存在此校验码，请重新获取！")
+          return respond_error("不存在此校验码，请重新获取！")
         end
 
         if validation_code_object.expired?
           validation_code_object.destroy
-          error!("校验码已过期，请重新获取！")
+          return respond_error("校验码已过期，请重新获取！")
         end
 
         user = User.where(phone: phone).first
         if user
           validation_code_object.destroy
-          error!('该用户已存在，无法注册！')
+          return respond_error('该用户已存在，无法注册！')
         end
 
         user = User.new(phone: phone,
                         oauth_login_code: SecureRandom.hex(10))
 
         if not user.save(validate: false)
-          error!('用户注册失败!')
+          return respond_error('用户注册失败!')
         end
 
         validation_code_object.destroy
@@ -87,7 +87,7 @@ module Api::V1
 
         current_user.api_request = true
         if not current_user.update(user_params)
-          error!(current_user.errors.full_messages.join(', '))
+          respond_error(current_user.errors.full_messages.join(', '))
         else
           respond_ok
         end
@@ -98,8 +98,11 @@ module Api::V1
         validation_code_object = SmsValidationCode.where(phone: params[:phone])
                                                   .order_by(created_at: :desc)
                                                   .first
-        validation_code_object.validation_code
-                                                   
+        if validation_code_object.nil?
+          respond_error("validation code not found")
+        else
+          validation_code_object.validation_code
+        end
       end
       
       get :test do

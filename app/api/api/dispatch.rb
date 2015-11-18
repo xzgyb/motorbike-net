@@ -11,13 +11,14 @@ module Api
     rescue_from :all do |e|
       case e
         when Mongoid::Errors::DocumentNotFound
-          rack_response({error: '数据不存在'}.to_json, 404)
+          rack_response({result: 0, error: '数据不存在'}.to_json, 404)
         when Grape::Exceptions::ValidationErrors
-          rack_response({error: '参数不符合要求，请检查参数是否按照 API 要求传输',
+          rack_response({result: 0,
+                         error: '参数不符合要求，请检查参数是否按照 API 要求传输',
                          validation_errors: e.errors}.to_json, 400)
         else
           Rails.logger.error "Api error: #{e}\n#{e.backtrace.join("\n")}"
-          rack_response({error: 'API 接口异常'}.to_json, 500)
+          rack_response({result: 0, error: 'API 接口异常'}.to_json, 500)
       end
     end
 
@@ -31,7 +32,7 @@ module Api
     # Route unknown paths.
     route :any, '*path' do
       status 404
-      { status: 'error', error: 'Page not found.' }
+      { result: 0, error: 'Page not found.' }
     end
   end
 end
