@@ -3,7 +3,7 @@ div.container
     # API文档
     ----
     ### 1. 创建oauth应用
-    访问`http://115.28.1.131:3000/oauth/applications`, 点击 New Application按钮,
+    访问`http://localhost:3000/oauth/applications`, 点击 New Application按钮,
     Name随意填，Redirect uri填写urn:ietf:wg:oauth:2.0:oob，然后submit.
     记住Application Id和Secret.
 
@@ -14,7 +14,7 @@ div.container
     * type为获取校验码的类型，1为获取注册用的校验码，2为获取登录用的校验码，3为获取重置密码的校验码,
       不同的type值会有不同的短信内容, 目前仅使用1.
     * 如果调用成功，返回`{"ok":1}`, 如果调用失败，返回`{"error": "错误原因"}`
-    * 调用实例：   `curl --request GET http://115.28.1.131:3000/api/v1/users/validation_code?phone=13812345678&type=1`
+    * 调用实例：   `curl --request GET http://localhost:3000/api/v1/users/validation_code?phone=13812345678&type=1`
     * 服务器向云信发送请求的时间间隔为1分钟，1分钟内重复发送校验码请求，将失败.
     * 校验码的有效期为10分钟，超过10分钟注册，将失败。
 
@@ -36,6 +36,13 @@ div.container
     ### 5. 使用oauth的token访问资源
     使用第4步获取的token，来访问服务器的资源，具体用法可参见相关的第三方库使用说明.
     如果token超时，则使用refresh_token重新获取新的token进行资源访问。
+
+    ### 6. 设置用户名和密码
+    `PUT /api/v1/users/update`
+
+    * 数据部分包括2个参数，name: 用户名, password: 密码, password_confirmation: 确认密码
+    * 如果调用成功，返回`{"ok":1}`, 如果调用失败, 返回`{"error":"错误原因"}`.
+    * 调用实例: `curl -H 'Content-Type:application/json' --request PUT -d '{"name":"gyb","password":"12345678","password_confirmation":"12345678"}' http://localhost:3000/api/v1/users/update.`
 
 
 
