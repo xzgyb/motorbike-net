@@ -43,7 +43,7 @@ class User
   field :oauth_login_code, type: String, default: ""
   
   validates :name, presence: true, uniqueness: true
-  validates :module_id, presence: true, uniqueness: true
+  validates :module_id, uniqueness: true
   
   embeds_one :bike, autobuild: true
   has_many :topics, dependent: :delete

@@ -10,6 +10,12 @@ module Api::V1
     }
 
     resource :users do
+      helpers do
+        def user_params
+          ActionController::Parameters.new(params).permit(
+              :name, :password, :password_confirmation)
+        end
+      end
 
       desc 'get sms validation code'
       params do
@@ -70,6 +76,27 @@ module Api::V1
         respond_ok(oauth_login_code: user.oauth_login_code)
       end
 
+      desc 'Update user info'
+      params do
+        requires :name, type: String, desc: 'user name'
+        requires :password, type: String, desc: 'user password'
+        requires :password_confirmation, type: String, desc: 'user password confirmation'
+      end
+      put :update do
+        doorkeeper_authorize!
+        current_user.update_attributes!(user_params)
+        respond_ok
+      end
+
+      # Get validation code api temporary.
+      get "get_validation_code/:phone" do
+        validation_code_object = SmsValidationCode.where(phone: params[:phone])
+                                                  .order_by(created_at: :desc)
+                                                  .first
+        validation_code_object.validation_code
+                                                   
+      end
+      
       get :test do
         doorkeeper_authorize!
         {'phone': current_user.phone}
