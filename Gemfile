@@ -28,6 +28,7 @@ gem "doorkeeper-mongodb", github: "doorkeeper-gem/doorkeeper-mongodb"
 gem 'china_sms', :git => 'https://github.com/xzgyb/china_sms.git'
 
 group :development, :test do
+  gem "awesome_print", require:"ap"
   #gem 'byebug'
   gem 'web-console', '~> 2.0'
   gem 'spring'
