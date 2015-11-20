@@ -11,14 +11,20 @@ module Api
     rescue_from :all do |e|
       case e
         when Mongoid::Errors::DocumentNotFound
-          rack_response({result: 0, error: '数据不存在'}.to_json, 404)
+          error!({result: 0, error: '数据不存在'}, 404)
+        when Mongoid::Errors::Validations
+          message = e.record.errors.full_messages.join(', ')
+          error!({result: 0, error: message}, 200)
         when Grape::Exceptions::ValidationErrors
-          rack_response({result: 0,
-                         error: '参数不符合要求，请检查参数是否按照 API 要求传输',
-                         validation_errors: e.errors}.to_json, 400)
+          error!({result: 0,
+                  error: '参数不符合要求，请检查参数是否按照 API 要求传输',
+                  validation_errors: e.errors}, 400)
+        when Api::Errors::RespondErrors
+          error!({result: 0,
+                  error: e.message}, 200)
         else
           Rails.logger.error "Api error: #{e}\n#{e.backtrace.join("\n")}"
-          rack_response({result: 0, error: 'API 接口异常'}.to_json, 500)
+          error!({result: 0, error: 'API 接口异常'}, 500)
       end
     end
 

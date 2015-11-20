@@ -4,8 +4,13 @@ module Api
       {result: 1}.merge(response)
     end
 
-    def respond_error(error_message)
-      {result: 0, error: error_message}
+    def respond_error!(message)
+      raise Errors::RespondErrors, message
+    end
+
+    def api_request(resource)
+      resource.api_request = true
+      yield resource
     end
 
     def current_user
