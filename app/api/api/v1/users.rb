@@ -15,9 +15,33 @@ module Api::V1
           ActionController::Parameters.new(params).permit(
               :name, :password, :password_confirmation)
         end
+
+        def check_sms_validation_code!(type)
+          phone, validation_code = params[:phone], params[:validation_code]
+          validation_code_object = SmsValidationCode.find(phone, validation_code)
+
+          if validation_code_object.nil?
+            respond_error!("不存在此校验码，请重新获取！")
+          end
+
+          if validation_code_object.type != type
+            respond_error!("校验码类型不匹配！")
+          end
+
+          if validation_code_object.expired?
+            respond_error!("校验码已过期，请重新获取！")
+          end
+        end
+
+        def user_with_phone!(phone)
+          user = User.where(phone: phone).first
+          respond_error!('该用户不存在，请注册！') unless user
+
+          user
+        end
       end
 
-      desc 'get sms validation code'
+      desc 'Get sms validation code'
       params do
         requires :phone, type: String, desc: 'phone number'
         optional :type, type: Integer, default: 1, values: 1..3,
@@ -26,7 +50,7 @@ module Api::V1
       get :validation_code do
         phone, type = params[:phone], params[:type]
 
-        validation_code_object = SmsValidationCode.generate(phone)
+        validation_code_object = SmsValidationCode.generate(phone, type)
         sms_content = SMS_CONTENTS[type] % [validation_code_object.validation_code]
 
         ChinaSMS.use(:yunxin, username: 'mhkjcf', password: 'mhkjcf467')
@@ -37,43 +61,60 @@ module Api::V1
           respond_ok
         else
           Rails.logger.error "Send sms error: result code is #{result[:code]}"
-          respond_error("获取短信校验码失败，错误代码=#{result[:code]}")
+          respond_error!("获取短信校验码失败，错误代码=#{result[:code]}")
         end
       end
 
-      desc 'register user with phone and validation code'
+      desc 'Register user with phone and validation code'
       params do
         requires :phone, type: String, desc: 'phone number'
         requires :validation_code, type: String, desc: 'validation code'
       end
       post :register do
-        phone, validation_code = params[:phone], params[:validation_code]
-        validation_code_object = SmsValidationCode.find(phone, validation_code)
-        
-        if validation_code_object.nil?
-          return respond_error("不存在此校验码，请重新获取！")
-        end
+        check_sms_validation_code!(SmsValidationCode::REGISTER_USER)
 
-        if validation_code_object.expired?
-          validation_code_object.destroy
-          return respond_error("校验码已过期，请重新获取！")
-        end
-
+        phone = params[:phone]
         user = User.where(phone: phone).first
-        if user
-          validation_code_object.destroy
-          return respond_error('该用户已存在，无法注册！')
-        end
+
+        respond_error!('该用户已存在，无法注册！') if user
 
         user = User.new(phone: phone,
                         oauth_login_code: SecureRandom.hex(10))
 
-        if not user.save(validate: false)
-          return respond_error('用户注册失败!')
-        end
+        respond_error!('用户注册失败!') unless user.save(validate: false)
 
-        validation_code_object.destroy
         respond_ok(oauth_login_code: user.oauth_login_code)
+      end
+
+      desc 'Login user with phone and validation code'
+      params do
+        requires :phone, type: String, desc: 'phone number'
+        requires :validation_code, type: String, desc: 'validation code'
+      end
+      get :login do
+        check_sms_validation_code!(SmsValidationCode::LOGIN_USER)
+        user = user_with_phone!(params[:phone])
+        respond_ok(oauth_login_code: user.oauth_login_code)
+      end
+
+      desc 'Reset user password'
+      params do
+        requires :phone, type: String, desc: 'phone number'
+        requires :validation_code, type: String, desc: 'validation code'
+        requires :password, type: String, desc: 'user password'
+        requires :password_confirmation, type: String, desc: 'user password confirmation'
+      end
+      put :reset do
+        check_sms_validation_code!(SmsValidationCode::RESET_PASSWORD)
+        user = user_with_phone!(params[:phone])
+
+        api_request(user) do |user|
+          user.password = params[:password]
+          user.password_confirmation = params[:password_confirmation]
+
+          user.save!
+          respond_ok
+        end
       end
 
       desc 'Update user info'
@@ -85,10 +126,8 @@ module Api::V1
       put :update do
         doorkeeper_authorize!
 
-        current_user.api_request = true
-        if not current_user.update(user_params)
-          respond_error(current_user.errors.full_messages.join(', '))
-        else
+        api_request(current_user) do |user|
+          user.update!(user_params)
           respond_ok
         end
       end
@@ -99,7 +138,7 @@ module Api::V1
                                                   .order_by(created_at: :desc)
                                                   .first
         if validation_code_object.nil?
-          respond_error("validation code not found")
+          respond_error!("validation code not found")
         else
           validation_code_object.validation_code
         end
@@ -110,5 +149,6 @@ module Api::V1
         {'phone': current_user.phone}
       end
     end
+
   end
 end

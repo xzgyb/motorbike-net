@@ -9,15 +9,22 @@ class SmsValidationCode
   field :validation_code, type: String
   field :phone, type: String
   field :expires_in, type: Integer
+  field :type, type: Integer
 
-  DEFAULT_EXPIRS_IN = 24 * 60 * 60  # Default expire time is 10 minutes.
+  DEFAULT_EXPIRES_IN = 24 * 60 * 60  # Default expire time is 10 minutes.
+
+  # Sms validation code type
+  REGISTER_USER = 1
+  LOGIN_USER    = 2
+  RESET_PASSWORD = 3
 
   class << self
     # generate a sms validation code object, then save.
-    def generate(phone)
-      self.create(phone: phone) do |doc|
-        doc.validation_code = ValidationCodeGenerator.gen_code
-        doc.expires_in = DEFAULT_EXPIRS_IN
+    def generate(phone, type)
+      self.create(phone: phone) do |record|
+        record.validation_code = ValidationCodeGenerator.gen_code
+        record.expires_in = DEFAULT_EXPIRES_IN
+        record.type = type
       end
     end
 
