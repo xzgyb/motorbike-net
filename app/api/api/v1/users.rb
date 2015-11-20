@@ -91,7 +91,7 @@ module Api::V1
         requires :phone, type: String, desc: 'phone number'
         requires :validation_code, type: String, desc: 'validation code'
       end
-      get :login do
+      post :login do
         check_sms_validation_code!(SmsValidationCode::LOGIN_USER)
         user = user_with_phone!(params[:phone])
         respond_ok(oauth_login_code: user.oauth_login_code)
