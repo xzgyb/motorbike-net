@@ -3,7 +3,9 @@ Rails.application.routes.draw do
     controllers applications: 'oauth/applications', authorized_applications: 'oauth/authorized_applications'
   end
 
-  devise_for :users
+  devise_for :users, controllers: {
+      sessions: :sessions
+  }
 
   get '/bike_info/:id', to: 'bike_info#show', as: 'bike_info'
 
