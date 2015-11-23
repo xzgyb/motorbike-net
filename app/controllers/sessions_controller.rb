@@ -18,15 +18,11 @@ class SessionsController < Devise::SessionsController
 
       if @auth_key != :email
         user_params.delete(:email)
+        user_params[@auth_key] = value
       end
-
-      user_params[@auth_key] = value
     end
 
     def set_devise_authentication_keys
-      Devise.authentication_keys = [[@auth_key, true]]
-      [:email, :name, :phone].each do |key|
-        Devise.authentication_keys << [key, false] if key != @auth_key
-      end
+      Devise.authentication_keys = [@auth_key]
     end
 end
