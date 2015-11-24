@@ -6,9 +6,15 @@ Doorkeeper.configure do
     current_user || warden.authenticate!(scope: :user)
   end
 
-  resource_owner_from_credentials do |_routes|
-    u = User.find_for_database_authentication(phone: params[:username])
-    u if u && u.valid_oauth_login_code?(params[:password])
+  resource_owner_from_credentials do |_routes; user|
+    [:phone, :name, :email].find do |user_key|
+      user = User.find_for_database_authentication(user_key => params[:username])
+    end
+
+    if user && (user.valid_oauth_login_code?(params[:password]) ||
+                user.valid_password?(params[:password]))
+      user
+    end
   end
 
   enable_application_owner confirmation: true
