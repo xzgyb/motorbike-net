@@ -5,7 +5,7 @@ nav.navbar.navbar-default
           |东动电子
       ul.nav.navbar-nav.navbar-right
         - if user_signed_in?
-          = nav_user_item(current_user.name)
+          = nav_user_item(current_user_title)
 
         = nav_item('首页', root_path)
 
