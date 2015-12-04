@@ -60,8 +60,8 @@ div.container
     `PUT /api/v1/users/reset`
 
     * 先使用type=3，获取手机重置校验码
-    * 数据部分包括4个参数，phone：手机号，validation_code：手机上收到的短信校验码
-                           password: 密码, password_confirmation: 确认密码
+    * 数据部分包括4个参数，phone：手机号，validation\_code：手机上收到的短信校验码
+                           password: 密码, password\_confirmation: 确认密码
     * 如果调用成功，返回`{"result":1}`, 如果调用失败, 返回`{"result":0,"error":"错误原因"}`.
     * 调用实例: `curl -H 'Content-Type:application/json' --request PUT -d '{"phone":"13812345678","validation_code":"904483","password":"12345678","password_confirmation":"12345678"}' http://localhost:3000/api/v1/users/reset.`
 
