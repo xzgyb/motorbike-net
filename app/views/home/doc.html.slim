@@ -65,6 +65,22 @@ div.container
     * 如果调用成功，返回`{"result":1}`, 如果调用失败, 返回`{"result":0,"error":"错误原因"}`.
     * 调用实例: `curl -H 'Content-Type:application/json' --request PUT -d '{"phone":"13812345678","validation_code":"904483","password":"12345678","password_confirmation":"12345678"}' http://localhost:3000/api/v1/users/reset.`
 
+    ### 9. 获取App的最新版本
+    `GET /api/v1/app_versions/newest`
 
+    * 如果调用成功，返回`{"result":1,"version":"1.0.1"}`, 如果调用失败, 返回`{"result":0,"error":"错误原因"}`.
 
+    ### 10. 获取指定版本的app url
+    `GET /api/v1/app_versions/url`
 
+    * 数据部分包括1个参数，version: 版本号
+    * 如果调用成功，返回`{"result":1,"url":"app的完整url"}`, 如果调用失败, 返回`{"result":0,"error":"错误原因"}`.
+    * 调用实例: `curl -H 'Content-Type:application/json' --request GET  http://localhost:3000/api/v1/app_versions/url?version=1.1.0.`
+
+    ### 11. 获取指定版本的app变更内容
+    `GET /api/v1/app_versions/changelog`
+
+    * 数据部分包括1个参数，version: 版本号
+    * 如果调用成功，返回`{"result":1,"changelog":"app的变更内容"}`, 如果调用失败, 返回`{"result":0,"error":"错误原因"}`.
+      这个变更内容在网站端可以用markdown的语法输入，返回的是html内容，app端可以放到webview中显示。
+    * 调用实例: `curl -H 'Content-Type:application/json' --request GET  http://localhost:3000/api/v1/app_versions/changelog?version=1.1.0.`

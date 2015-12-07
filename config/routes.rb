@@ -14,6 +14,7 @@ Rails.application.routes.draw do
   resources :topics do
     resources :posts
   end
+  resources :app_versions, only: [:index, :create, :destroy]
 
   mount Api::Dispatch => '/'
 

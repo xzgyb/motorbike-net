@@ -1,0 +1,15 @@
+- content_for :paginate do
+  = paginate app_versions
+
+= render layout: 'shared/table' do
+  h5.pull-left App版本列表
+  = link_to "上传", new_app_version_path, class: 'btn btn-success pull-right'
+  thead
+    tr
+      th.col-sm-3 版本
+      th.col-sm-2 上传时间
+      th.col-sm-5 变更记录
+      th.col-sm-1 操作
+  tbody
+    = render app_versions
+

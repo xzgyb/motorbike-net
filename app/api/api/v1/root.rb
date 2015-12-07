@@ -5,5 +5,6 @@ module Api::V1
     # Mount api
     mount Bikes
     mount Users
+    mount AppVersions
   end
 end

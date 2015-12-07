@@ -1,0 +1,21 @@
+div.row
+  div.panel.panel-default.col-sm-8.col-sm-offset-2
+    div.panel-heading
+      h4 上传App
+    div.panel-body
+      = form_for app_version do |f|
+        = render 'shared/error_messages', target: app_version
+        div.form-group
+          = f.label :version
+          = f.text_field :version, autofocus: true, class: 'form-control', required: true
+
+        div.form-group
+          = f.label :changelog
+          = f.text_area :changelog, rows: 10, class: 'form-control'
+
+        div.form-group
+          = f.label :app
+          = f.file_field :app, required: true
+
+        = f.submit '上传', class: 'btn btn-success btn-lg'
+

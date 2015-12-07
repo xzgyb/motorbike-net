@@ -2,6 +2,7 @@ zh-CN:
   mongoid:
     models:
       user: "用户"
+      app_version: "App版本"
     attributes:
       user:
         email: "电子邮件"
@@ -10,4 +11,8 @@ zh-CN:
         password_confirmation: "确认密码"
         module_id: '模块ID'
         current_password: '当前密码'
+      app_version:
+        version: "版本号"
+        changelog: "变更记录"
+        app: "App文件"
 
