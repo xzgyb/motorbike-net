@@ -3,19 +3,13 @@ require 'markdown_render'
 module Api::V1
   class AppVersions < Grape::API
 
-    class JsonRawFormatter
-      class << self
-        def call(object, _env)
-          if object.is_a?(String) && object.html_safe?
-            object
-          else
-            Grape::Formatter::Json.call(object, _env)
-          end
-        end
+    formatter :json, ->(object, env) do
+      if object.is_a?(String) && object.html_safe?
+        object
+      else
+        Grape::Formatter::Json.call(object, env)
       end
     end
-
-    formatter :json, JsonRawFormatter
 
     resource :app_versions do
       desc 'Get newest app version'
