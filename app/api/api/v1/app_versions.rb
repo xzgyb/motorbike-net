@@ -2,6 +2,21 @@ require 'markdown_render'
 
 module Api::V1
   class AppVersions < Grape::API
+
+    class JsonRawFormatter
+      class << self
+        def call(object, _env)
+          if object.is_a?(String) && object.html_safe?
+            object
+          else
+            Grape::Formatter::Json.call(object, _env)
+          end
+        end
+      end
+    end
+
+    formatter :json, JsonRawFormatter
+
     resource :app_versions do
       desc 'Get newest app version'
       get :newest do
@@ -28,8 +43,7 @@ module Api::V1
       get 'changelog' do
         app_version = AppVersion.by_version(params[:version]).first
         respond_error!('没有这个版本的App') unless app_version
-        ActiveSupport::JSON::Encoding.escape_html_entities_in_json = false
-        respond_ok(changelog: MarkdownRender.markdown(app_version.changelog))
+        %({"result":1,"changelog":"#{MarkdownRender.markdown(app_version.changelog)}"}).html_safe
       end
 
     end
