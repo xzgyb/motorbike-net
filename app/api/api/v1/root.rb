@@ -6,5 +6,6 @@ module Api::V1
     mount Bikes
     mount Users
     mount AppVersions
+    mount TravelPlans
   end
 end

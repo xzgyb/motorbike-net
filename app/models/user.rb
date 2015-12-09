@@ -49,8 +49,11 @@ class User
   validates :module_id, uniqueness: true
   
   embeds_one :bike, autobuild: true
+
+  has_many :travel_plans, dependent: :delete
   has_many :topics, dependent: :delete
   has_many :posts, dependent: :delete
+
   has_many :oauth_applications, class_name: 'Doorkeeper::Application', as: :owner
 
   def valid_oauth_login_code?(code)

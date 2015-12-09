@@ -84,3 +84,95 @@ div.container
     * 如果调用成功，返回`{"result":1,"changelog":"app的变更内容"}`, 如果调用失败, 返回`{"result":0,"error":"错误原因"}`.
       这个变更内容在网站端可以用markdown的语法输入，返回的是html内容，app端可以放到webview中显示。
     * 调用实例: `curl -H 'Content-Type:application/json' --request GET  http://localhost:3000/api/v1/app_versions/changelog?version=1.1.0.`
+
+    ### 12. 获取登录用户的出行计划列表
+    `GET /api/v1/travel_plans`
+
+    * 如果调用成功，返回
+
+        `{ "result:1,
+          "travel_plans":
+           [{"id":"5667e1dde54396160e00000b",
+             "content":"11123asdfasfasdfasf",
+             "passing_locations":[[115, 12.0],[34,56]],
+             "destination_location":[118.28,55.22],
+             "status":1,
+             "start_off_time":"2015-12-12 03:00:00"}]`
+
+    * 其中travel_plans为出行计划列表，类型为一个数组，数组中每一个元素为一条出行计划记录.
+    * id为记录的id.
+    * content为出行计划内容.
+    * passing_locations为出行计划途径地的经纬度，类型为一个数组，每个元素为经纬度数组.
+    * destination_location为目的地经纬度数组.
+    * status为该出行计划状态，类型为整型.
+    * start_off\_time为出发时间
+
+    * 如果调用失败, 返回`{"result":0,"error":"错误原因"}`.
+
+    * 调用实例: `curl --request GET  http://localhost:3000/api/v1/travel_plans`
+
+    ### 13. 为当前登录用户创建一条出行计划
+    `POST /api/v1/travel_plans`
+
+    * 数据部分包括5个参数，
+      content: 出行计划内容,
+      passing\_locations: 出行计划途径地的经纬度数组,
+      destination\_location: 目的地经纬度,
+      status: 出行计划状态,
+      start_off\_time: 出发时间
+
+    * 如果调用成功，返回 `{"result": 1}`, 如果调用失败, 返回`{"result":0,"error":"错误原因"}`
+
+    * 调用实例: `curl -H 'Content-Type:application/json'
+                --request POST
+                -d '{"content":"hello","passing_locations":[[12,3],[23,5]],
+                    "destination_location":[23.35,18.2],status:1,
+                    "start_off_time":"2015-12-30 08:30:00"}'
+                http://localhost:3000/api/v1/travel_plans`
+
+    ### 14. 为当前登录用户更新一条出行计划
+    `PUT /api/v1/travel_plans/:id`
+
+    * id为已获取的出行计划列表中相应的一条出行计划记录中的id字段内容
+
+    * 数据部分包括5个参数，
+      content: 出行计划内容,
+      passing\_locations: 出行计划途径地的经纬度数组,
+      destination\_location: 目的地经纬度,
+      status: 出行计划状态,
+      start_off\_time: 出发时间,
+      这几个字段都是可选的，可以只填其中一个.
+
+    * 如果调用成功，返回 `{"result": 1}`, 如果调用失败, 返回`{"result":0,"error":"错误原因"}`
+
+    * 调用实例: `curl -H 'Content-Type:application/json'
+                --request PUT
+                -d '{"content":"hello", status:2}'
+                http://localhost:3000/api/v1/travel_plans/5667e1dde54396160e00000b`
+
+    ### 15. 为当前登录用户删除一条出行计划
+    `DELETE /api/v1/travel_plans/:id`
+
+    * id为已获取的出行计划列表中相应的一条出行计划记录中的id字段内容
+    * 如果调用成功，返回 `{"result": 1}`, 如果调用失败, 返回`{"result":0,"error":"错误原因"}`
+
+    * 调用实例: `curl --request DELETE http://localhost:3000/api/v1/travel_plans/5667e1dde54396160e00000b`
+
+    ### 16. 为当前登录用户获取一条指定id的出行计划
+    `GET /api/v1/travel_plans/:id`
+
+    * id为已获取的出行计划列表中相应的一条出行计划记录中的id字段内容
+    * 如果调用成功，返回
+
+        `{ "result:1,
+          "travel_plans":
+           [{"id":"5667e1dde54396160e00000b",
+             "content":"11123asdfasfasdfasf",
+             "passing_locations":[[115, 12.0],[34,56]],
+             "destination_location":[118.28,55.22],
+             "status":1,
+             "start_off_time":"2015-12-12 03:00:00"}]`
+
+    * 如果调用失败, 返回`{"result":0,"error":"错误原因"}`
+
+    * 调用实例: `curl --request GET http://localhost:3000/api/v1/travel_plans/5667e1dde54396160e00000b`

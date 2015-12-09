@@ -28,6 +28,7 @@ gem "doorkeeper-mongodb", github: "doorkeeper-gem/doorkeeper-mongodb"
 gem 'china_sms', :git => 'https://github.com/xzgyb/china_sms.git'
 gem 'carrierwave-mongoid', :require => 'carrierwave/mongoid'
 gem 'versionomy'
+gem 'grape-entity'
 
 group :development, :test do
   gem "awesome_print", require:"ap"
