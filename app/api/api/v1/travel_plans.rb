@@ -1,13 +1,9 @@
 module Api::V1
   class TravelPlans < Grape::API
     resource :travel_plans do
-      #before { doorkeeper_authorize! }
+      before { doorkeeper_authorize! }
 
       helpers do
-        def current_user
-          @current_user ||= User.where(email: 'gaoyb@meixing.com').first
-        end
-
         def travel_plan_params
           ActionController::Parameters.new(params).permit(
               :content, :start_off_time, :status, passing_locations: [], destination_location: [])
