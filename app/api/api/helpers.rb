@@ -1,7 +1,8 @@
 module Api
   module Helpers
-    def respond_ok(response = {})
-      {result: 1}.merge(response)
+    def respond_ok(response = nil)
+      present response if response
+      present :result, 1
     end
 
     def respond_error!(message)
