@@ -14,7 +14,7 @@ module ApplicationHelper
     current_user.name.blank? ? current_user.phone : current_user.name
   end
 
-  def nav_user_item(user_name)
+  def nav_user_items(user_name)
     content_tag(:li, class: "dropdown") do
       caption_tag = link_to('#', id: 'user-drop', 
               'class' => 'dropdown-toggle roll',
