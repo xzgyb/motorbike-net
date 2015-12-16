@@ -35,4 +35,26 @@ module ApplicationHelper
       caption_tag + items_tag
     end
   end
+
+  def nav_manage_items
+    content_tag(:li, class: "dropdown") do
+      caption_tag = link_to('#', id: 'manage-drop',
+                            'class' => 'dropdown-toggle roll',
+                            'aria-expanded' => 'false',
+                            'aria-haspopup' => 'true',
+                            'role' => 'button',
+                            'data-toggle' => 'dropdown') do
+        content_tag(:span, 'data-title' => '后台管理') { '后台管理' }
+      end
+
+      items_tag = content_tag(:ul, 'class' => 'dropdown-menu',
+                              'aria-labelledby' => 'manage-drop') do
+        content_tag(:li) { link_to('用户管理', users_path) } +
+        content_tag(:li) { link_to('车辆管理', bikes_path) } +
+        content_tag(:li) { link_to('App版本管理', app_versions_path) }
+      end
+
+      caption_tag + items_tag
+    end
+  end
 end

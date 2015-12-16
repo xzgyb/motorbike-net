@@ -9,12 +9,8 @@ nav.navbar.navbar-default
 
         = nav_item('首页', root_path)
 
-        - if can? :manage, User
-          = nav_item('用户管理', users_path)
-        - if can? :manage, Bike
-          = nav_item('车辆管理', bikes_path)
-        - if can? :manage, AppVersion
-          = nav_item('App版本管理', app_versions_path)
+        - if can? :manage, :all
+          = nav_manage_items
 
         = nav_item('社区', topics_path)
 
