@@ -1,6 +1,7 @@
 module Api::V1
   class Bikes < Grape::API
     resource :bikes do
+      before { doorkeeper_authorize! }
 
       helpers do
         def bike_params
