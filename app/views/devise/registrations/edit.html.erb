@@ -1,6 +1,16 @@
-<div class="col-sm-6 col-sm-offset-3">
-<%= bootstrap_devise_error_messages! %>
-    <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put }) do |f| %>
+<%= form_for(resource, :as => "user", :url => registration_path(resource_name), :html => { :method => :put }) do |f| %>
+  <div class="row">
+    <div class="col-sm-12">
+      <%- if notice.present? %>
+          <div class="alert alert-info">
+            <%= notice %>
+          </div>
+      <% end -%>
+      <%= edit_registrations_error_messages! %>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-5">
       <div class="form-group">
         <%= f.label :email %>
         <%= f.email_field :email, autofocus: true, class: "form-control" %>
@@ -10,10 +20,9 @@
         <%= f.text_field :name, class: "form-control" %>
       </div>
       <div class="form-group">
-        <%= f.label :module_id %>
-        <%= f.text_field :module_id, class: "form-control" %>
+        <%= f.label :phone %>
+        <%= f.text_field :phone, class: "form-control" %>
       </div>
-       
       <div class="form-group">
         <%= f.label :password %> <i>(<%= t('.leave_blank_if_you_don_t_want_to_change_it', :default => "leave blank if you don't want to change it") %>)</i><br />
         <%= f.password_field :password, :autocomplete => "off", class: "form-control" %>
@@ -26,8 +35,46 @@
         <%= f.label :current_password %> <i>(<%= t('.we_need_your_current_password_to_confirm_your_changes', :default => 'we need your current password to confirm your changes') %>)</i>
         <%= f.password_field :current_password, class: "form-control" %>
       </div>
-      <%= f.submit t('.update', :default => "Update"), class: "btn btn-primary" %>
-    <% end %>
-<p><%= t('.unhappy', :default => 'Unhappy') %>? <%= link_to t('.cancel_my_account', :default => "Cancel my account"), registration_path(resource_name), :data => { :confirm => t('.are_you_sure', :default => "Are you sure?") }, :method => :delete %>.</p>
-</div>
+    </div>
+
+    <div class="col-sm-7">
+      <div class="panel panel-primary" style="margin-left: 20px">
+        <div class="panel-heading">您所拥有的电动车信息</div>
+        <table class="table">
+          <tr>
+            <th>模块id</th>
+            <td>名称</td>
+          </tr>
+          <%= f.nested_fields_for :bikes,
+                                  wrapper_tag: :tr do |ff| %>
+            <td><%= ff.text_field :module_id, class: 'form-control' %></td>
+            <td><%= ff.text_field :name, class: 'form-control' %></td>
+            <td>
+              <%= ff.remove_nested_fields_link do %>
+                <span class="glyphicon glyphicon-minus"></span>
+              <% end %>
+            </td>
+          <% end %>
+        </table>
+
+        <div class="panel-footer">
+          <%= f.add_nested_fields_link :bikes do %>
+            <span class="glyphicon glyphicon-plus btn-lg"></span>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row" style="margin-top: 40px">
+    <hr>
+    <div class="col-sm-offset-5">
+      <%= f.submit t('.update', :default => "Update"),
+                  class: "btn btn-primary",
+                  style: "width: 100px" %>
+      <p style="margin-top: 10px"><%= t('.unhappy', :default => 'Unhappy') %>? <%= link_to t('.cancel_my_account', :default => "Cancel my account"), registration_path(resource_name), :data => { :confirm => t('.are_you_sure', :default => "Are you sure?") }, :method => :delete %>.</p>
+    </div>
+  </div>
+<% end %>
+
 

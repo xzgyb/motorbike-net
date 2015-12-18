@@ -1,0 +1,38 @@
+= Gon::Base.render_data
+
+div.container-fluid
+  div.row.bike-info style="margin-bottom: 40px"
+    div.col-sm-11
+      table.table.table-condensed.table-striped.table-bordered.bike-summary-info
+        thead
+          tr
+            th 车辆名称
+            th 模块ID
+            th 位置(经纬度)
+            th 电量
+            th 行驶里程
+        tbody
+          = render(partial: 'bike', collection: bikes, as: :bike,
+                   locals: {user: user, selected_bike: bike})
+  hr
+
+  div.row
+    div.col-sm-4
+      div.bike-info
+        = bike_info_panel('诊断信息', bike.diag_info)
+
+    div.col-sm-8
+      div#map-tabs
+        ul.nav.nav-tabs role="tablist"
+          li.active role="prensentation"
+            a href="#map-location-tab" role="tab" data-toggle="tab" 车辆位置
+          li role="prensentation"
+            a href="#map-track-tab" role="tab" data-toggle="tab" 车辆轨迹
+
+        div#map-tab.tab-content
+          div#map-location-tab.tab-pane.fade.in.active role="tabpanel"
+            div#bike-location-map.bike-map
+          div#map-track-tab.tab-pane role="tabpanel"
+            div#bike-track-map.bike-map
+
+= javascript_include_tag 'bike_info'

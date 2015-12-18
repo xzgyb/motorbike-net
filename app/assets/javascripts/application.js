@@ -16,3 +16,5 @@
 //= require turbolinks
 //= require header
 //= require users
+//= require bikes
+//= require nested_form_fields

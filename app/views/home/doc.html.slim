@@ -117,11 +117,11 @@ div.container
     `POST /api/v1/travel_plans`
 
     * 数据部分包括5个参数，
-      content: 出行计划内容,
-      passing\_locations: 出行计划途径地的经纬度数组,
-      destination\_location: 目的地经纬度,
-      status: 出行计划状态,
-      start_off\_time: 出发时间
+      * content: 出行计划内容,
+      * passing\_locations: 出行计划途径地的经纬度数组,
+      * destination\_location: 目的地经纬度,
+      * status: 出行计划状态,
+      * start_off\_time: 出发时间
 
     * 如果调用成功，返回 `{"result": 1}`, 如果调用失败, 返回`{"result":0,"error":"错误原因"}`
 
@@ -138,11 +138,12 @@ div.container
     * id为已获取的出行计划列表中相应的一条出行计划记录中的id字段内容
 
     * 数据部分包括5个参数，
-      content: 出行计划内容,
-      passing\_locations: 出行计划途径地的经纬度数组,
-      destination\_location: 目的地经纬度,
-      status: 出行计划状态,
-      start_off\_time: 出发时间,
+      * content: 出行计划内容,
+      * passing\_locations: 出行计划途径地的经纬度数组,
+      * destination\_location: 目的地经纬度,
+      * status: 出行计划状态,
+      * start_off\_time: 出发时间,
+
       这几个字段都是可选的，可以只填其中一个.
 
     * 如果调用成功，返回 `{"result": 1}`, 如果调用失败, 返回`{"result":0,"error":"错误原因"}`
@@ -167,14 +168,136 @@ div.container
     * 如果调用成功，返回
 
         `{ "result:1,
-          "travel_plans":
-           [{"id":"5667e1dde54396160e00000b",
+          "travel_plan":
+           {"id":"5667e1dde54396160e00000b",
              "content":"11123asdfasfasdfasf",
              "passing_locations":[[115, 12.0],[34,56]],
              "destination_location":[118.28,55.22],
              "status":1,
-             "start_off_time":"2015-12-12 03:00:00"}]`
+             "start_off_time":"2015-12-12 03:00:00"}}`
 
     * 如果调用失败, 返回`{"result":0,"error":"错误原因"}`
 
     * 调用实例: `curl --request GET http://localhost:3000/api/v1/travel_plans/5667e1dde54396160e00000b`
+
+    ### 17. 获取登录用户的车辆信息
+    `GET /api/v1/bikes`
+
+    * 如果调用成功，返回
+
+        `{ "result:1,
+          "bikes":
+           [{"id":"5673a4a8e5439637e1000000",
+             "name":"rensheng1234",
+             "module_id":"123123123",
+             "longitude":112.5,
+             "latitude":318.5,
+             "battery":12.5,
+             "travel_mileage":0.0,
+             "diag_info":{"sdf":"234"}}]}`
+
+    * 其中bikes为该用户所有的车辆信息数组.
+
+    * 如果调用失败, 返回`{"result":0,"error":"错误原因"}`.
+
+    * 调用实例: `curl --request GET  http://localhost:3000/api/v1/bikes`
+
+    ### 18. 为当前登录用户添加一个电动车信息
+    `POST /api/v1/bikes`
+
+    * 数据部分包括2个参数，
+      * module_id: 电动车的模块id, 必须填的.
+      * name: 电动车的名称，可选的.
+
+    * 如果调用成功，返回 `{"result": 1}`, 如果调用失败, 返回`{"result":0,"error":"错误原因"}`
+
+    * 调用实例: `curl -H 'Content-Type:application/json'
+                --request POST
+                -d '{"module_id":"2423424"
+                    "name":"moto1123"}'
+                http://localhost:3000/api/v1/bikes`
+
+    ### 19. 为当前登录用户更新一个电动车信息
+    `PUT /api/v1/bikes/:id`
+
+    * id为已获取的用户的车辆信息中相应的一条记录中的id字段内容
+
+    * 数据部分包括7个参数，
+      * module_id: 电动车的模块id, 可选.
+      * name: 电动车的名称，可选.
+      * longitude: 经度，可选.
+      * latitude: 纬度，可选.
+      * battery: 电量，可选.
+      * travel_mileage: 行驶里程，可选.
+      * diag_info: 诊断信息，可选.
+
+    * 如果调用成功，返回 `{"result": 1}`, 如果调用失败, 返回`{"result":0,"error":"错误原因"}`
+
+    * 调用实例: `curl -H 'Content-Type:application/json'
+                --request PUT
+                -d '{"longitude":134.5, "latitude":5, "diag_info":{"sdf":"234"}}'
+                http://localhost:3000/api/v1/bikes/5673a4a8e5439637e1000000`
+
+    ### 20. 为当前登录用户删除一个电动车信息
+    `DELETE /api/v1/bikes/:id`
+
+    * id为已获取的用户的车辆信息中相应的一条记录中的id字段内容.
+    * 如果调用成功，返回 `{"result": 1}`, 如果调用失败, 返回`{"result":0,"error":"错误原因"}`
+
+    * 调用实例: `curl --request DELETE http://localhost:3000/api/v1/bikes/5673a4a8e5439637e1000000`
+
+    ### 21. 为当前登录用户获取一条指定bike id的电动车信息
+    `GET /api/v1/bikes/:id`
+
+    * id为已获取的用户的车辆信息中相应的一条记录中的id字段内容.
+    * 如果调用成功，返回
+
+        `{ "result:1,
+          "bike":
+           {"id":"5673a4a8e5439637e1000000",
+             "name":"rensheng1234",
+             "module_id":"123123123",
+             "longitude":112.5,
+             "latitude":318.5,
+             "battery":12.5,
+             "travel_mileage":0.0,
+             "diag_info":{"sdf":"234"}}`
+
+    * 如果调用失败, 返回`{"result":0,"error":"错误原因"}`
+    * 调用实例: `curl --request GET http://localhost:3000/api/v1/bikes/5673a4a8e5439637e1000000`
+
+    ### 22. 为当前登录用户获取一指定的电动车行驶位置信息
+    `GET /api/v1/bikes/:id/locations`
+
+    * id为已获取的用户的车辆信息中相应的一条记录中的id字段内容.
+    * 如果调用成功，返回
+
+        `{ "result:1,
+          "locations":
+            [{"longitude":12.5,"latitude":118.5},
+             {"longitude":112.5,"latitude":318.5}}`
+
+        其中locations为该电动车的行驶位置数组.
+
+    * 如果调用失败, 返回`{"result":0,"error":"错误原因"}`
+    * 调用实例: `curl --request GET http://localhost:3000/api/v1/bikes/5673a4a8e5439637e1000000/locations`
+
+    ### 23. 为当前登录用户上传一个指定模块id的电动车信息
+    `PUT /api/v1/bikes/upload/:module_id`
+
+    * module_id为电动车的模块id
+
+    * 数据部分包括6个参数，
+      * name: 电动车的名称，可选.
+      * longitude: 经度，可选.
+      * latitude: 纬度，可选.
+      * battery: 电量，可选.
+      * travel_mileage: 行驶里程，可选.
+      * diag_info: 诊断信息，可选.
+
+    * 如果调用成功，返回 `{"result": 1}`, 如果调用失败, 返回`{"result":0,"error":"错误原因"}`
+
+    * 调用实例: `curl -H 'Content-Type:application/json'
+                --request PUT
+                -d '{"longitude":134.5, "latitude":5, "diag_info":{"sdf":"234"}}'
+                http://localhost:3000/api/v1/bikes/upload/123123123`

@@ -7,12 +7,12 @@ createBMap = (container) ->
     return map
 
 # Display bike location map.
-displayBikeLocationMap = (container, userName, longitude, latitude) ->
+displayBikeLocationMap = (container, userName, bikeName, longitude, latitude) ->
     map = createBMap(container)
 
     point = new BMap.Point(longitude, latitude)
     marker = new BMap.Marker(point)
-    label = new BMap.Label(userName + "的位置",
+    label = new BMap.Label(userName + "的" + bikeName + "的位置",
                            {offset: new BMap.Size(-30, 30)})
     label.setStyle(
            color: "rgb(255,65,54)"
@@ -55,7 +55,11 @@ $ ->
   setBikeMapsSize()
 
   # Default display bike location map.
-  displayBikeLocationMap("bike-location-map", gon.userName, gon.longitude, gon.latitude)
+  displayBikeLocationMap("bike-location-map",
+    gon.userName,
+    gon.bikeName,
+    gon.longitude,
+    gon.latitude)
 
   isBikeTrackMapShown = false
   $('a[href="#map-track-tab"]').on 'shown.bs.tab', ->

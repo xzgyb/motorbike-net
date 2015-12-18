@@ -4,13 +4,16 @@ Rails.application.routes.draw do
   end
 
   devise_for :users, controllers: {
-      sessions: :sessions
+      sessions: :sessions,
+      registrations: :registrations
   }
 
-  get '/bike_info/:id', to: 'bike_info#show', as: 'bike_info'
+  get '/bikes/all', to: 'bikes#all', as: 'bikes'
 
-  resources :bikes, only: :index
-  resources :users, only: [:index, :update, :destroy]
+  resources :users, only: [:index, :update, :destroy] do
+    resources :bikes, only: [:index, :show]
+  end
+
   resources :topics do
     resources :posts
   end

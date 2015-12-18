@@ -29,6 +29,7 @@ gem 'china_sms', :git => 'https://github.com/xzgyb/china_sms.git'
 gem 'carrierwave-mongoid', :require => 'carrierwave/mongoid'
 gem 'versionomy'
 gem 'grape-entity'
+gem 'nested_form_fields'
 
 group :development, :test do
   gem "awesome_print", require:"ap"

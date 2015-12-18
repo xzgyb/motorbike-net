@@ -1,5 +1,5 @@
 class BikeDecorator < ApplicationDecorator 
-  delegate :diag_info
+  delegate :module_id, :diag_info
 
   def name
     object.name.blank? ? I18n.t("none") : object.name

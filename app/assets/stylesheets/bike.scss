@@ -1,0 +1,26 @@
+$selected_bike_background_color: #204d74;
+
+.bike-info {
+    padding-left: 20px;
+}
+
+#map-tabs {
+    width: 97%;
+}
+
+.bike-map {
+    width: 100%;
+    border: #ddd 1px solid;
+    border-top-style: none;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.bike-summary-info tbody {
+  cursor: pointer;
+
+  tr:hover, tr.selected {
+    background-color: $selected_bike_background_color !important;
+    color: white !important;
+  }
+}

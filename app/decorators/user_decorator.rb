@@ -1,4 +1,4 @@
 class UserDecorator < ApplicationDecorator 
   delegate_all
-  decorates_association :bike
+  decorates_association :bikes
 end

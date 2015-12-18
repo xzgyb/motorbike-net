@@ -5,45 +5,73 @@ module Api::V1
 
       helpers do
         def bike_params
-          ActionController::Parameters.new(params).require(:bike).permit(
-              :name, :longitude, :latitude, :battery, :travel_mileage).tap do |whitelisted|
-            if params[:bike][:diag_info]
-              whitelisted[:diag_info] = params[:bike][:diag_info]
+          ActionController::Parameters.new(params).permit(
+              :module_id, :name, :longitude, :latitude, :battery, :travel_mileage).tap do |whitelisted|
+            if params[:diag_info]
+              whitelisted[:diag_info] = params[:diag_info]
             end
           end
-
         end
       end
 
-      desc 'Upload bike info with the module id'
+      desc "get current user's bikes list"
+      get do
+        bikes = current_user.bikes
+
+        present bikes, with: Api::Entities::Bike
+        respond_ok
+      end
+
+      desc 'create a bike for current user'
       params do
-        requires :bike, type: Hash do
-          optional :name, type: String
-          optional :longitude, type: Float
-          optional :latitude, type: Float
-          optional :battery, type: Float
-          optional :travel_mileage, type: Float
-          optional :diag_info, type: Hash
-        end
+        requires :module_id, type: String
+        optional :name, type: String
+      end
+      post do
+        current_user.bikes.create!(bike_params)
+        respond_ok
       end
 
-      put ':module_id' do
-        user = User.find_by(module_id: params[:module_id])
-        bike = user.bike
+      desc 'update a bike for current user'
+      put ':id' do
+        bike = current_user.bikes.find(params[:id])
 
-        bike.assign_attributes(bike_params)
+        bike.update!(bike_params)
+        respond_ok
+      end
 
-        bike_data = params[:bike]
+      desc 'destroy a bike for current user'
+      delete ':id' do
+        bike = current_user.bikes.find(params[:id])
 
-        if bike_data.has_key?(:longitude) &&
-            bike_data.has_key?(:latitude)
+        bike.destroy!
+        respond_ok
+      end
 
-          bike.travel_track_histories.push([bike_data[:longitude],
-                                            bike_data[:latitude]])
+      desc 'get a bike for current user'
+      get ':id' do
+        bike = current_user.bikes.find(params[:id])
+        present bike, with: Api::Entities::Bike
+        respond_ok
+      end
+
+      desc 'Upload bike data with the module id'
+      put 'upload/:module_id' do
+        bike = current_user.bikes.find_by(module_id: params[:module_id])
+        bike.update!(bike_params)
+
+        if params.has_key?(:longitude) && params.has_key?(:latitude)
+          bike.locations.create!(longitude: params[:longitude],
+                                 latitude: params[:latitude])
         end
 
-        bike.save!
+        respond_ok
+      end
 
+      desc "Get locations data with the specified bike"
+      get ':id/locations' do
+        bike = current_user.bikes.find(params[:id])
+        present bike.locations, with: Api::Entities::Location
         respond_ok
       end
     end

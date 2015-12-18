@@ -6,13 +6,16 @@ zh-CN:
     attributes:
       user:
         email: "电子邮件"
+        phone: "手机号"
         name: "用户名"
         password: "密码"
         password_confirmation: "确认密码"
-        module_id: '模块ID'
         current_password: '当前密码'
+        bikes: "电动车信息"
       app_version:
         version: "版本号"
         changelog: "变更记录"
         app: "App文件"
+      bike:
+        module_id: '模块ID'
 

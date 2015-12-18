@@ -29,7 +29,7 @@ module ApplicationHelper
                                    'aria-labelledby' => 'user-drop') do
         content_tag(:li) { link_to('用户信息', edit_user_registration_path) } +
         tag(:li, class: 'divider', role: 'separator') +
-        content_tag(:li) { link_to('车辆信息', bike_info_path(current_user)) }
+        content_tag(:li) { link_to('车辆信息', user_bikes_path(current_user)) }
       end
 
       caption_tag + items_tag

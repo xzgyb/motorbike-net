@@ -39,16 +39,16 @@ class User
 
   ## Custom
   field :name, type: String, default: ""
-  field :module_id, type: String, default: ""
   field :points, type: Integer, default: 0
   field :admin, type: Boolean, default: false
   field :phone, type: String, default: ""
   field :oauth_login_code, type: String, default: ""
   
   validates :name, presence: true, uniqueness: true
-  validates :module_id, uniqueness: true
-  
-  embeds_one :bike, autobuild: true
+  validates :phone, uniqueness: true, allow_blank: true
+
+  embeds_many :bikes
+  accepts_nested_attributes_for :bikes, allow_destroy: true
 
   has_many :travel_plans, dependent: :delete
   has_many :topics, dependent: :delete
