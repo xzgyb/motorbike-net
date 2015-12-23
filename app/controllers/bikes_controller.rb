@@ -1,5 +1,5 @@
 class BikesController < ApplicationController
-  load_and_authorize_resource :user
+  load_resource :user
   decorates_assigned :users, :bike, :bikes, :user
 
   def all
