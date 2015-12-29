@@ -1,11 +1,6 @@
 <%= form_for(resource, :as => "user", :url => registration_path(resource_name), :html => { :method => :put }) do |f| %>
   <div class="row">
     <div class="col-sm-12">
-      <%- if notice.present? %>
-          <div class="alert alert-info">
-            <%= notice %>
-          </div>
-      <% end -%>
       <%= edit_registrations_error_messages! %>
     </div>
   </div>
