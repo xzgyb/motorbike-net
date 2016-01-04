@@ -8,7 +8,7 @@ class AppUploader < CarrierWave::Uploader::Base
   end
 
   def extension_white_list
-    %w(apk)
+    %w(apk bin)
   end
 
 end

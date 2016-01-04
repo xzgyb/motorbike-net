@@ -16,7 +16,6 @@ class Ability
 
       can :create, Post
       can :create, Topic
-      can :show, :bike
 
       basic_read_only
     end
