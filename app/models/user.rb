@@ -53,6 +53,7 @@ class User
   has_many :travel_plans, dependent: :delete
   has_many :topics, dependent: :delete
   has_many :posts, dependent: :delete
+  has_many :medias, dependent: :delete
 
   has_many :oauth_applications, class_name: 'Doorkeeper::Application', as: :owner
 

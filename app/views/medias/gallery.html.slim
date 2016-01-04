@@ -1,0 +1,9 @@
+- @medias.each do |media|
+  - case @type
+    - when Media::IMAGE
+      = render partial: 'image_thumbnail', locals: { image: media }
+    - when Media::VIDEO
+      = render partial: 'video_thumbnail', locals: { video: media }
+    - when Media::AUDIO
+      = render partial: 'audio_thumbnail', locals: { audio: media }
+
