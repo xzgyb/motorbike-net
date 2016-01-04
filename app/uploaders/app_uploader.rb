@@ -6,9 +6,4 @@ class AppUploader < CarrierWave::Uploader::Base
   def store_dir
     "uploads/#{model.class.to_s.underscore}/#{model.id}"
   end
-
-  def extension_white_list
-    %w(apk bin)
-  end
-
 end

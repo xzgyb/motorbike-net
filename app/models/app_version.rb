@@ -15,14 +15,14 @@ class AppVersion
   scope :newest, ->(name) {  named(name).ordered.limit(1) }
   scope :by_name_version, ->(name, version) { named(name).versioned(version) }
 
-  validates :version, presence: true, uniqueness: true
+  validates :version, presence: true
   validates :app, presence: true
 
   class GreatestVersionValidator < ActiveModel::EachValidator
     def validate_each(record, attribute, value)
       newest_app_version = AppVersion.newest(record.name).first
       if newest_app_version
-        if Versionomy.parse(value) <
+        if Versionomy.parse(value) <=
             Versionomy.parse(newest_app_version.version)
           record.errors.add attribute, :greatest_version
         end
