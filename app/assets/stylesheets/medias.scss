@@ -1,0 +1,14 @@
+.medias {
+    margin-top: 100px;
+    text-align: center;
+
+    p {
+        margin-top: 20px;
+    }
+
+    a {
+        &:link, &:visited, &:hover {
+            text-decoration: none;
+        }
+    }
+}
