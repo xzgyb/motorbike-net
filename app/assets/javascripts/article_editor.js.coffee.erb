@@ -1,0 +1,17 @@
+#= require simditor/module
+#= require simditor/hotkeys
+#= require simditor/uploader
+#= require simditor/simditor
+#= require_self
+defaultImage = '<%= asset_path 'image.png' %>'
+
+$(document).on 'page:change', ->
+  toolbar = ['title', 'bold', 'italic', 'underline', 'strikethrough',
+            'fontScale', 'color', 'ol', 'ul', 'blockquote',
+            'table', 'link', 'image', 'hr', 'indent', 'outdent', 'alignment']
+
+  editor = new Simditor
+    textarea: $('#editor')
+    toolbar: toolbar
+    defaultImage: defaultImage
+    upload: true

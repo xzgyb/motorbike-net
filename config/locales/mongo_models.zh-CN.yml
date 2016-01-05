@@ -18,4 +18,7 @@ zh-CN:
         app: "App文件"
       bike:
         module_id: '模块ID'
+      article:
+        title: '资讯标题'
+        body: '资讯内容'
 

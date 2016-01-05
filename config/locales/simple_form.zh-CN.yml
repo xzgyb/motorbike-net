@@ -7,6 +7,9 @@
       post:
         create: '发表回复'
         update: '保存修改的回复'
+      article:
+        create: '创建'
+        update: '保存'
   simple_form:
     "yes": '是'
     "no": '否'

@@ -17,7 +17,13 @@ Rails.application.routes.draw do
   resources :topics do
     resources :posts
   end
+
   resources :app_versions, only: [:index, :new, :create, :destroy]
+  resources :articles do
+    member do
+      put 'publish'
+    end
+  end
 
   mount Api::Dispatch => '/'
 

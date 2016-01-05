@@ -51,7 +51,8 @@ module ApplicationHelper
                               'aria-labelledby' => 'manage-drop') do
         content_tag(:li) { link_to('用户管理', users_path) } +
         content_tag(:li) { link_to('车辆管理', bikes_path) } +
-        content_tag(:li) { link_to('App版本管理', app_versions_path) }
+        content_tag(:li) { link_to('App版本管理', app_versions_path) } +
+        content_tag(:li) { link_to('时尚资讯管理', articles_path) }
       end
 
       caption_tag + items_tag
