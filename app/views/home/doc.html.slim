@@ -301,3 +301,21 @@ div.container
                 --request PUT
                 -d '{"longitude":134.5, "latitude":5, "diag_info":{"sdf":"234"}}'
                 http://localhost:3000/api/v1/bikes/upload/123123123`
+
+    ### 24. 为当前登录用户上传文件
+    `PUT /api/v1/medias/upload`
+
+    body的编码部分使用multipart/form-data
+    
+
+    * 数据部分包括2个参数，
+      * type: 上传的文件类型, 1: 图片, 2: 视频, 3: 音频
+      * media: 上传的文件内容。
+
+    * 如果调用成功，返回 `{"result": 1}`, 如果调用失败, 返回`{"result":0,"error":"错误原因"}`
+
+    * 调用实例: `curl -X PUT http://localhost:3000/api/v1/medias/upload 
+                      -F 'type=1' 
+                      -F 'access_token=a69b7ce2bb7b7b1ac7fcefda2fcf9abddd86f203c0d38ba94c2e9f1e2486b0e3' 
+                      -F "media=@/vagrant/aa.jpg;type=image/jpeg"`
+
