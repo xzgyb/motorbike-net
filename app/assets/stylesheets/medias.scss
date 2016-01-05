@@ -13,15 +13,21 @@
 }
 
 .medias {
-  margin-top: 100px;
+  margin-top: 150px;
 }
 
 .gallery {
-  .image-media {
+  .image-media, .video-media, .audio-media {
     margin-bottom: 20px;
+    
     p {
       margin-top: 5px;
     }
+
+  }
+
+  .video-media, .audio-media {
+      margin-top: 100px;
   }
 }
 

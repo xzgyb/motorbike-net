@@ -1,12 +1,13 @@
+
 $(document).on 'page:change', ->
-  $("[role='dialog']").on 'show.bs.modal', ->
+  $("#gallery-image-modal").on 'show.bs.modal', ->
+    $(this).css('display', 'block')
     $modalDialog = $(this).find('.modal-dialog')
+    offset = ($(window).height() - $modalDialog.height()) / 2
+    offset = 0 if offset < 0
 
     $modalDialog.css({
-      'position': 'absolute',
-      'margin': '10px',
-      'top': "0"
-      'left': "0"
+        'margin-top': offset
     })
 
   $('.gallery a').click ->
