@@ -18,3 +18,4 @@
 //= require users
 //= require bikes
 //= require nested_form_fields
+//= require medias

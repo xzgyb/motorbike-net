@@ -1,5 +1,4 @@
-.medias {
-    margin-top: 100px;
+.medias, .gallery {
     text-align: center;
 
     p {
@@ -11,4 +10,23 @@
             text-decoration: none;
         }
     }
+}
+
+.medias {
+  margin-top: 100px;
+}
+
+.gallery {
+  .image-media {
+    margin-bottom: 20px;
+    p {
+      margin-top: 5px;
+    }
+  }
+}
+
+#gallery-image-modal {
+  .modal-body {
+    padding: 0;
+  }
 }

@@ -7,5 +7,6 @@ module Api::V1
     mount Users
     mount AppVersions
     mount TravelPlans
+    mount Medias
   end
 end

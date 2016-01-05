@@ -29,7 +29,6 @@ Rails.application.routes.draw do
 
   root 'home#index'
   get  '/doc', to: 'home#doc'
-  put  '/medias/upload' 
   get  '/medias/index', as: 'medias'
 
   match '*path', via: :all, to: redirect('/')

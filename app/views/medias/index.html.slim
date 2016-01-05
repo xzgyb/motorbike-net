@@ -1,16 +1,16 @@
 div.container-fluid.medias
   div.row
     div.col-sm-4
-      = link_to medias_path(type: :image) do
+      = link_to medias_path(type: 1) do
         = image_tag image_url(:image_type)
         p 图片#{@images_count}张
 
     div.col-sm-4
-      = link_to medias_path(type: :video) do
+      = link_to medias_path(type: 2) do
         = image_tag image_url(:video_type)
         p 视频#{@videos_count}个
 
     div.col-sm-4
-      = link_to medias_path(type: :audio) do
+      = link_to medias_path(type: 3) do
         = image_tag image_url(:audio_type)
         p 音频#{@audios_count}个
