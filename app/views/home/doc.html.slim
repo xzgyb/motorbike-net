@@ -303,7 +303,7 @@ div.container
                 http://localhost:3000/api/v1/bikes/upload/123123123`
 
     ### 24. 为当前登录用户上传文件
-    `PUT /api/v1/medias/upload`
+    `POST /api/v1/medias`
 
     body的编码部分使用multipart/form-data
     
@@ -318,4 +318,33 @@ div.container
                       -F 'type=1' 
                       -F 'access_token=a69b7ce2bb7b7b1ac7fcefda2fcf9abddd86f203c0d38ba94c2e9f1e2486b0e3' 
                       -F "media=@/vagrant/aa.jpg;type=image/jpeg"`
+
+    ### 25. 获取登录用户的已上传的文件列表
+    `GET /api/v1/medias`
+
+    * 数据部分包括1个参数
+      * type: 文件类型,  1: 图片, 2: 视频, 3: 音频
+      * 如果指定type参数, 将返回指定type的文件列表.
+
+    * 如果调用成功，返回
+
+        `{"medias":[{"id":"568cccc863623925ad000000","type":1,"url":"http://localhost:3000/uploads/media/media/568cccc863623925ad000000/a1.jpg"},{"id":"568ccccb63623925ad000001","type":1,"url":"http://localhost:3000/uploads/media/media/568ccccb63623925ad000001/a1.jpg"}],"result":1}`
+
+    * 其中medias为该用户所上传的文件信息数组.
+
+    * 如果调用失败, 返回`{"result":0,"error":"错误原因"}`.
+
+    ### 26. 为当前登录用户删除一个已上传的文件
+    `DELETE /api/v1/medias/:id`
+
+    * id为已获取的用户的上传文件信息中相应的一条记录中的id字段内容.
+    * 如果调用成功，返回 `{"result": 1}`, 如果调用失败, 返回`{"result":0,"error":"错误原因"}`
+
+    ### 27. 为当前登录用户删除所有已上传的文件
+    `DELETE /api/v1/medias`
+
+    * 数据部分包括1个参数
+      * type: 文件类型,  1: 图片, 2: 视频, 3: 音频
+      * 如果指定type参数, 将删除定type的文件.
+    * 如果调用成功，返回 `{"result": 1}`, 如果调用失败, 返回`{"result":0,"error":"错误原因"}`
 
