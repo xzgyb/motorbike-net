@@ -9,7 +9,7 @@ module Api::V1
         requires :media, type: Rack::Multipart::UploadedFile
         requires :type, type: Integer, values: [1, 2, 3]
       end
-      put :upload do
+      post :upload do
         media = Media.new
 
         media.media = params[:media]
