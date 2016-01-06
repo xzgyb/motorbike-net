@@ -16,7 +16,5 @@ class Media
 
   validates :media, presence: true
 
-  def self.count_of(type)
-    Media.where(type: type).count
-  end
+  scope :of_type, -> (type) { where(type: type) }
 end

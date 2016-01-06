@@ -1,13 +1,15 @@
 class MediasController < ApplicationController
+  authorize_resource
+  
   def index
     @type = params[:type]
     if @type.present?
-      @medias = Media.where(type: @type)
+      @medias = current_user.medias.of_type(@type)
       render :gallery 
     else
-      @images_count = Media.count_of(Media::IMAGE) 
-      @videos_count = Media.count_of(Media::VIDEO) 
-      @audios_count = Media.count_of(Media::AUDIO) 
+      @images_count = current_user.medias.of_type(Media::IMAGE).count
+      @videos_count = current_user.medias.of_type(Media::VIDEO).count
+      @audios_count = current_user.medias.of_type(Media::AUDIO).count
     end
   end
 end

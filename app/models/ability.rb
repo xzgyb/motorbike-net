@@ -17,6 +17,8 @@ class Ability
       can :create, Post
       can :create, Topic
 
+      can :read, Media, :user_id => user.id
+
       basic_read_only
     end
   end
