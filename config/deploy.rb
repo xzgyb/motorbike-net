@@ -12,7 +12,7 @@ set :branch, 'master'
 set :user, ENV['DEPLOY_USER'] 
 set :rails_env, 'production'
 
-set :shared_paths, ['config/secrets.yml', 'config/mongoid.yml', 'config/puma.rb', 'log', 'tmp/pids', 'tmp/sockets']
+set :shared_paths, ['config/secrets.yml', 'config/mongoid.yml', 'config/puma.rb', 'log', 'tmp/pids', 'tmp/sockets', 'public/uploads']
 
 task :environment do
   invoke :'rvm:use[ruby-2.2.3@default]'
@@ -30,6 +30,9 @@ task :setup => :environment do
 
   queue! %(mkdir -p "#{deploy_to}/#{shared_path}/tmp/pids")
   queue! %(chmod g+rx,u+rwx "#{deploy_to}/#{shared_path}/tmp/pids")
+
+  queue! %(mkdir -p "#{deploy_to}/#{shared_path}/public/uploads")
+  queue! %(chmod g+rx,u+rwx "#{deploy_to}/#{shared_path}/public/uploads")
 
   queue! %[touch "#{deploy_to}/#{shared_path}/config/secrets.yml"]
   queue! %[touch "#{deploy_to}/#{shared_path}/config/mongoid.yml"]
