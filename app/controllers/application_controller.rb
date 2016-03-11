@@ -12,7 +12,7 @@ class ApplicationController < ActionController::Base
 
   def configure_permitted_parameters
     extra_user_fields = [:email, :phone, :name, bikes_attributes: [:module_id, :name, :_destroy, :id]]
-    devise_parameter_sanitizer.for(:sign_up).concat extra_user_fields 
-    devise_parameter_sanitizer.for(:account_update).concat extra_user_fields
+    devise_parameter_sanitizer.permit(:sign_up, keys: extra_user_fields)
+    devise_parameter_sanitizer.permit(:account_update, keys: extra_user_fields)
   end
 end

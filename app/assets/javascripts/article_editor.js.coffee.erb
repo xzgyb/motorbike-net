@@ -5,7 +5,7 @@
 #= require_self
 defaultImage = '<%= asset_path 'image.png' %>'
 
-$(document).on 'page:change', ->
+$(document).on 'turbolinks:load', ->
   toolbar = ['title', 'bold', 'italic', 'underline', 'strikethrough',
             'fontScale', 'color', 'ol', 'ul', 'blockquote',
             'table', 'link', 'image', 'hr', 'indent', 'outdent', 'alignment']

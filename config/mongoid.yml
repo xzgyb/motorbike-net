@@ -1,6 +1,6 @@
 development:
   # Configure available database sessions. (required)
-  sessions:
+  clients:
     # Defines the default session. (required)
     default:
       # Defines the name of the default database that Mongoid can connect to.
@@ -88,13 +88,13 @@ development:
     # Ensure all times are UTC in the app side. (default: false)
     # use_utc: false
 production:
-  sessions:
+  clients:
     default:
       database: motorbike_net_production
       hosts:
         - localhost:27017
 test:
-  sessions:
+  clients:
     default:
       database: motorbike_net_test
       hosts:
