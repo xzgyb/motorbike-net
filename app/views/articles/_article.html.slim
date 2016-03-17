@@ -3,8 +3,8 @@ article
     = link_to article_path(article) do
       .col-sm-3
         = image_tag(article.title_image_url)
-      .col-sm-6
-        h2
+      .col-sm-8
+        h3
           = article.title 
     footer.col-sm-9.col-sm-offset-3
       span = article.update_time 

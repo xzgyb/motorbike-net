@@ -16,6 +16,11 @@ class ArticlesController < ApplicationController
   end
 
   def update
+    if @article.update_attributes(article_params)
+      redirect_to article_path(@article), notice: '资讯编辑成功!'
+    else
+      render :edit
+    end
   end
 
   def publish
@@ -49,7 +54,7 @@ class ArticlesController < ApplicationController
 
   private
     def article_params
-      params.require(:article).permit(:title, :title_picture_url, :body)
+      params.require(:article).permit(:title, :body)
     end
 
     def from_index_request?(url)
