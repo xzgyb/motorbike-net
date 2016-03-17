@@ -19,6 +19,16 @@ GIT
     china_sms (0.0.7)
 
 GIT
+  remote: https://github.com/xzgyb/draper.git
+  revision: 29574984b7bfda1bb512559ec51b99ed6dc4282a
+  specs:
+    draper (2.1.0)
+      actionpack (>= 3.0)
+      activemodel (>= 3.0)
+      activesupport (>= 3.0)
+      request_store (~> 1.0)
+
+GIT
   remote: https://github.com/xzgyb/mina-puma.git
   revision: f2ad911195d35faa1663c533f490e096dd74816e
   specs:
@@ -129,11 +139,6 @@ GEM
     devise-bootstrap-views (0.0.7)
     doorkeeper (3.0.0)
       railties (>= 3.2)
-    draper (2.1.0)
-      actionpack (>= 3.0)
-      activemodel (>= 3.0)
-      activesupport (>= 3.0)
-      request_store (~> 1.0)
     equalizer (0.0.11)
     erubis (2.7.0)
     execjs (2.6.0)
@@ -320,7 +325,7 @@ DEPENDENCIES
   devise-bootstrap-views
   doorkeeper (= 3.0.0)
   doorkeeper-mongodb!
-  draper
+  draper!
   gon
   grape
   grape-entity
