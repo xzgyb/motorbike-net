@@ -1,4 +1,4 @@
-source 'https://ruby.taobao.org'
+source 'https://rubygems.org'
 
 gem 'rails', '>= 5.0.0.beta3', '< 5.1'
 gem 'sqlite3'
@@ -25,7 +25,7 @@ gem 'cancancan'
 gem 'draper', :git => 'https://github.com/xzgyb/draper.git'
 gem 'puma'
 gem 'gon'
-gem 'doorkeeper', '=3.0.0'
+gem 'doorkeeper', '4.0.0.rc2'
 gem "doorkeeper-mongodb", github: "doorkeeper-gem/doorkeeper-mongodb"
 gem 'china_sms', :git => 'https://github.com/xzgyb/china_sms.git'
 gem 'carrierwave-mongoid', :require => 'carrierwave/mongoid'
