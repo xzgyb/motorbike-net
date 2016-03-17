@@ -1,4 +1,4 @@
-$(document).on 'turbolinks:load', ->
+$(document).on 'page:change', ->
     $('.dropdown').hover ->
         $(this).addClass('open')
     , ->

@@ -14,8 +14,8 @@
     "yes": '是'
     "no": '否'
     required:
-      text: '必需'
-      mark: '*'
+      text: ''
+      mark: ''
       # You can uncomment the line below if you need to overwrite the whole required html.
       # When using html, text and mark won't be used.
       # html: '<abbr title="required">*</abbr>'

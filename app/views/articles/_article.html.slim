@@ -1,14 +1,15 @@
-.container.article-page
+article
   .row
-    .col-sm-8.col-sm-offset-2
-      = render 'shared/notice_message'
-  .row
-    .col-sm-8.col-sm-offset-2
-      h2.page-header.text-center = article.title
-  - if can?(:edit, Article) && can?(:destroy, Article)
-    .row
-      .col-sm-8.col-sm-offset-2
-        ul.list-inline
+    = link_to article_path(article) do
+      .col-sm-3
+        = image_tag(article.title_image_url)
+      .col-sm-6
+        h2
+          = article.title 
+    footer.col-sm-9.col-sm-offset-3
+      span = article.update_time 
+      ul.list-inline
+        - if can?(:edit, Article)
           li
             = link_to '编辑',
                     edit_article_path(article),
@@ -20,12 +21,11 @@
                       class: 'btn btn-success btn-xs',
                       method: :put
 
+        - if can?(:destroy, Article)
           li
             = link_to '删除',
                     article_path(article),
                     class: 'btn btn-danger btn-xs',
                     data: {confirm: "您确定删除该条资讯吗?"},
-                  method: :delete
-  .row
-    .col-sm-8.col-sm-offset-2
-      == article.body
+                    method: :delete
+

@@ -7,7 +7,8 @@ module Api::Entities
     expose :type
     expose :url do |instance, options|
       env = options[:env]
-      "#{env['rack.url_scheme']}://#{env['HTTP_HOST']}#{instance.media.url}"
+      host_url = "#{env['rack.url_scheme']}://#{env['HTTP_HOST']}"
+      host_url + instance.media.url
     end
 
     root "medias", "media"

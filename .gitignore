@@ -18,3 +18,4 @@
 /.idea
 /public/assets
 /public/uploads
+.byebug_history

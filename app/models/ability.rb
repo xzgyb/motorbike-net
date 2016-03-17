@@ -26,5 +26,6 @@ class Ability
   private
     def basic_read_only
       can :read, Topic 
+      can :read, Article
     end
 end

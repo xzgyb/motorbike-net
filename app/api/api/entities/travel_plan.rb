@@ -1,8 +1,7 @@
 module Api::Entities
   class TravelPlan < Grape::Entity
-    format_with(:time) { |dt|
-      dt ? dt.to_formatted_s(:db) : ""
-    }
+
+    format_with(:time) { |dt| dt ? dt.strftime("%Y-%m-%d %H:%M:%S") : "" }
 
     expose :_id, as: :id do |instance, options|
       instance._id.to_s

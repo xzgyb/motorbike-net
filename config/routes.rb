@@ -20,9 +20,8 @@ Rails.application.routes.draw do
 
   resources :app_versions, only: [:index, :new, :create, :destroy]
   resources :articles do
-    member do
-      put 'publish'
-    end
+    put 'publish', on: :member
+    post 'upload_image', on: :collection
   end
 
   mount Api::Dispatch => '/'

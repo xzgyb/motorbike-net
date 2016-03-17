@@ -348,3 +348,37 @@ div.container
       * 如果指定type参数, 将删除定type的文件.
     * 如果调用成功，返回 `{"result": 1}`, 如果调用失败, 返回`{"result":0,"error":"错误原因"}`
 
+    ### 28. 获取时尚资讯列表
+    `GET /api/v1/articles`
+
+    * 如果调用成功，返回
+      
+        `{"articles":[{"id":"56ea2129636239098ec5ff2a",
+                     "title":"终于，Xbox One 也加入到了 UWP 的队列",
+                     "title_image_url":"http://192.168.33.10:3000/uploads/article_images/thumb_201603171114442cea080064cbe6a897ed9fa0422d10ba.jpg",
+                     "updated_at":"2016-03-17 11:15:20"},
+                     ...
+                    ],
+          "result":1}`
+
+    * 其中articles为时尚资讯列表，类型为一个数组，数组中每一个元素为一条资讯记录.
+    * id为记录的id.
+    * title为资讯的标题.
+    * title\_image\_url为资讯的一个标题图片.
+    * updated_at为资讯的更新时间.
+
+    ### 29. 获取一条时尚资讯
+    `GET /api/v1/articles/:id`
+
+    * id为已获取的时尚资讯列表中相应的一条记录中的id字段内容.
+    * 如果调用成功，返回
+        `{"article":{"id":"56e9227d636239120278a400",
+                   "title":"人生自古",
+                   "title_image_url":"http://192.168.33.10:3000/uploads/article_images/thumb_201603161708058cf67a34c9d6856396010586ca972790.jpg",
+                   "body":"...",
+                   "updated_at":"2016-03-17 09:57:28"},
+                   "result":1}`
+    * 其中body为资讯内容，为html标记的内容，可以用一个webview显示.
+
+    * 如果调用失败, 返回`{"result":0,"error":"错误原因"}`
+    * 调用实例: `curl --request GET http://localhost:3000/api/v1/articles/56e9227d636239120278a400`

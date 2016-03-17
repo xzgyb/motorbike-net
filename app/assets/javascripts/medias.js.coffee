@@ -1,5 +1,4 @@
-
-$(document).on 'turbolinks:load', ->
+$(document).on 'page:change', ->
   $("#gallery-image-modal").on 'show.bs.modal', ->
     $(this).css('display', 'block')
     $modalDialog = $(this).find('.modal-dialog')

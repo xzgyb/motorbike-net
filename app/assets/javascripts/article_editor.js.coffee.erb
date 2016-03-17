@@ -3,9 +3,10 @@
 #= require simditor/uploader
 #= require simditor/simditor
 #= require_self
-defaultImage = '<%= asset_path 'image.png' %>'
 
-$(document).on 'turbolinks:load', ->
+$(document).ready ->
+  defaultImage = '<%= asset_path 'image.png' %>'
+
   toolbar = ['title', 'bold', 'italic', 'underline', 'strikethrough',
             'fontScale', 'color', 'ol', 'ul', 'blockquote',
             'table', 'link', 'image', 'hr', 'indent', 'outdent', 'alignment']
@@ -14,4 +15,5 @@ $(document).on 'turbolinks:load', ->
     textarea: $('#editor')
     toolbar: toolbar
     defaultImage: defaultImage
-    upload: true
+    upload:
+        url: '/articles/upload_image'

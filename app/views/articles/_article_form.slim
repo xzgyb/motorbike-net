@@ -1,0 +1,19 @@
+= stylesheet_link_tag    'article_editor', media: 'all', 'data-turbolinks-track' => true
+= javascript_include_tag 'article_editor'
+
+h1.text-center 
+  = page_title 
+
+= simple_form_for article do |f|
+  = render 'shared/error_messages', target: article
+  = f.input :title
+  = f.input :body, label: false, required: false, as: :text,
+            :input_html => {id: 'editor',
+                            placeholder: "请在这里编辑您的资讯信息",
+                            autofocus: true}
+  = f.button :submit, class: 'btn-primary btn-lg'
+  - if article.persisted? && (!article.published?)
+    = link_to '发布资讯',
+              publish_article_path(article),
+              class: 'btn btn-success btn-lg',
+              method: :put

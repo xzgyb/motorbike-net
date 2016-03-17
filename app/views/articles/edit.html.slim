@@ -1,15 +1,1 @@
-= stylesheet_link_tag    'article_editor', media: 'all', 'data-turbolinks-track' => true
-= javascript_include_tag 'article_editor'
-
-= simple_form_for article do |f|
-  h1 编辑资讯
-  = render 'shared/notice_message'
-  = f.input :body, label: false, as: :text,
-          :input_html => {id: 'editor',
-                  placeholder: "请在这里编辑您的资讯信息",
-                  autofocus: true}
-  = f.button :submit, class: 'btn-primary btn-lg'
-  = link_to '发布资讯',
-            publish_article_path(article),
-            class: 'btn btn-success btn-lg',
-            method: :put
+= render 'article_form', page_title: '编辑资讯'

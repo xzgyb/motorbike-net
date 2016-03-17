@@ -10,3 +10,4 @@ html
   body
     == render 'header'
     == content_for?(:content) ? yield(:content) : yield
+    == render 'footer'

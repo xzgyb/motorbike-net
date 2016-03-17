@@ -132,6 +132,7 @@ zh-CN:
         other: 长度非法（必须为 %{count} 个字符）
       other_than: 长度非法（不可为 %{count} 个字符
       greatest_version: 必须为最大的版本号
+      has_image: 必须包含一个图片
     template:
       body: 如下字段出现错误：
       header:

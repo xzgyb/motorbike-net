@@ -58,4 +58,8 @@ module ApplicationHelper
       caption_tag + items_tag
     end
   end
+
+  def article_controller?
+    controller_name == 'articles'
+  end
 end

@@ -1,0 +1,6 @@
+.article-list.container-fluid
+  - if article_controller? && can?(:create, Article)
+    .row
+      .pull-right
+        = link_to '新建资讯', new_article_path, class: 'btn btn-primary'
+  = render articles
