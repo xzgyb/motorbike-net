@@ -11,18 +11,27 @@ displayBikeLocationMap = (container, userName, bikeName, longitude, latitude) ->
     map = createBMap(container)
 
     point = new BMap.Point(longitude, latitude)
-    marker = new BMap.Marker(point)
-    label = new BMap.Label(userName + "的" + bikeName + "的位置",
-                           {offset: new BMap.Size(-30, 30)})
-    label.setStyle(
-           color: "rgb(255,65,54)"
-           fontWeight: "bold"
-           fontSize: "18px"
-           borderStyle: "none")
 
-    marker.setLabel(label)
-    map.addOverlay(marker)
     map.centerAndZoom(point, 19)
+
+    convertor = new BMap.Convertor()
+    convertor.translate([point], 1, 5, (data) ->
+      if data.status == 0
+        convertedPoint = data.points[0]
+        marker = new BMap.Marker(convertedPoint)
+
+        label = new BMap.Label(userName + "的" + bikeName + "的位置",
+                               {offset: new BMap.Size(-30, 30)})
+        label.setStyle(
+               color: "rgb(255,65,54)"
+               fontWeight: "bold"
+               fontSize: "18px"
+               borderStyle: "none")
+
+        marker.setLabel(label)
+        map.addOverlay(marker)
+        map.centerAndZoom(convertedPoint, 19)
+    )
 
 # Display bike track map.
 displayBikeTrackMap = (container, locationPoints) ->
