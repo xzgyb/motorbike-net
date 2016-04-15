@@ -7,9 +7,7 @@ module Api::Entities
     end
     expose :title
     expose :title_image_url do |instance, options|
-      env = options[:env]
-      host_url = "#{env['rack.url_scheme']}://#{env['HTTP_HOST']}"
-      host_url + instance.title_image_url
+      instance.title_image_url
     end
 
     expose :body, if: lambda { |_, options| options[:export_body] == true }

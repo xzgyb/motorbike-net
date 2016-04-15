@@ -19,3 +19,6 @@
 /public/assets
 /public/uploads
 .byebug_history
+.envrc
+gems.tags
+tags

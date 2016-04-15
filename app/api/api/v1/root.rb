@@ -9,5 +9,8 @@ module Api::V1
     mount TravelPlans
     mount Medias
     mount Articles
+    mount Activities
+    mount Livings
+    mount TakeAlongSomethings
   end
 end

@@ -34,19 +34,31 @@ gem 'grape-entity'
 gem 'nested_form_fields'
 gem 'mini_magick'
 gem 'nokogiri'
+gem 'mongoid-enum'
+gem 'carrierwave-video'
+gem 'carrierwave-video-thumbnailer'
 
 group :development, :test do
   gem "awesome_print", require:"ap"
   gem 'byebug'
-  gem 'web-console', '~> 3.0'
   gem 'listen', '~> 3.0.5'
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
   gem 'better_errors'
+  gem 'factory_girl_rails'
 end
 
 group :development do
+  gem 'web-console', '~> 3.0'
   gem 'mina'
   gem 'mina-puma', :git => 'https://github.com/xzgyb/mina-puma.git', :require => false
+  gem 'guard'
+  gem 'guard-minitest'
+  gem 'guard-ctags-bundler'
+end
 
+group :test do
+  gem 'mocha'
+  gem 'database_cleaner', :git => 'https://github.com/DatabaseCleaner/database_cleaner.git'
+  gem 'minitest-hooks'
 end
