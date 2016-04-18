@@ -9,6 +9,10 @@ includes:
   - bike_infos
   - media_files
   - articles
+  - take_along_somethings
+  - activities
+  - livings
+  - actions
 
 search: true
 ---

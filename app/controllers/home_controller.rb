@@ -6,5 +6,6 @@ class HomeController < ApplicationController
   end
 
   def doc
+    redirect_to "/docs/index.html"
   end
 end

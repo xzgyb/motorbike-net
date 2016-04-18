@@ -22,3 +22,4 @@
 .envrc
 gems.tags
 tags
+/public/docs
