@@ -12,7 +12,7 @@ set :branch, 'master'
 set :user, ENV['DEPLOY_USER'] 
 set :rails_env, 'production'
 
-set :shared_paths, ['config/secrets.yml', 'config/mongoid.yml', 'config/puma.rb', 'log', 'tmp/pids', 'tmp/sockets', 'public/uploads']
+set :shared_paths, ['config/secrets.yml', 'config/mongoid.yml', 'config/puma.rb', 'log', 'tmp/pids', 'tmp/sockets', 'public/uploads', 'public/docs']
 
 task :environment do
   invoke :'rvm:use[ruby-2.2.3@default]'
@@ -34,10 +34,19 @@ task :setup => :environment do
   queue! %(mkdir -p "#{deploy_to}/#{shared_path}/public/uploads")
   queue! %(chmod g+rx,u+rwx "#{deploy_to}/#{shared_path}/public/uploads")
 
+  queue! %(mkdir -p "#{deploy_to}/#{shared_path}/public/docs")
+  queue! %(chmod g+rx,u+rwx "#{deploy_to}/#{shared_path}/public/docs")
+
   queue! %[touch "#{deploy_to}/#{shared_path}/config/secrets.yml"]
   queue! %[touch "#{deploy_to}/#{shared_path}/config/mongoid.yml"]
   queue! %[touch "#{deploy_to}/#{shared_path}/config/puma.rb"]
   queue  %[echo "-----> Be sure to edit '#{deploy_to}/#{shared_path}/config/mongoid.yml' , 'secrets.yml' and 'puma.rb'."]
+end
+
+task :docs => :environment do
+  queue! %[cd "#{deploy_to}/current/docs/slate"]
+  queue! %[bundle install]
+  queue! %[bundle exec middleman build]
 end
 
 desc "Deploys the current version to the server."
