@@ -12,5 +12,6 @@ module Api::V1
     mount Activities
     mount Livings
     mount TakeAlongSomethings
+    mount Actions
   end
 end
