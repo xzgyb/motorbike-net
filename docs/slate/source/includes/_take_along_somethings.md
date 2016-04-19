@@ -16,7 +16,8 @@ curl --request GET  http://localhost:3000/api/v1/take_along_somethings
      "title":"example title",
      "place":"example place",
      "price":"0.0",
-     "coordinates":[32.5,62.8],
+     "longitude":32.5,
+     "latitude":62.8,
      "updated_at":"2016-04-20 14:49:56",
      "start_at":"2016-04-18 14:49:56",
      "end_at":"2016-04-19 00:49:56",
@@ -59,7 +60,8 @@ id                   | 字符串 | 一条捎东西记录的id
 title                | 字符串 | 标题
 place                | 字符串 | 地点名称
 price                | 字符串 | 价格
-coordinates          | 浮点数数组 | [经度, 纬度]
+longitude            | 浮点数 | 经度
+latitude             | 浮点数 | 纬度
 updated_at           | 字符串 | 更新时间
 start_at             | 字符串 | 开始时间
 end_at               | 字符串 | 结束时间
@@ -95,7 +97,8 @@ curl -H 'Content-Type:application/json'
      -d '{"title":"hello"
           "place":"地点名称",
           "price":"35.5,",
-          "coordinates":[12.5,234.6],
+          "longitude":12.5,
+          "latitude":234.6,
           "start_at": "2016-05-01 12:00:50",
           "end_at": "2016-05-04 18:30:00",
           "images_attributes":[
@@ -123,7 +126,8 @@ curl -H 'Content-Type:application/json'
 title      | 是      | 标题
 place      | 是      | 地点名称
 price      | 是      | 价格
-coordinates| 是      | [经度, 纬度]
+longitude  | 是      | 经度
+latitude   | 是      | 纬度
 start_at   | 是      | 开始时间
 end_at     | 是      | 结束时间
 images_attributes | 是      | 上传的图片数据
@@ -143,7 +147,7 @@ images_attributes | 是      | 上传的图片数据
 ```shell
 curl -H 'Content-Type:application/json'
      --request PUT
-     -d '{"title":"another title", "coordinates":[55.2,66.8]}'
+     -d '{"title":"another title", "longitude":55.2, "latitude":66.8]}'
      http://localhost:3000/api/v1/take_along_somethings/57148394495576297f2d30f7
 ```
 
@@ -165,7 +169,8 @@ id         | 是       | 一条捎东西记录的id
 title      | 是       | 标题
 place      | 是       | 地点名称
 price      | 是       | 价格
-coordinates| 是       | [经度, 纬度]
+longitude  | 是       | 经度
+latitude   | 是       | 纬度
 start_at   | 是       | 开始时间
 end_at     | 是       | 结束时间
 images_attributes | 是 | 上传的图片数据
@@ -265,7 +270,8 @@ curl --request GET http://localhost:3000/api/v1/take_along_somethings/5714839449
      "title":"example title",
      "place":"example place",
      "price":"0.0",
-     "coordinates":[32.5,62.8],
+     "longitude":32.5,
+     "latitude":62.8,
      "content":"",
      "updated_at":"2016-04-20 14:49:56",
      "start_at":"2016-04-18 14:49:56",

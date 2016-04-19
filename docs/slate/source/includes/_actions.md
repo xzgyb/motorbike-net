@@ -17,7 +17,8 @@ curl --request GET  http://localhost:3000/api/v1/actions
      "title":"example title",
      "place":"example place",
      "price":"0.0",
-     "coordinates":[32.5,62.8],
+     "longitude":32.5,
+     "latitude":62.8,
      "updated_at":"2016-04-20 14:49:56",
      "videos":[{"url":"http://115.29.110.82/public/uploads/sample.mp4",
                 "thumb_url":"http://115.29.110.82/public/uploads/sample.jpg",
@@ -27,7 +28,8 @@ curl --request GET  http://localhost:3000/api/v1/actions
       "title":"example title",
       "place":"example place",
       "price":"0.0",
-      "coordinates":[32.5,62.8],
+      "longitude":32.5,
+      "latitude":62.8,
       "updated_at":"2016-04-20 14:49:56",
       "start_at":"2016-04-18 14:49:56",
       "end_at":"2016-04-19 00:49:56",
@@ -39,7 +41,8 @@ curl --request GET  http://localhost:3000/api/v1/actions
       "title":"example title",
       "place":"example place",
       "price":"0.0",
-      "coordinates":[32.5,62.8],
+      "longitude":32.5,
+      "latitude":62.8,
       "updated_at":"2016-04-20 14:49:56",
       "start_at":"2016-04-18 14:49:56",
       "end_at":"2016-04-19 00:49:56",
@@ -84,7 +87,8 @@ type                 | 字符串 | activity: 表示活动, take_along_something:
 title                | 字符串 | 标题
 place                | 字符串 | 地点名称
 price                | 字符串 | 价格
-coordinates          | 浮点数数组 | [经度, 纬度]
+longitude            | 浮点数 | 经度
+latitude             | 浮点数 | 纬度
 updated_at           | 字符串 | 更新时间
 start_at             | 字符串 | 开始时间, type为activity或take_along_something才有该字段
 end_at               | 字符串 | 结束时间, type为activity或take_along_something才有该字段

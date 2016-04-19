@@ -16,7 +16,8 @@ curl --request GET  http://localhost:3000/api/v1/livings
      "title":"example title",
      "place":"example place",
      "price":"0.0",
-     "coordinates":[32.5,62.8],
+     "longitude":32.5,
+     "latitude":62.8,
      "updated_at":"2016-04-20 14:49:56",
      "videos":[{"url":"http://115.29.110.82/public/uploads/sample.mp4",
                 "thumb_url":"http://115.29.110.82/public/uploads/sample.jpg",
@@ -57,7 +58,8 @@ id                   | 字符串 | 一条直播记录的id
 title                | 字符串 | 标题
 place                | 字符串 | 地点名称
 price                | 字符串 | 价格
-coordinates          | 浮点数数组 | [经度, 纬度]
+longitude            | 浮点数 | 经度
+latitude             | 浮点数 | 纬度
 updated_at           | 字符串 | 更新时间
 content              | 字符串 | 具体的内容
 videos               | video类型的数组 | 视频相关信息
@@ -91,7 +93,8 @@ curl -H 'Content-Type:application/json'
      -d '{"title":"hello"
           "place":"地点名称",
           "price":"35.5,",
-          "coordinates":[12.5,234.6],
+          "longitude":12.5,
+          "latitude":234.6,
           "videos_attributes":[
             "file":"视频文件数据",
             "file":"视频文件数据"
@@ -117,7 +120,8 @@ curl -H 'Content-Type:application/json'
 title      | 是      | 标题
 place      | 是      | 地点名称
 price      | 是      | 价格
-coordinates| 是      | [经度, 纬度]
+longitude  | 是      | 经度
+latitude   | 是      | 纬度
 videos_attributes | 是      | 上传的视频数据
 
 
@@ -135,7 +139,7 @@ videos_attributes | 是      | 上传的视频数据
 ```shell
 curl -H 'Content-Type:application/json'
      --request PUT
-     -d '{"title":"another title", "coordinates":[55.2,66.8]}'
+     -d '{"title":"another title", "longitude":55.2,"latitude":66.8}'
      http://localhost:3000/api/v1/livings/57148394495576297f2d30f7
 ```
 
@@ -157,7 +161,8 @@ id         | 是       | 一条直播记录的id
 title      | 是       | 标题
 place      | 是       | 地点名称
 price      | 是       | 价格
-coordinates| 是       | [经度, 纬度]
+longitude  | 是       | 经度
+latitude   | 是       | 纬度
 videos_attributes | 是      | 上传的视频数据
 
 
@@ -255,7 +260,8 @@ curl --request GET http://localhost:3000/api/v1/livings/57148394495576297f2d30f7
      "title":"example title",
      "place":"example place",
      "price":"0.0",
-     "coordinates":[32.5,62.8],
+     "longitude":32.5,
+     "latitude":62.8,
      "content":"",
      "updated_at":"2016-04-20 14:49:56",
      "videos":[
