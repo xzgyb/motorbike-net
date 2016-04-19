@@ -43,6 +43,19 @@ class ActionTest < ActiveSupport::TestCase
     assert_not @activity_action.valid?
   end
 
+  test "longitude should be fist element of coordinates, and latitude should be last element of coordinates" do
+    @activity_action.coordinates = [13.5, 28.6]
+
+    assert_equal 13.5, @activity_action.longitude
+    assert_equal 28.6, @activity_action.latitude
+
+    @activity_action.longitude = 18.2
+    @activity_action.latitude  = 15.5
+    @activity_action.save
+
+    assert_equal [18.2, 15.5], @activity_action.coordinates
+  end
+
   test "images should be present when type is activity" do
     @activity_action.images = []
     assert_not @activity_action.valid?

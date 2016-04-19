@@ -4,7 +4,7 @@ module Api::V1
       helpers do
         def living_params
           ActionController::Parameters.new(params).permit(
-            :title, :price, :place, :content, coordinates: [],
+            :title, :price, :place, :content, :longitude, :latitude,
             videos_attributes: [:id, :file, :_destroy])
         end
       end

@@ -18,7 +18,7 @@ class LivingsApiTest < ActiveSupport::TestCase
 
     assert_equal Action.living.count, result["livings"].count 
     
-    %w[id title place price updated_at videos coordinates].each do |field|
+    %w[id title place price updated_at videos longitude latitude].each do |field|
       assert_includes result["livings"][0], field
     end
 
@@ -75,7 +75,8 @@ class LivingsApiTest < ActiveSupport::TestCase
         title: "hello living",
         price: 25.2,
         content: "example content",
-        coordinates: [112, 553],
+        longitude: 112,
+        latitude: 553,
         videos_attributes: [
           {id: living.videos[0].id.to_s, file: new_video_attachment},
           {file: new_video_attachment},
@@ -112,7 +113,8 @@ class LivingsApiTest < ActiveSupport::TestCase
         price: 25.2,
         place: "example place",
         content: "example content",
-        coordinates: [112, 553],
+        longitude: 112,
+        latitude: 553,
         videos_attributes: [
           {file: new_video_attachment},
           {file: new_video_attachment}

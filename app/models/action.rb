@@ -35,6 +35,21 @@ class Action
 
   before_save :normalize_coordinates
 
+  def longitude
+    (self.coordinates.try(:first) || 0).to_f
+  end
+
+  def latitude
+    (self.coordinates.try(:last) || 0).to_f
+  end
+
+  def longitude=(value)
+    self.coordinates[0] = value 
+  end
+
+  def latitude=(value)
+    self.coordinates[1] = value
+  end
 
   private
     def normalize_coordinates

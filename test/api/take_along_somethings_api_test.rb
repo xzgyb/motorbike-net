@@ -18,7 +18,7 @@ class TakeAlongSomethingsApiTest < ActiveSupport::TestCase
 
     assert_equal Action.take_along_something.count, result["take_along_somethings"].count 
     
-    %w[id title place price updated_at start_at end_at images coordinates].each do |field|
+    %w[id title place price updated_at start_at end_at images longitude latitude].each do |field|
       assert_includes result["take_along_somethings"][0], field
     end
 
@@ -74,7 +74,8 @@ class TakeAlongSomethingsApiTest < ActiveSupport::TestCase
         title: "hello take_along_something",
         price: 25.2,
         content: "example content",
-        coordinates: [112, 553],
+        longitude: 112,
+        latitude:  553,
         images_attributes: [
           {id: take_along_something.images[0].id.to_s, file: new_image_attachment},
           {file: new_image_attachment},
@@ -113,7 +114,8 @@ class TakeAlongSomethingsApiTest < ActiveSupport::TestCase
         start_at: Time.current,
         end_at: 2.days.since,
         content: "example content",
-        coordinates: [112, 553],
+        longitude: 112,
+        latitude: 553,
         images_attributes: [
           {file: new_image_attachment},
           {file: new_image_attachment}

@@ -18,7 +18,7 @@ class ActivitiesApiTest < ActiveSupport::TestCase
 
     assert_equal Action.activity.count, result["activities"].count 
     
-    %w[id title place price updated_at start_at end_at images coordinates].each do |field|
+    %w[id title place price updated_at start_at end_at images longitude latitude].each do |field|
       assert_includes result["activities"][0], field
     end
 
@@ -74,7 +74,8 @@ class ActivitiesApiTest < ActiveSupport::TestCase
         title: "hello activity",
         price: 25.2,
         content: "example content",
-        coordinates: [112, 553],
+        longitude: 112,
+        latitude: 553,
         images_attributes: [
           {id: activity.images[0].id.to_s, file: new_image_attachment},
           {file: new_image_attachment},
@@ -113,7 +114,8 @@ class ActivitiesApiTest < ActiveSupport::TestCase
         start_at: Time.current,
         end_at: 2.days.since,
         content: "example content",
-        coordinates: [112, 553],
+        longitude: 112,
+        latitude: 553,
         images_attributes: [
           {file: new_image_attachment},
           {file: new_image_attachment}

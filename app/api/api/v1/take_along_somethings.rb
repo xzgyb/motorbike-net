@@ -4,7 +4,7 @@ module Api::V1
       helpers do
         def take_along_something_params
           ActionController::Parameters.new(params).permit(
-            :title, :price, :place, :content, :start_at, :end_at, coordinates: [],
+            :title, :price, :place, :content, :start_at, :end_at, :longitude, :latitude,
             images_attributes: [:id, :file, :_destroy])
         end
       end
