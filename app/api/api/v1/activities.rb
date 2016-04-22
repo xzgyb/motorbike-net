@@ -1,6 +1,10 @@
 module Api::V1
   class Activities < Grape::API
     resource :activities do
+      before do
+        doorkeeper_authorize!
+      end
+
       helpers do
         def activity_params
           ActionController::Parameters.new(params).permit(

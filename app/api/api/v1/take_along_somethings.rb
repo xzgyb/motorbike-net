@@ -1,6 +1,10 @@
 module Api::V1
   class TakeAlongSomethings < Grape::API
     resource :take_along_somethings do
+      before do
+        doorkeeper_authorize!
+      end
+
       helpers do
         def take_along_something_params
           ActionController::Parameters.new(params).permit(

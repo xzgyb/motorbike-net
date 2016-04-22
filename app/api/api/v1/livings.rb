@@ -1,6 +1,10 @@
 module Api::V1
   class Livings < Grape::API
     resource :livings do
+      before do
+        doorkeeper_authorize!
+      end
+
       helpers do
         def living_params
           ActionController::Parameters.new(params).permit(

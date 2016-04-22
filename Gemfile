@@ -46,6 +46,10 @@ group :development, :test do
   gem 'spring-watcher-listen', '~> 2.0.0'
   gem 'better_errors'
   gem 'factory_girl_rails'
+  gem 'pry'
+  gem 'pry-byebug'
+  gem 'pry-alias'
+  gem 'pry-rails'
 end
 
 group :development do

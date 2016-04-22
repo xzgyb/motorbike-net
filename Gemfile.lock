@@ -104,6 +104,8 @@ GEM
       coderay (>= 1.0.0)
       erubis (>= 2.6.6)
       rack (>= 0.9.0)
+    binding_of_caller (0.7.2)
+      debug_inspector (>= 0.0.1)
     blockenspiel (0.5.0)
     bootstrap-sass (3.3.6)
       autoprefixer-rails (>= 5.2.1)
@@ -257,6 +259,14 @@ GEM
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
       slop (~> 3.4)
+    pry-alias (0.0.1)
+      binding_of_caller
+      pry
+    pry-byebug (3.3.0)
+      byebug (~> 8.0)
+      pry (~> 0.10)
+    pry-rails (0.3.4)
+      pry (>= 0.9.10)
     puma (3.0.2)
     rack (2.0.0.alpha)
       json
@@ -401,6 +411,10 @@ DEPENDENCIES
   mongoid-enum
   nested_form_fields
   nokogiri
+  pry
+  pry-alias
+  pry-byebug
+  pry-rails
   puma
   rails (>= 5.0.0.beta3, < 5.1)
   redcarpet

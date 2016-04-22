@@ -1,13 +1,10 @@
 require 'test_helper'
 
 class ActivitiesApiTest < ActiveSupport::TestCase
-  include Rack::Test::Methods  
-
-  def app; Rails.application; end
 
   test 'GET /api/v1/activities returns a activities list' do
     create_list(:activity_with_images, 10)
-    get '/api/v1/activities'
+    get '/api/v1/activities', access_token: token
 
     assert last_response.ok?
 
@@ -38,7 +35,9 @@ class ActivitiesApiTest < ActiveSupport::TestCase
     two = create(:activity_with_images, updated_at: 1.day.since)
     three = create(:activity_with_images, updated_at: 2.days.since)
 
-    get 'api/v1/activities'
+    get 'api/v1/activities', access_token: token
+    assert last_response.ok?
+
     result = JSON.parse(last_response.body)
 
     result_ids = result["activities"].map { |elem| elem["id"] }
@@ -48,7 +47,7 @@ class ActivitiesApiTest < ActiveSupport::TestCase
 
   test 'GET /api/v1/activities/:id returns a specified id activity' do
     activity = create(:activity_with_images)
-    get "api/v1/activities/#{activity.id}"
+    get "api/v1/activities/#{activity.id}", access_token: token
     
     assert last_response.ok?
     result = JSON.parse(last_response.body)
@@ -61,7 +60,7 @@ class ActivitiesApiTest < ActiveSupport::TestCase
   test 'DELETE /api/v1/activities/:id should work' do
     activity = create(:activity_with_images)
 
-    delete "api/v1/activities/#{activity.id}"
+    delete "api/v1/activities/#{activity.id}", access_token: token
 
     assert last_response.ok?
     assert_equal 0, Action.activity.count
@@ -80,7 +79,8 @@ class ActivitiesApiTest < ActiveSupport::TestCase
           {id: activity.images[0].id.to_s, file: new_image_attachment},
           {file: new_image_attachment},
           {file: new_image_attachment}
-        ]
+        ],
+        access_token: token
 
 
     assert last_response.ok?
@@ -96,7 +96,8 @@ class ActivitiesApiTest < ActiveSupport::TestCase
     put "api/v1/activities/#{activity.id}",
         images_attributes: [
           {id: activity.images[0].id.to_s, _destroy: '1'}
-        ]
+        ],
+        access_token: token
     assert last_response.ok?
 
     activity.reload
@@ -119,7 +120,8 @@ class ActivitiesApiTest < ActiveSupport::TestCase
         images_attributes: [
           {file: new_image_attachment},
           {file: new_image_attachment}
-        ]
+        ],
+        access_token: token
 
     assert last_response.created?
     assert_equal 1, Action.activity.count

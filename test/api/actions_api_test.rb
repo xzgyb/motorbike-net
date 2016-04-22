@@ -1,16 +1,13 @@
 require 'test_helper'
 
 class ActionsApiTest < ActiveSupport::TestCase
-  include Rack::Test::Methods  
-
-  def app; Rails.application; end
 
   test 'GET /api/v1/actions returns a actions list' do
     create(:activity_with_images, updated_at: Time.current)
     create(:living_with_videos, updated_at: 1.day.since)
     create(:take_along_something_with_images, updated_at: 2.days.since) 
 
-    get '/api/v1/actions'
+    get '/api/v1/actions', access_token: token
 
     assert last_response.ok?
 

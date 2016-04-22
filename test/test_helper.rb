@@ -7,8 +7,11 @@ require 'minitest/hooks/test'
 DatabaseCleaner.strategy = :truncation
 
 class ActiveSupport::TestCase
+  include Rack::Test::Methods  
   include FactoryGirl::Syntax::Methods
   include Minitest::Hooks
+
+  def app; Rails.application; end
 
   def before_setup
     ActionImageUploader.any_instance.stubs(:move_to_cache).returns(false)
@@ -26,6 +29,18 @@ class ActiveSupport::TestCase
 
   def after_all
     FileUtils.rm_rf("#{Rails.root}/tmp/uploads")
+  end
+
+  def login_user(user)
+    application = create(:application)
+    @token = create(:access_token,
+                    application: application, 
+                    resource_owner_id: user.id)
+  end
+
+  def token
+    @token ||= login_user(create(:user))
+    @token.token
   end
 end
 

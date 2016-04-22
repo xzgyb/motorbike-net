@@ -1,13 +1,10 @@
 require 'test_helper'
 
 class LivingsApiTest < ActiveSupport::TestCase
-  include Rack::Test::Methods  
-
-  def app; Rails.application; end
 
   test 'GET /api/v1/livings returns a livings list' do
     create_list(:living_with_videos, 10)
-    get '/api/v1/livings'
+    get '/api/v1/livings', access_token: token
 
     assert last_response.ok?
 
@@ -38,7 +35,8 @@ class LivingsApiTest < ActiveSupport::TestCase
     two = create(:living_with_videos, updated_at: 1.day.since)
     three = create(:living_with_videos, updated_at: 2.days.since)
 
-    get 'api/v1/livings'
+    get 'api/v1/livings', access_token: token
+    assert last_response.ok?
     
     result = JSON.parse(last_response.body)
 
@@ -49,7 +47,7 @@ class LivingsApiTest < ActiveSupport::TestCase
 
   test 'GET /api/v1/livings/:id returns a specified id living' do
     living = create(:living_with_videos)
-    get "api/v1/livings/#{living.id}"
+    get "api/v1/livings/#{living.id}", access_token: token
     
     assert last_response.ok?
     result = JSON.parse(last_response.body)
@@ -62,7 +60,7 @@ class LivingsApiTest < ActiveSupport::TestCase
   test 'DELETE /api/v1/livings/:id should work' do
     living = create(:living_with_videos)
 
-    delete "api/v1/livings/#{living.id}"
+    delete "api/v1/livings/#{living.id}", access_token: token
 
     assert last_response.ok?
     assert_equal 0, Action.living.count
@@ -81,7 +79,8 @@ class LivingsApiTest < ActiveSupport::TestCase
           {id: living.videos[0].id.to_s, file: new_video_attachment},
           {file: new_video_attachment},
           {file: new_video_attachment}
-        ]
+        ],
+        access_token: token
 
 
     assert last_response.ok?
@@ -97,7 +96,8 @@ class LivingsApiTest < ActiveSupport::TestCase
     put "api/v1/livings/#{living.id}",
         videos_attributes: [
           {id: living.videos[0].id.to_s, _destroy: '1'}
-        ]
+        ],
+        access_token: token
     assert last_response.ok?
 
     living.reload
@@ -118,7 +118,8 @@ class LivingsApiTest < ActiveSupport::TestCase
         videos_attributes: [
           {file: new_video_attachment},
           {file: new_video_attachment}
-        ]
+        ], 
+        access_token: token
 
     assert last_response.created?
     assert_equal 1, Action.living.count

@@ -1,6 +1,9 @@
 module Api::V1
   class Actions < Grape::API
     resource :actions do
+      before do
+        doorkeeper_authorize!
+      end
 
       desc 'get actions list'
       get do

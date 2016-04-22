@@ -1,13 +1,10 @@
 require 'test_helper'
 
 class TakeAlongSomethingsApiTest < ActiveSupport::TestCase
-  include Rack::Test::Methods  
-
-  def app; Rails.application; end
 
   test 'GET /api/v1/take_along_somethings returns a take_along_somethings list' do
     create_list(:take_along_something_with_images, 10)
-    get '/api/v1/take_along_somethings'
+    get '/api/v1/take_along_somethings', access_token: token
 
     assert last_response.ok?
 
@@ -38,7 +35,9 @@ class TakeAlongSomethingsApiTest < ActiveSupport::TestCase
     two = create(:take_along_something_with_images, updated_at: 1.day.since)
     three = create(:take_along_something_with_images, updated_at: 2.days.since)
 
-    get 'api/v1/take_along_somethings'
+    get 'api/v1/take_along_somethings', access_token: token
+    assert last_response.ok?
+
     result = JSON.parse(last_response.body)
 
     result_ids = result["take_along_somethings"].map { |elem| elem["id"] }
@@ -48,7 +47,7 @@ class TakeAlongSomethingsApiTest < ActiveSupport::TestCase
 
   test 'GET /api/v1/take_along_somethings/:id returns a specified id take_along_something' do
     take_along_something = create(:take_along_something_with_images)
-    get "api/v1/take_along_somethings/#{take_along_something.id}"
+    get "api/v1/take_along_somethings/#{take_along_something.id}", access_token: token
     
     assert last_response.ok?
     result = JSON.parse(last_response.body)
@@ -61,7 +60,7 @@ class TakeAlongSomethingsApiTest < ActiveSupport::TestCase
   test 'DELETE /api/v1/take_along_somethings/:id should work' do
     take_along_something = create(:take_along_something_with_images)
 
-    delete "api/v1/take_along_somethings/#{take_along_something.id}"
+    delete "api/v1/take_along_somethings/#{take_along_something.id}", access_token: token
 
     assert last_response.ok?
     assert_equal 0, Action.take_along_something.count
@@ -80,7 +79,8 @@ class TakeAlongSomethingsApiTest < ActiveSupport::TestCase
           {id: take_along_something.images[0].id.to_s, file: new_image_attachment},
           {file: new_image_attachment},
           {file: new_image_attachment}
-        ]
+        ], 
+        access_token: token
 
 
     assert last_response.ok?
@@ -96,7 +96,8 @@ class TakeAlongSomethingsApiTest < ActiveSupport::TestCase
     put "api/v1/take_along_somethings/#{take_along_something.id}",
         images_attributes: [
           {id: take_along_something.images[0].id.to_s, _destroy: '1'}
-        ]
+        ],
+        access_token: token
     assert last_response.ok?
 
     take_along_something.reload
@@ -119,7 +120,8 @@ class TakeAlongSomethingsApiTest < ActiveSupport::TestCase
         images_attributes: [
           {file: new_image_attachment},
           {file: new_image_attachment}
-        ]
+        ], 
+        access_token: token
 
     assert last_response.created?
     assert_equal 1, Action.take_along_something.count
