@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class ActionsApiTest < ActiveSupport::TestCase
+class FriendsApiTest < ActiveSupport::TestCase
   def setup
     @gyb = create(:user, name: 'gyb')
     @current_user = @gyb
@@ -23,7 +23,7 @@ class ActionsApiTest < ActiveSupport::TestCase
     get '/api/v1/friends', access_token: token
 
     assert last_response.ok?
-
+    
     result = JSON.parse(last_response.body)
 
     assert_includes result, "friends"
@@ -108,12 +108,12 @@ class ActionsApiTest < ActiveSupport::TestCase
     assert_equal @gyb.id.to_s, result["friends"][0]['id']
   end
 
-  test 'DELETE /api/v1/friends/deny denies a friend request for current user' do
+  test 'DELETE /api/v1/friends/deny/:friend_id denies a friend request for current user' do
     @john.be_friends_with(@current_user)
 
     assert_equal 1, @current_user.pending_friends.count
 
-    delete '/api/v1/friends/deny', access_token: token, friend_id: @john.id
+    delete "/api/v1/friends/deny/#{@john.id}", access_token: token
     assert last_response.ok?
 
     assert_equal 0, @current_user.pending_friends.count
