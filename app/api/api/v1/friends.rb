@@ -46,10 +46,7 @@ module Api::V1
       end
 
       desc 'deny add friend request'
-      params do
-        requires :friend_id, type: String
-      end
-      delete :deny do
+      delete 'deny/:friend_id' do
         friend = User.find(params[:friend_id])
         current_user.delete_friend(friend)
         respond_ok  
