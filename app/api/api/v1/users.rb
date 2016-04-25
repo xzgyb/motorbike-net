@@ -143,6 +143,31 @@ module Api::V1
           validation_code_object.validation_code
         end
       end
+
+      # query users
+      get "query(/:user_name)" do
+        doorkeeper_authorize!
+        if params[:user_name].blank?
+          users = User.all.name_ordered
+        else
+          users = User.where(name:/^#{params[:user_name]}/).name_ordered
+        end
+
+        users = paginate(users)
+
+        present users, with: Api::Entities::User
+        present paginate_record_for(users), with: Api::Entities::Paginate
+
+        respond_ok
+      end
+
+      # get user info
+      get ":id" do
+        doorkeeper_authorize!
+        user = User.find(params[:id])
+        present user, with: Api::Entities::User, export_detail: true
+        respond_ok
+      end
       
       get :test do
         doorkeeper_authorize!

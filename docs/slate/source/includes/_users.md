@@ -201,3 +201,103 @@ password_confirmation | 是 | 确认密码
 成功  | `{"result":1"}`
 失败  | `{"result":0,"error":"错误原因"}`
 
+## 查询用户
+> 调用实例:
+
+```shell
+curl --request GET  http://localhost:3000/api/v1/users/query/jo
+```
+> 返回:
+
+```json
+{"result":1,
+ "friends":[
+    {"id":"571db5d849557627ae3a3de0", "name":"john"},
+    {"id":"571dc9424955763a2b3a3e17", "name":"joyce"}
+  ],
+ "paginate_meta": {"current_page":1,
+                   "next_page":null,
+                   "prev_page":null,
+                   "total_pages":1,
+                   "total_count":2}
+}
+```
+
+### HTTP请求
+
+`GET /api/v1/users/query/:user_name`
+
+### 请求参数
+
+参数名     | 是否必需 | 描述
+-----------|----------|------
+user_name  | 否       | 要查询的用户名，可以只指定用户名的前缀部分，如果不指定该参数，则查询所有用户.
+page       | 否       | 要获取第几页数据
+per_page   | 否       | 指定每页多少条记录
+
+### 返回结果
+
+结果  | 内容
+------|--------------
+成功  | `{"result":1","users":[<user>, ...],"paginate_meta":<paginate_meta>}`, 其中`users`为一数组，元素类型为user, paginate_meta为分页相关数据。
+失败  | `{"result":0,"error":"错误原因"}`
+
+#### user类型说明
+
+名称               | 类型   | 描述
+---------------------|--------|------
+id                   | 字符串 | 用户id
+name                 | 字符串 | 用户名称
+
+#### paginate_meta类型说明
+
+名称               | 类型   | 描述
+---------------------|--------|------
+current_page         | 整型   | 当前页面号
+next_page            | 整型   | 下一个页面号，可能为null
+prev_page            | 整型   | 前一个页面号, 可能为null
+total_pages          | 整型   | 总共页面数
+total_count          | 整型   | 总共记录数
+
+## 查询指定用户id的详细信息
+> 调用实例:
+
+```shell
+curl --request GET  http://localhost:3000/api/v1/users/571db5d849557627ae3a3de0
+```
+> 返回:
+
+```json
+{"result":1,
+ "user":{
+    "id":"571dcb184955763ade3a3ed5",
+    "name":"john",
+    "email":"email45@hello.com"
+  }
+}
+```
+
+### HTTP请求
+
+`GET /api/v1/users/:id`
+
+### 请求参数
+
+参数名     | 是否必需 | 描述
+-----------|----------|------
+id         | 否       | 用户id
+
+### 返回结果
+
+结果  | 内容
+------|--------------
+成功  | `{"result":1","user":<user>, 其中`user`为带有详细用户信息的user
+失败  | `{"result":0,"error":"错误原因"}`
+
+#### user类型说明
+
+名称               | 类型   | 描述
+---------------------|--------|------
+id                   | 字符串 | 用户id
+name                 | 字符串 | 用户名称
+email                | 字符串 | 用户email

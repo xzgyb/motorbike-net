@@ -32,7 +32,7 @@ class ActiveSupport::TestCase
   end
 
   def login_user(user)
-    application = create(:application)
+    application = create(:application, owner: user)
     @token = create(:access_token,
                     application: application, 
                     resource_owner_id: user.id)
