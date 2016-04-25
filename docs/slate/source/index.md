@@ -13,6 +13,7 @@ includes:
   - activities
   - livings
   - actions
+  - friends
 
 search: true
 ---
