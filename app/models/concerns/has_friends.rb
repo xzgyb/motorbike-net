@@ -63,6 +63,11 @@ module HasFriends
     User.in(id: friend_ids)
   end
 
+  def pending_friends
+    pending_friend_ids = self.friendships.where(status: 'pending').pluck(:friend_id).to_a
+    User.in(id: pending_friend_ids)
+  end
+
   def delete_friend(friend)
     self.friendships.where(friend_id: friend.id).delete_all
     friend.friendships.where(friend_id: self.id).delete_all

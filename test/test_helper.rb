@@ -43,17 +43,3 @@ class ActiveSupport::TestCase
     @token.token
   end
 end
-
-=begin
-Dir[Rails.root.join("app/uploaders/*.rb")].each { |f| require f }
-CarrierWave::Uploader::Base.descendants.each do |klass|
-  next if klass.anonymous?
-  klass.class_eval do 
-    def cache!(file)
-    end
-
-    def store!
-    end
-  end
-end
-=end

@@ -13,5 +13,6 @@ module Api::V1
     mount Livings
     mount TakeAlongSomethings
     mount Actions
+    mount Friends
   end
 end

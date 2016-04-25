@@ -59,6 +59,8 @@ class User
 
   has_many :oauth_applications, class_name: 'Doorkeeper::Application', as: :owner
 
+  scope :name_ordered, -> { order_by(name: :asc) }
+
   def valid_oauth_login_code?(code)
     oauth_login_code && oauth_login_code == code
   end
