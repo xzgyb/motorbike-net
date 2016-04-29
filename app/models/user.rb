@@ -45,6 +45,9 @@ class User
   field :admin, type: Boolean, default: false
   field :phone, type: String, default: ""
   field :oauth_login_code, type: String, default: ""
+
+  field :avatar, type: String
+  mount_uploader :avatar, AvatarUploader
   
   validates :name, presence: true, uniqueness: true
   validates :phone, uniqueness: true, allow_blank: true

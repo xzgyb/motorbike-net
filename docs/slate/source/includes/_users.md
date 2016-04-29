@@ -117,6 +117,7 @@ curl -H 'Content-Type:application/json'
 name                  | 是       | 用户名 
 password              | 是       | 密码
 password_confirmation | 是       | 确认密码
+avatar                | 否       | 用户头像
 
 ### 返回结果
 
@@ -248,6 +249,7 @@ per_page   | 否       | 指定每页多少条记录
 ---------------------|--------|------
 id                   | 字符串 | 用户id
 name                 | 字符串 | 用户名称
+avatar_url           | 字符串 | 用户头像url
 
 #### paginate_meta类型说明
 
@@ -301,3 +303,4 @@ id         | 否       | 用户id
 id                   | 字符串 | 用户id
 name                 | 字符串 | 用户名称
 email                | 字符串 | 用户email
+avatar_url           | 字符串 | 用户头像url

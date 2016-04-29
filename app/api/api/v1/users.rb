@@ -13,7 +13,7 @@ module Api::V1
       helpers do
         def user_params
           ActionController::Parameters.new(params).permit(
-              :name, :password, :password_confirmation)
+              :name, :password, :password_confirmation, :avatar)
         end
 
         def check_sms_validation_code!(type)
@@ -122,6 +122,7 @@ module Api::V1
         requires :name, type: String, desc: 'user name'
         requires :password, type: String, desc: 'user password'
         requires :password_confirmation, type: String, desc: 'user password confirmation'
+        optional :avatar, type: File
       end
       put :update do
         doorkeeper_authorize!

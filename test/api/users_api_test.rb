@@ -25,6 +25,7 @@ class UsersApiTest < ActiveSupport::TestCase
 
     assert_includes result['users'][0], 'id'
     assert_includes result['users'][0], 'name'
+    assert_includes result['users'][0], 'avatar_url'
 
     %w[current_page next_page prev_page total_pages total_count].each do |field|
       assert_includes result["paginate_meta"], field
@@ -69,7 +70,7 @@ class UsersApiTest < ActiveSupport::TestCase
 
     assert_includes result, "user"
 
-    %w[id name email].each do |field|
+    %w[id name email avatar_url].each do |field|
       assert_includes result["user"], field
     end
 
