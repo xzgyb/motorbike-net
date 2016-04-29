@@ -89,7 +89,7 @@ validation_code | 是       | 手机上收到的短信校验码, 这个校验码
 
 如果token超时，则使用refresh_token重新获取新的token进行资源访问。
 
-## 设置用户名和密码
+## 设置用户信息
 
 > 调用实例:
 
@@ -213,8 +213,8 @@ curl --request GET  http://localhost:3000/api/v1/users/query/jo
 ```json
 {"result":1,
  "friends":[
-    {"id":"571db5d849557627ae3a3de0", "name":"john"},
-    {"id":"571dc9424955763a2b3a3e17", "name":"joyce"}
+    {"id":"571db5d849557627ae3a3de0", "name":"john", "avatar_url":"http://localhost:3000/upload/avatar/1.png"},
+    {"id":"571dc9424955763a2b3a3e17", "name":"joyce", "avatar_url":"http://localhost:3000/upload/avatar/2.png"}
   ],
  "paginate_meta": {"current_page":1,
                    "next_page":null,
@@ -274,7 +274,8 @@ curl --request GET  http://localhost:3000/api/v1/users/571db5d849557627ae3a3de0
  "user":{
     "id":"571dcb184955763ade3a3ed5",
     "name":"john",
-    "email":"email45@hello.com"
+    "email":"email45@hello.com",
+    "avatar_url":"http://localhost:3000/upload/avatar/2.png"
   }
 }
 ```
