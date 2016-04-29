@@ -2,6 +2,7 @@ class Action
   include Mongoid::Document
   include Mongoid::Timestamps
   include Mongoid::Enum
+  include GeoNearable
 
   enum :type, [:activity, :living, :take_along_something]
     

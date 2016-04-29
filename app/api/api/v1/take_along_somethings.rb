@@ -14,8 +14,22 @@ module Api::V1
       end
       
       desc 'get take_along_somethings list'
+      params do
+        optional :longitude, type: Float
+        optional :latitude,  type: Float
+        optional :page,      type: Integer
+        optional :per_page,  type: Integer
+      end
       get do
-        take_along_somethings = paginate(Action.take_along_something.latest)
+        longitude = params[:longitude] || 0
+        latitude  = params[:latitude] || 0
+        page      = params[:page] || 1
+        per_page  = params[:per_page] || 25
+
+        take_along_somethings = Action.near([longitude, latitude], 
+                                            page: page, 
+                                            per_page: per_page,
+                                            match: { '_enumtype': 'take_along_something' })
 
         present take_along_somethings, with: Api::Entities::TakeAlongSomething
         present paginate_record_for(take_along_somethings), with: Api::Entities::Paginate

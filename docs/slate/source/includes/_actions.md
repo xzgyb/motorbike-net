@@ -4,7 +4,7 @@
 > 调用实例:
 
 ```shell
-curl --request GET  http://localhost:3000/api/v1/actions
+curl --request GET  http://localhost:3000/api/v1/actions?longitude=32.3&latitude=62.9
 ```
 
 > 返回:
@@ -19,6 +19,7 @@ curl --request GET  http://localhost:3000/api/v1/actions
      "price":"0.0",
      "longitude":32.5,
      "latitude":62.8,
+     "distance":110,
      "updated_at":"2016-04-20 14:49:56",
      "videos":[{"url":"http://115.29.110.82/public/uploads/sample.mp4",
                 "thumb_url":"http://115.29.110.82/public/uploads/sample.jpg",
@@ -30,6 +31,7 @@ curl --request GET  http://localhost:3000/api/v1/actions
       "price":"0.0",
       "longitude":32.5,
       "latitude":62.8,
+      "distance":120,
       "updated_at":"2016-04-20 14:49:56",
       "start_at":"2016-04-18 14:49:56",
       "end_at":"2016-04-19 00:49:56",
@@ -43,6 +45,7 @@ curl --request GET  http://localhost:3000/api/v1/actions
       "price":"0.0",
       "longitude":32.5,
       "latitude":62.8,
+      "distance":130,
       "updated_at":"2016-04-20 14:49:56",
       "start_at":"2016-04-18 14:49:56",
       "end_at":"2016-04-19 00:49:56",
@@ -70,6 +73,8 @@ curl --request GET  http://localhost:3000/api/v1/actions
 -----------|----------|------
 page       | 否       | 要获取第几页数据
 per_page   | 否       | 指定每页多少条记录
+longitude  | 否       | 指定当前位置的经度
+latitude   | 否       | 指定当前位置的纬度
 
 ### 返回结果
 
@@ -89,6 +94,7 @@ place                | 字符串 | 地点名称
 price                | 字符串 | 价格
 longitude            | 浮点数 | 经度
 latitude             | 浮点数 | 纬度
+distance             | 整数   | 与当前位置的距离, 单位为米
 updated_at           | 字符串 | 更新时间
 start_at             | 字符串 | 开始时间, type为activity或take_along_something才有该字段
 end_at               | 字符串 | 结束时间, type为activity或take_along_something才有该字段

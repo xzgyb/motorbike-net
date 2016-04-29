@@ -4,7 +4,13 @@ class TakeAlongSomethingsApiTest < ActiveSupport::TestCase
 
   test 'GET /api/v1/take_along_somethings returns a take_along_somethings list' do
     create_list(:take_along_something_with_images, 10)
-    get '/api/v1/take_along_somethings', access_token: token
+
+    first_take_along_something = Action.take_along_something.first
+
+    get '/api/v1/take_along_somethings',
+      longitude: first_take_along_something.longitude,
+      latitude: first_take_along_something.latitude,
+      access_token: token
 
     assert last_response.ok?
 
@@ -15,7 +21,7 @@ class TakeAlongSomethingsApiTest < ActiveSupport::TestCase
 
     assert_equal Action.take_along_something.count, result["take_along_somethings"].count 
     
-    %w[id title place price updated_at start_at end_at images longitude latitude].each do |field|
+    %w[id title place price updated_at start_at end_at images longitude latitude distance].each do |field|
       assert_includes result["take_along_somethings"][0], field
     end
 
@@ -28,21 +34,6 @@ class TakeAlongSomethingsApiTest < ActiveSupport::TestCase
     assert_equal 1, result["take_along_somethings"][0]["images"].count
     assert_includes result["take_along_somethings"][0]["images"][0], "url"
     assert_includes result["take_along_somethings"][0]["images"][0], "thumb_url"
-  end
-
-  test 'GET /api/v1/take_along_somethings returns a take_along_somethings list the order of which is descendant by updated_at' do
-    one = create(:take_along_something_with_images, updated_at: Time.current)
-    two = create(:take_along_something_with_images, updated_at: 1.day.since)
-    three = create(:take_along_something_with_images, updated_at: 2.days.since)
-
-    get 'api/v1/take_along_somethings', access_token: token
-    assert last_response.ok?
-
-    result = JSON.parse(last_response.body)
-
-    result_ids = result["take_along_somethings"].map { |elem| elem["id"] }
-    assert_equal [three.id.to_s, two.id.to_s, one.id.to_s], result_ids 
-
   end
 
   test 'GET /api/v1/take_along_somethings/:id returns a specified id take_along_something' do
@@ -74,7 +65,7 @@ class TakeAlongSomethingsApiTest < ActiveSupport::TestCase
         price: 25.2,
         content: "example content",
         longitude: 112,
-        latitude:  553,
+        latitude:  80,
         images_attributes: [
           {id: take_along_something.images[0].id.to_s, file: new_image_attachment},
           {file: new_image_attachment},
@@ -90,7 +81,7 @@ class TakeAlongSomethingsApiTest < ActiveSupport::TestCase
     assert_equal "hello take_along_something", take_along_something.title 
     assert_equal "25.2", take_along_something.price.to_s 
     assert_equal "example content", take_along_something.content 
-    assert_equal [112, 553], take_along_something.coordinates 
+    assert_equal [112, 80], take_along_something.coordinates 
     assert_equal 3, take_along_something.images.count
 
     put "api/v1/take_along_somethings/#{take_along_something.id}",
@@ -116,7 +107,7 @@ class TakeAlongSomethingsApiTest < ActiveSupport::TestCase
         end_at: 2.days.since,
         content: "example content",
         longitude: 112,
-        latitude: 553,
+        latitude: 80,
         images_attributes: [
           {file: new_image_attachment},
           {file: new_image_attachment}

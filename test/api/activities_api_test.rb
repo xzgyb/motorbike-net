@@ -4,7 +4,9 @@ class ActivitiesApiTest < ActiveSupport::TestCase
 
   test 'GET /api/v1/activities returns a activities list' do
     create_list(:activity_with_images, 10)
-    get '/api/v1/activities', access_token: token
+    first_activity = Action.activity.first
+
+    get '/api/v1/activities', longitude: first_activity.longitude, latitude: first_activity.latitude, access_token: token
 
     assert last_response.ok?
 
@@ -15,7 +17,7 @@ class ActivitiesApiTest < ActiveSupport::TestCase
 
     assert_equal Action.activity.count, result["activities"].count 
     
-    %w[id title place price updated_at start_at end_at images longitude latitude].each do |field|
+    %w[id title place price updated_at start_at end_at images longitude latitude distance].each do |field|
       assert_includes result["activities"][0], field
     end
 
@@ -28,21 +30,6 @@ class ActivitiesApiTest < ActiveSupport::TestCase
     assert_equal 1, result["activities"][0]["images"].count
     assert_includes result["activities"][0]["images"][0], "url"
     assert_includes result["activities"][0]["images"][0], "thumb_url"
-  end
-
-  test 'GET /api/v1/activities returns a activities list the order of which is descendant by updated_at' do
-    one = create(:activity_with_images, updated_at: Time.current)
-    two = create(:activity_with_images, updated_at: 1.day.since)
-    three = create(:activity_with_images, updated_at: 2.days.since)
-
-    get 'api/v1/activities', access_token: token
-    assert last_response.ok?
-
-    result = JSON.parse(last_response.body)
-
-    result_ids = result["activities"].map { |elem| elem["id"] }
-    assert_equal [three.id.to_s, two.id.to_s, one.id.to_s], result_ids 
-
   end
 
   test 'GET /api/v1/activities/:id returns a specified id activity' do
@@ -74,7 +61,7 @@ class ActivitiesApiTest < ActiveSupport::TestCase
         price: 25.2,
         content: "example content",
         longitude: 112,
-        latitude: 553,
+        latitude: 80,
         images_attributes: [
           {id: activity.images[0].id.to_s, file: new_image_attachment},
           {file: new_image_attachment},
@@ -90,7 +77,7 @@ class ActivitiesApiTest < ActiveSupport::TestCase
     assert_equal "hello activity", activity.title 
     assert_equal "25.2", activity.price.to_s 
     assert_equal "example content", activity.content 
-    assert_equal [112, 553], activity.coordinates 
+    assert_equal [112, 80], activity.coordinates 
     assert_equal 3, activity.images.count
 
     put "api/v1/activities/#{activity.id}",
@@ -116,7 +103,7 @@ class ActivitiesApiTest < ActiveSupport::TestCase
         end_at: 2.days.since,
         content: "example content",
         longitude: 112,
-        latitude: 553,
+        latitude: 80,
         images_attributes: [
           {file: new_image_attachment},
           {file: new_image_attachment}

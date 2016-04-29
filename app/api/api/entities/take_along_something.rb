@@ -6,7 +6,7 @@ module Api::Entities
 
     expose(:_id, as: :id) { |instance, _| instance._id.to_s } 
 
-    expose :title, :place, :price, :longitude, :latitude
+    expose :title, :place, :price, :longitude, :latitude, :distance
     expose :content, if: :export_content
 
     with_options(format_with: :time) do
