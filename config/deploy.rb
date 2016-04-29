@@ -65,6 +65,7 @@ task :deploy => :environment do
 
     to :launch do
       queue "mkdir -p #{deploy_to}/#{current_path}/tmp/"
+      queue "RAILS_ENV=production bundle exec rails db:mongoid:create_indexes"
       invoke :'puma:restart'
     end
   end
