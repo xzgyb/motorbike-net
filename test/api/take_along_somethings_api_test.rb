@@ -1,11 +1,21 @@
 require 'test_helper'
 
 class TakeAlongSomethingsApiTest < ActiveSupport::TestCase
+  def setup
+    @current_user = create(:user)
+    @gyb = create(:user, name: 'gyb')
 
-  test 'GET /api/v1/take_along_somethings returns a take_along_somethings list' do
-    create_list(:take_along_something_with_images, 10)
+    login_user(@current_user)
+  end
 
-    first_take_along_something = Action.take_along_something.first
+  test 'GET /api/v1/take_along_somethings returns a take_along_somethings list published by current_user and his friends' do
+    create_friendship(@current_user, @gyb)
+
+    create_list(:take_along_something_with_images, 5, user: @current_user)
+    create_list(:take_along_something_with_images, 5, user: @gyb)
+    create_list(:take_along_something_with_images, 5, user: create(:user))
+
+    first_take_along_something = @current_user.actions.take_along_somethings.first
 
     get '/api/v1/take_along_somethings',
       longitude: first_take_along_something.longitude,
@@ -19,7 +29,7 @@ class TakeAlongSomethingsApiTest < ActiveSupport::TestCase
     assert_includes result, "take_along_somethings"
     assert_includes result, "paginate_meta"
 
-    assert_equal Action.take_along_something.count, result["take_along_somethings"].count 
+    assert_equal 10, result["take_along_somethings"].count 
     
     %w[id title place price updated_at start_at end_at images longitude latitude distance].each do |field|
       assert_includes result["take_along_somethings"][0], field
@@ -37,7 +47,7 @@ class TakeAlongSomethingsApiTest < ActiveSupport::TestCase
   end
 
   test 'GET /api/v1/take_along_somethings/:id returns a specified id take_along_something' do
-    take_along_something = create(:take_along_something_with_images)
+    take_along_something = create(:take_along_something_with_images, user: @current_user)
     get "api/v1/take_along_somethings/#{take_along_something.id}", access_token: token
     
     assert last_response.ok?
@@ -49,16 +59,16 @@ class TakeAlongSomethingsApiTest < ActiveSupport::TestCase
   end
 
   test 'DELETE /api/v1/take_along_somethings/:id should work' do
-    take_along_something = create(:take_along_something_with_images)
+    take_along_something = create(:take_along_something_with_images, user: @current_user)
 
     delete "api/v1/take_along_somethings/#{take_along_something.id}", access_token: token
 
     assert last_response.ok?
-    assert_equal 0, Action.take_along_something.count
+    assert_equal 0, @current_user.actions.take_along_somethings.count
   end
 
   test 'PUT /api/v1/take_along_somethings/:id should update the specified id take_along_something' do
-    take_along_something = create(:take_along_something_with_images)
+    take_along_something = create(:take_along_something_with_images, user: @current_user)
 
     put "api/v1/take_along_somethings/#{take_along_something.id}", 
         title: "hello take_along_something",
@@ -99,6 +109,27 @@ class TakeAlongSomethingsApiTest < ActiveSupport::TestCase
 
   test 'POST /api/v1/take_along_somethings should create a take_along_something' do
 
+    # login another user
+    login_user @gyb
+
+    post "api/v1/take_along_somethings", 
+        title: "hello take_along_something",
+        price: 25.2,
+        place: "example place",
+        start_at: Time.current,
+        end_at: 2.days.since,
+        content: "example content",
+        longitude: 112,
+        latitude: 80,
+        images_attributes: [
+          {file: new_image_attachment},
+          {file: new_image_attachment}
+        ], 
+        access_token: token
+
+    # login current_user
+    login_user @current_user
+
     post "api/v1/take_along_somethings", 
         title: "hello take_along_something",
         price: 25.2,
@@ -115,9 +146,9 @@ class TakeAlongSomethingsApiTest < ActiveSupport::TestCase
         access_token: token
 
     assert last_response.created?
-    assert_equal 1, Action.take_along_something.count
+    assert_equal 1, @current_user.actions.take_along_somethings.count
 
-    take_along_something = Action.take_along_something.first
+    take_along_something = @current_user.actions.take_along_somethings.first
     assert_equal "hello take_along_something", take_along_something.title
     assert_equal 2, take_along_something.images.count
   end

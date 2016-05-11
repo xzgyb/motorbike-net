@@ -45,6 +45,7 @@ class User
   field :admin, type: Boolean, default: false
   field :phone, type: String, default: ""
   field :oauth_login_code, type: String, default: ""
+  field :max_distance, type: Integer, default: 5
 
   field :avatar, type: String
   mount_uploader :avatar, AvatarUploader
@@ -59,6 +60,20 @@ class User
   has_many :topics, dependent: :delete
   has_many :posts, dependent: :delete
   has_many :medias, dependent: :delete
+  has_many :actions do
+    def activities
+      where('_enumtype' => 'activity')
+    end
+
+    def livings
+      where('_enumtype' => 'living')
+    end
+
+    def take_along_somethings
+      where('_enumtype' => 'take_along_something')
+    end
+  end
+
 
   has_many :oauth_applications, class_name: 'Doorkeeper::Application', as: :owner
 

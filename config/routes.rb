@@ -30,5 +30,7 @@ Rails.application.routes.draw do
   get  '/doc', to: 'home#doc'
   get  '/medias/index', as: 'medias'
 
+  mount ActionCable.server => '/cable'
+
   match '*path', via: :all, to: redirect('/')
 end

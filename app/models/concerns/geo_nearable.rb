@@ -22,15 +22,15 @@ module GeoNearable
         }
       ]
 
+      if opts[:match]
+        pipeline << { '$match' => opts[:match] }
+      end
+
       count = collection.aggregate(pipeline).count
 
       if page && per_page
         pipeline << { '$skip' => ((page.to_i - 1) * per_page) }
         pipeline << { '$limit' => per_page }
-      end
-
-      if opts[:match] 
-        pipeline << { '$match' => opts[:match] }
       end
 
       if opts[:sort]
@@ -78,6 +78,15 @@ module GeoNearable
         end
 
         models.sort! { |a, b| a.distance <=> b.distance }
+      end
+
+      def mongodb_match_expression(user, action_type)
+        user_ids = user.friend_ids << user.id
+
+        and_expressions = [{"user_id" => {"$in" => user_ids}}] 
+        and_expressions << {"_enumtype" => action_type} if action_type != :all
+
+        {"$and" => and_expressions}
       end
   end
 end

@@ -128,10 +128,4 @@ class FriendsApiTest < ActiveSupport::TestCase
     assert_equal 0, @current_user.friends.count
     assert_equal 0, @john.friends.count
   end
-
-  private
-    def create_friendship(user1, user2)
-      user1.be_friends_with(user2)
-      user2.be_friends_with(user1)
-    end
 end

@@ -23,13 +23,12 @@ module Api::V1
       get do
         longitude = params[:longitude] || 0
         latitude  = params[:latitude] || 0
-        page      = params[:page] || 1
-        per_page  = params[:per_page] || 25
 
-        take_along_somethings = Action.near([longitude, latitude], 
-                                            page: page, 
-                                            per_page: per_page,
-                                            match: { '_enumtype': 'take_along_something' })
+        take_along_somethings = Action.circle_actions_for(current_user)
+                                      .take_along_something
+                                      .latest
+
+        take_along_somethings = paginate(take_along_somethings)
 
         present take_along_somethings, with: Api::Entities::TakeAlongSomething
         present paginate_record_for(take_along_somethings), with: Api::Entities::Paginate
@@ -39,7 +38,7 @@ module Api::V1
 
       desc 'create a take_along_something'
       post do
-        Action.take_along_something.create!(take_along_something_params)
+        current_user.actions.take_along_somethings.create!(take_along_something_params)
 
         respond_ok
       end
@@ -54,14 +53,14 @@ module Api::V1
 
       desc 'delete a take_along_something'
       delete ':id' do
-        take_along_something = Action.find(params[:id])
+        take_along_something = current_user.actions.take_along_somethings.find(params[:id])
         take_along_something.destroy!
         respond_ok
       end
 
       desc 'update a take_along_something'
       put ':id' do
-        take_along_something = Action.find(params[:id])
+        take_along_something = current_user.actions.take_along_somethings.find(params[:id])
         take_along_something.update!(take_along_something_params)
 
         respond_ok

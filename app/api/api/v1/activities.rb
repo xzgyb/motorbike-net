@@ -24,14 +24,9 @@ module Api::V1
       get do
         longitude = params[:longitude] || 0
         latitude  = params[:latitude] || 0
-        page      = params[:page] || 1
-        per_page  = params[:per_page] || 25
 
-        
-        activities = Action.near([longitude, latitude], 
-                                 page: page, 
-                                 per_page: per_page,
-                                 match: { '_enumtype': 'activity' })
+        activities = Action.circle_actions_for(current_user).activity.latest
+        activities = paginate(activities)
 
         present activities, with: Api::Entities::Activity
         present paginate_record_for(activities), with: Api::Entities::Paginate
@@ -41,8 +36,7 @@ module Api::V1
 
       desc 'create a activity'
       post do
-        Action.activity.create!(activity_params)
-
+        current_user.actions.activities.create!(activity_params)
         respond_ok
       end
 
@@ -56,21 +50,18 @@ module Api::V1
 
       desc 'delete a activity'
       delete ':id' do
-        activity = Action.find(params[:id])
+        activity = current_user.actions.activities.find(params[:id])
         activity.destroy!
         respond_ok
       end
 
       desc 'update a activity'
       put ':id' do
-        activity = Action.find(params[:id])
+        activity = current_user.actions.activities.find(params[:id])
         activity.update!(activity_params)
 
         respond_ok
       end
-
-
-
     end
   end
 end

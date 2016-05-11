@@ -23,13 +23,9 @@ module Api::V1
       get do
         longitude = params[:longitude] || 0
         latitude  = params[:latitude] || 0
-        page      = params[:page] || 1
-        per_page  = params[:per_page] || 25
 
-        livings = Action.near([longitude, latitude], 
-                              page: page, 
-                              per_page: per_page,
-                              match: { '_enumtype': 'living' })
+        livings = Action.circle_actions_for(current_user).living.latest
+        livings = paginate(livings)
 
         present livings, with: Api::Entities::Living
         present paginate_record_for(livings), with: Api::Entities::Paginate
@@ -39,7 +35,7 @@ module Api::V1
 
       desc 'create a living'
       post do
-        Action.living.create!(living_params)
+        current_user.actions.livings.create!(living_params)
 
         respond_ok
       end
@@ -54,21 +50,18 @@ module Api::V1
 
       desc 'delete a living'
       delete ':id' do
-        living = Action.find(params[:id])
+        living = current_user.actions.livings.find(params[:id])
         living.destroy!
         respond_ok
       end
 
       desc 'update a living'
       put ':id' do
-        living = Action.find(params[:id])
+        living = current_user.actions.livings.find(params[:id])
         living.update!(living_params)
 
         respond_ok
       end
-
-
-
     end
   end
 end

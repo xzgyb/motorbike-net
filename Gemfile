@@ -64,5 +64,5 @@ end
 group :test do
   gem 'mocha'
   gem 'database_cleaner', :git => 'https://github.com/DatabaseCleaner/database_cleaner.git'
-  gem 'minitest-hooks'
+ gem 'minitest-hooks'
 end

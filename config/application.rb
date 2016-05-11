@@ -33,5 +33,6 @@ module MotorbikeNet
     config.i18n.available_locales = ['zh-CN', 'en']
 
     # Do not swallow errors in after_commit/after_rollback callbacks.
+    config.action_cable.disable_request_forgery_protection = true
   end
 end

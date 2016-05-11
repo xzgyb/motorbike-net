@@ -1,10 +1,21 @@
 require 'test_helper'
 
 class ActivitiesApiTest < ActiveSupport::TestCase
+  def setup
+    @current_user = create(:user)
+    @gyb = create(:user, name: 'gyb')
 
-  test 'GET /api/v1/activities returns a activities list' do
-    create_list(:activity_with_images, 10)
-    first_activity = Action.activity.first
+    login_user(@current_user)
+  end
+
+  test 'GET /api/v1/activities returns a activities list published by current_user and his friends' do
+    create_friendship(@current_user, @gyb)
+
+    create_list(:activity_with_images, 5, user: @current_user)
+    create_list(:activity_with_images, 5, user: @gyb)
+    create_list(:activity_with_images, 5, user: create(:user))
+
+    first_activity = @current_user.actions.activities.first
 
     get '/api/v1/activities', longitude: first_activity.longitude, latitude: first_activity.latitude, access_token: token
 
@@ -15,8 +26,8 @@ class ActivitiesApiTest < ActiveSupport::TestCase
     assert_includes result, "activities"
     assert_includes result, "paginate_meta"
 
-    assert_equal Action.activity.count, result["activities"].count 
-    
+    assert_equal 10, result["activities"].count
+
     %w[id title place price updated_at start_at end_at images longitude latitude distance].each do |field|
       assert_includes result["activities"][0], field
     end
@@ -33,7 +44,7 @@ class ActivitiesApiTest < ActiveSupport::TestCase
   end
 
   test 'GET /api/v1/activities/:id returns a specified id activity' do
-    activity = create(:activity_with_images)
+    activity = create(:activity_with_images, user: @current_user)
     get "api/v1/activities/#{activity.id}", access_token: token
     
     assert last_response.ok?
@@ -45,16 +56,16 @@ class ActivitiesApiTest < ActiveSupport::TestCase
   end
 
   test 'DELETE /api/v1/activities/:id should work' do
-    activity = create(:activity_with_images)
+    activity = create(:activity_with_images, user: @current_user)
 
     delete "api/v1/activities/#{activity.id}", access_token: token
 
     assert last_response.ok?
-    assert_equal 0, Action.activity.count
+    assert_equal 0, @current_user.actions.activities.count
   end
 
   test 'PUT /api/v1/activities/:id should update the specified id activity' do
-    activity = create(:activity_with_images)
+    activity = create(:activity_with_images, user: @current_user)
 
     put "api/v1/activities/#{activity.id}", 
         title: "hello activity",
@@ -94,6 +105,26 @@ class ActivitiesApiTest < ActiveSupport::TestCase
   end
 
   test 'POST /api/v1/activities should create a activity' do
+    # login another user
+    login_user @gyb
+
+    post "api/v1/activities", 
+        title: "hello activity",
+        price: 25.2,
+        place: "example place",
+        start_at: Time.current,
+        end_at: 2.days.since,
+        content: "example content",
+        longitude: 112,
+        latitude: 80,
+        images_attributes: [
+          {file: new_image_attachment},
+          {file: new_image_attachment}
+        ],
+        access_token: token
+
+    # login current_user
+    login_user @current_user
 
     post "api/v1/activities", 
         title: "hello activity",
@@ -111,9 +142,9 @@ class ActivitiesApiTest < ActiveSupport::TestCase
         access_token: token
 
     assert last_response.created?
-    assert_equal 1, Action.activity.count
+    assert_equal 1, @current_user.actions.activities.count
 
-    activity = Action.activity.first
+    activity = @current_user.actions.activities.first
     assert_equal "hello activity", activity.title
     assert_equal 2, activity.images.count
   end

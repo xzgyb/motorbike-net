@@ -42,4 +42,9 @@ class ActiveSupport::TestCase
     @token ||= login_user(create(:user))
     @token.token
   end
+
+  def create_friendship(user1, user2)
+    user1.be_friends_with(user2)
+    user2.be_friends_with(user1)
+  end
 end

@@ -1,5 +1,7 @@
 module Api
   module Helpers
+    include DoorkeeperTokenHelper
+
     PaginateRecord = Struct.new(:current_page, 
                                 :next_page,
                                 :prev_page,
@@ -37,19 +39,6 @@ module Api
       result = PaginateRecord.new
       result.members.each { |member| result[member] = resource.send(member) }
       result
-    end
-
-    private
-
-    def doorkeeper_token
-      @_doorkeeper_token ||= Doorkeeper::OAuth::Token.authenticate(
-          decorated_request,
-          *Doorkeeper.configuration.access_token_methods
-      )
-    end
-
-    def decorated_request
-      Doorkeeper::Grape::AuthorizationDecorator.new(request)
     end
   end
 end

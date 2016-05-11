@@ -59,8 +59,11 @@ module HasFriends
   end
 
   def friends
-    friend_ids = self.friendships.where(status: 'accepted').pluck(:friend_id).to_a
     User.in(id: friend_ids)
+  end
+
+  def friend_ids
+    self.friendships.where(status: 'accepted').pluck(:friend_id).to_a
   end
 
   def pending_friends

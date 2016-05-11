@@ -1,10 +1,21 @@
 require 'test_helper'
 
 class LivingsApiTest < ActiveSupport::TestCase
+  def setup
+    @current_user = create(:user)
+    @gyb = create(:user, name: 'gyb')
 
-  test 'GET /api/v1/livings returns a livings list' do
-    create_list(:living_with_videos, 10)
-    first_living = Action.living.first
+    login_user(@current_user)
+  end
+
+  test 'GET /api/v1/livings returns a livings list published by current_user and his friends' do
+    create_friendship(@current_user, @gyb)
+
+    create_list(:living_with_videos, 5, user: @current_user)
+    create_list(:living_with_videos, 5, user: @gyb)
+    create_list(:living_with_videos, 5, user: create(:user))
+    
+    first_living = @current_user.actions.livings.first
 
     get '/api/v1/livings', longitude: first_living.longitude, latitude: first_living.latitude, access_token: token
 
@@ -15,7 +26,7 @@ class LivingsApiTest < ActiveSupport::TestCase
     assert_includes result, "livings"
     assert_includes result, "paginate_meta"
 
-    assert_equal Action.living.count, result["livings"].count 
+    assert_equal 10, result["livings"].count 
     
     %w[id title place price updated_at videos longitude latitude distance].each do |field|
       assert_includes result["livings"][0], field
@@ -33,7 +44,7 @@ class LivingsApiTest < ActiveSupport::TestCase
   end
 
   test 'GET /api/v1/livings/:id returns a specified id living' do
-    living = create(:living_with_videos)
+    living = create(:living_with_videos, user: @current_user)
     get "api/v1/livings/#{living.id}", access_token: token
     
     assert last_response.ok?
@@ -45,16 +56,16 @@ class LivingsApiTest < ActiveSupport::TestCase
   end
 
   test 'DELETE /api/v1/livings/:id should work' do
-    living = create(:living_with_videos)
+    living = create(:living_with_videos, user: @current_user)
 
     delete "api/v1/livings/#{living.id}", access_token: token
 
     assert last_response.ok?
-    assert_equal 0, Action.living.count
+    assert_equal 0, @current_user.actions.livings.count
   end
 
   test 'PUT /api/v1/livings/:id should update the specified id living' do
-    living = create(:living_with_videos)
+    living = create(:living_with_videos, user: @current_user)
 
     put "api/v1/livings/#{living.id}", 
         title: "hello living",
@@ -95,6 +106,25 @@ class LivingsApiTest < ActiveSupport::TestCase
 
   test 'POST /api/v1/livings should create a living' do
 
+    # login another user
+    login_user @gyb
+
+    post "api/v1/livings", 
+        title: "hello living",
+        price: 25.2,
+        place: "example place",
+        content: "example content",
+        longitude: 112,
+        latitude: 80,
+        videos_attributes: [
+          {file: new_video_attachment},
+          {file: new_video_attachment}
+        ], 
+        access_token: token
+
+    # login current_user
+    login_user @current_user
+
     post "api/v1/livings", 
         title: "hello living",
         price: 25.2,
@@ -109,9 +139,9 @@ class LivingsApiTest < ActiveSupport::TestCase
         access_token: token
 
     assert last_response.created?
-    assert_equal 1, Action.living.count
+    assert_equal 1, @current_user.actions.livings.count
 
-    living = Action.living.first
+    living = @current_user.actions.livings.first
     assert_equal "hello living", living.title
     assert_equal 2, living.videos.count
   end

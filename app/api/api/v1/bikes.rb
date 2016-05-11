@@ -63,6 +63,10 @@ module Api::V1
         if params.has_key?(:longitude) && params.has_key?(:latitude)
           bike.locations.create!(longitude: params[:longitude],
                                  latitude: params[:latitude])
+
+          NearbyActionsPushJob.perform_later(current_user, 
+                                             params[:longitude],
+                                             params[:latitude])
         end
 
         respond_ok

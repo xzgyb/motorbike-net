@@ -4,6 +4,7 @@ FactoryGirl.define do
     title       "example title"
     place       "example place"
     coordinates [32.5, 62.8]
+    user
 
     factory :activity, class: Action do
       type     :activity
