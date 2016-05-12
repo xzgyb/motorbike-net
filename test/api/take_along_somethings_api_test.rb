@@ -31,8 +31,16 @@ class TakeAlongSomethingsApiTest < ActiveSupport::TestCase
 
     assert_equal 10, result["take_along_somethings"].count 
     
-    %w[id title place price updated_at start_at end_at images longitude latitude distance].each do |field|
+    %w[id title place price updated_at start_at end_at images longitude latitude distance sender receiver].each do |field|
       assert_includes result["take_along_somethings"][0], field
+    end
+
+    %w[name address phone].each do |field|
+      assert_includes result["take_along_somethings"][0]["sender"], field
+    end
+
+    %w[name address phone].each do |field|
+      assert_includes result["take_along_somethings"][0]["receiver"], field
     end
 
     assert_not_includes result["take_along_somethings"][0], "content"
@@ -44,6 +52,15 @@ class TakeAlongSomethingsApiTest < ActiveSupport::TestCase
     assert_equal 1, result["take_along_somethings"][0]["images"].count
     assert_includes result["take_along_somethings"][0]["images"][0], "url"
     assert_includes result["take_along_somethings"][0]["images"][0], "thumb_url"
+  end
+
+  test 'GET /api/v1/take_along_somethings with max_distance returns a nearby take_along_something list' do
+    create_list(:take_along_something_with_images, 10, coordinates:[33.5, 55.8], user: @current_user) 
+
+    get '/api/v1/take_along_somethings', longitude: 33.5, latitude: 55.8, max_distance: 5,
+        access_token: token
+
+    assert last_response.ok?
   end
 
   test 'GET /api/v1/take_along_somethings/:id returns a specified id take_along_something' do
@@ -76,6 +93,8 @@ class TakeAlongSomethingsApiTest < ActiveSupport::TestCase
         content: "example content",
         longitude: 112,
         latitude:  80,
+        sender_attributes: {name: "qwwqe", phone: "11234234234", address: "24234234"} ,
+        receiver_attributes: {name: "weras", phone: "23423424", address: "112312311"} ,
         images_attributes: [
           {id: take_along_something.images[0].id.to_s, file: new_image_attachment},
           {file: new_image_attachment},
@@ -121,6 +140,8 @@ class TakeAlongSomethingsApiTest < ActiveSupport::TestCase
         content: "example content",
         longitude: 112,
         latitude: 80,
+        sender_attributes: {name: "gyb", phone: "11234234234", address: "24234234"} ,
+        receiver_attributes: {name: "ww", phone: "23423424", address: "112312311"} ,
         images_attributes: [
           {file: new_image_attachment},
           {file: new_image_attachment}
@@ -139,6 +160,8 @@ class TakeAlongSomethingsApiTest < ActiveSupport::TestCase
         content: "example content",
         longitude: 112,
         latitude: 80,
+        sender_attributes: {name: "gyb", phone: "11234234234", address: "24234234"} ,
+        receiver_attributes: {name: "ww", phone: "23423424", address: "112312311"} ,
         images_attributes: [
           {file: new_image_attachment},
           {file: new_image_attachment}

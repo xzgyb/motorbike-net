@@ -16,6 +16,9 @@ module Api::Entities
   
     expose :images, using: ActionImageAttachment
 
+    expose :sender, using: SomethingSender
+    expose :receiver, using: SomethingReceiver
+
     root "take_along_somethings", "take_along_something"
   end
 end

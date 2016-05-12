@@ -9,7 +9,9 @@ module Api::V1
         def take_along_something_params
           ActionController::Parameters.new(params).permit(
             :title, :price, :place, :content, :start_at, :end_at, :longitude, :latitude,
-            images_attributes: [:id, :file, :_destroy])
+            {images_attributes: [:id, :file, :_destroy]},
+            {sender_attributes: [:id, :name, :phone, :address, :_destroy]},
+            {receiver_attributes: [:id, :name, :phone, :address, :_destroy]})
         end
       end
       
@@ -19,16 +21,29 @@ module Api::V1
         optional :latitude,  type: Float
         optional :page,      type: Integer
         optional :per_page,  type: Integer
+        optional :max_distance, type: Integer
       end
       get do
         longitude = params[:longitude] || 0
         latitude  = params[:latitude] || 0
 
-        take_along_somethings = Action.circle_actions_for(current_user)
-                                      .take_along_something
-                                      .latest
+        if params[:max_distance].present?
+          page     = params[:page] || 1
+          per_page = params[:per_page] || 25
 
-        take_along_somethings = paginate(take_along_somethings)
+          take_along_somethings = Action.nearby_actions(current_user, 
+                                                        'take_along_something',
+                                                        [longitude, latitude],
+                                                        max_distance: params[:max_distance],
+                                                        page: page,
+                                                        per_page: per_page)
+        else
+          take_along_somethings = Action.circle_actions_for(current_user)
+                                        .take_along_something
+                                        .latest
+
+          take_along_somethings = paginate(take_along_somethings)
+        end
 
         present take_along_somethings, with: Api::Entities::TakeAlongSomething
         present paginate_record_for(take_along_somethings), with: Api::Entities::Paginate
@@ -38,8 +53,14 @@ module Api::V1
 
       desc 'create a take_along_something'
       post do
-        current_user.actions.take_along_somethings.create!(take_along_something_params)
+        take_along_something = current_user.actions.take_along_somethings.new(
+          take_along_something_params)
 
+        take_along_something.save!
+
+        ActionPushJob.perform_later(current_user, 
+                                    take_along_something, 
+                                    ActionPushJob::ACTION_ADD)
         respond_ok
       end
 
@@ -55,6 +76,10 @@ module Api::V1
       delete ':id' do
         take_along_something = current_user.actions.take_along_somethings.find(params[:id])
         take_along_something.destroy!
+
+        ActionPushJob.perform_later(current_user, 
+                                    take_along_something, 
+                                    ActionPushJob::ACTION_DELETE)
         respond_ok
       end
 
@@ -62,6 +87,10 @@ module Api::V1
       put ':id' do
         take_along_something = current_user.actions.take_along_somethings.find(params[:id])
         take_along_something.update!(take_along_something_params)
+
+        ActionPushJob.perform_later(current_user, 
+                                    take_along_something, 
+                                    ActionPushJob::ACTION_UPDATE)
 
         respond_ok
       end

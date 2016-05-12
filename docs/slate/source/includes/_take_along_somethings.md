@@ -22,6 +22,18 @@ curl --request GET  http://localhost:3000/api/v1/take_along_somethings?longitude
      "updated_at":"2016-04-20 14:49:56",
      "start_at":"2016-04-18 14:49:56",
      "end_at":"2016-04-19 00:49:56",
+     "sender":{
+       "id":"1123123345345435",
+       "name":"ggg",
+       "phone":"13811111111",
+       "adress":"sgsfgsdfgsfg"
+     },
+     "receiver":{
+       "id":"11233123345345435",
+       "name":"fff",
+       "phone":"13911111111",
+       "adress":"sgsfgsdfgsfg"
+     },
      "images":[{"url":"http://115.29.110.82/public/uploads/sample.jpg",
                 "thumb_url":"http://115.29.110.82/public/uploads/sample.jpg",
                 "id":"57148394495576297f2d30f6"}]},
@@ -47,6 +59,7 @@ page       | 否       | 要获取第几页数据
 per_page   | 否       | 指定每页多少条记录
 longitude  | 否       | 指定当前位置的经度
 latitude   | 否       | 指定当前位置的纬度
+max_distance | 否     | 获取指定max_distance距离内的捎东西列表
 
 ### 返回结果
 
@@ -71,6 +84,8 @@ start_at             | 字符串 | 开始时间
 end_at               | 字符串 | 结束时间
 content              | 字符串 | 具体的内容
 images               | image类型的数组 | 图片相关信息
+sender               | sender类型的对象 | 发件人信息, 可能为null
+receiver             | receiver类型的对象 | 收件人信息, 可能为null
 
 #### image类型说明
 
@@ -79,6 +94,24 @@ images               | image类型的数组 | 图片相关信息
 id                   | 字符串 | 一条图片记录的id
 url                  | 字符串 | 图片的url
 thumb_url            | 字符串 | thumb图片的url，用于显示缩略图
+
+#### sender类型说明
+
+名称               | 类型   | 描述
+---------------------|--------|------
+id                   | 字符串 | 发件人记录的id
+name                 | 字符串 | 发件人姓名
+phone                | 字符串 | 发件人电话
+address              | 字符串 | 发件人地址
+
+#### receiver类型说明
+
+名称               | 类型   | 描述
+---------------------|--------|------
+id                   | 字符串 | 收件人记录的id
+name                 | 字符串 | 收件人姓名
+phone                | 字符串 | 收件人电话
+address              | 字符串 | 收件人地址
 
 #### paginate_meta类型说明
 
@@ -105,6 +138,16 @@ curl -H 'Content-Type:application/json'
           "latitude":234.6,
           "start_at": "2016-05-01 12:00:50",
           "end_at": "2016-05-04 18:30:00",
+          "sender_attributes":{
+             "name":"ggg",
+             "phone":"13811111111",
+             "adress":"sgsfgsdfgsfg"
+           },
+           "receiver_attributes":{
+             "name":"fff",
+             "phone":"13911111111",
+             "adress":"sgsfgsdfgsfg"
+           },
           "images_attributes":[
             "file":"图片文件数据",
             "file":"图片文件数据"
@@ -134,8 +177,9 @@ longitude  | 是      | 经度
 latitude   | 是      | 纬度
 start_at   | 是      | 开始时间
 end_at     | 是      | 结束时间
-images_attributes | 是      | 上传的图片数据
-
+images_attributes | 是 | 上传的图片数据
+sender_attributes | 否 | 发件人信息
+receiver_attributes | 否 | 收件人信息
 
 ### 返回结果
 
@@ -151,7 +195,14 @@ images_attributes | 是      | 上传的图片数据
 ```shell
 curl -H 'Content-Type:application/json'
      --request PUT
-     -d '{"title":"another title", "longitude":55.2, "latitude":66.8]}'
+     -d '{"title":"another title",
+          "longitude":55.2,
+          "latitude":66.8,
+          "sender_attributes":{
+             "id":"1123123345345435"
+             "name":"ggg1232",
+             "phone":"1381111411"}
+          }'
      http://localhost:3000/api/v1/take_along_somethings/57148394495576297f2d30f7
 ```
 
@@ -178,6 +229,8 @@ latitude   | 是       | 纬度
 start_at   | 是       | 开始时间
 end_at     | 是       | 结束时间
 images_attributes | 是 | 上传的图片数据
+sender_attributes | 否 | 发件人信息
+receiver_attributes | 否 | 收件人信息
 
 
 ### 返回结果
@@ -280,6 +333,18 @@ curl --request GET http://localhost:3000/api/v1/take_along_somethings/5714839449
      "updated_at":"2016-04-20 14:49:56",
      "start_at":"2016-04-18 14:49:56",
      "end_at":"2016-04-19 00:49:56",
+     "sender":{
+       "id":"1123123345345435",
+       "name":"ggg",
+       "phone":"13811111111",
+       "adress":"sgsfgsdfgsfg"
+     },
+     "receiver":{
+       "id":"11233123345345435",
+       "name":"fff",
+       "phone":"13911111111",
+       "adress":"sgsfgsdfgsfg"
+     },
      "images":[
         {"url":"http://115.29.110.82/public/uploads/sample.jpg",
          "thumb_url":"http://115.29.110.82/public/uploads/sample.jpg",
