@@ -31,6 +31,9 @@ class FriendsApiTest < ActiveSupport::TestCase
 
     assert_includes result['friends'][0], 'id'
     assert_includes result['friends'][0], 'name'
+    assert_includes result['friends'][0], 'avatar_url'
+    assert_includes result['friends'][0], 'longitude'
+    assert_includes result['friends'][0], 'latitude'
 
     %w[current_page next_page prev_page total_pages total_count].each do |field|
       assert_includes result["paginate_meta"], field
