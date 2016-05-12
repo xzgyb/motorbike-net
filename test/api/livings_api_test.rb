@@ -43,6 +43,14 @@ class LivingsApiTest < ActiveSupport::TestCase
     assert_includes result["livings"][0]["videos"][0], "thumb_url"
   end
 
+  test 'GET /api/v1/livings with max_distance returns a nearby livings list' do
+    create_list(:living_with_videos, 10, coordinates:[33.5, 55.8], user: @current_user) 
+    get '/api/v1/livings', longitude: 33.5, latitude: 55.8, max_distance: 5,
+        access_token: token
+
+    assert last_response.ok?
+  end
+
   test 'GET /api/v1/livings/:id returns a specified id living' do
     living = create(:living_with_videos, user: @current_user)
     get "api/v1/livings/#{living.id}", access_token: token

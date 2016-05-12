@@ -1,6 +1,6 @@
-class NearbyActionsChannel < ApplicationCable::Channel
+class ActionChannel < ApplicationCable::Channel
   def subscribed
-    stream_from "nearby_actions:#{current_user.id}"
+    stream_from "action:#{current_user.id}"
   end
 
   def unsubscribed

@@ -45,6 +45,7 @@ page       | 否       | 要获取第几页数据
 per_page   | 否       | 指定每页多少条记录
 longitude  | 否       | 指定当前位置的经度
 latitude   | 否       | 指定当前位置的纬度
+max_distance | 否     | 获取指定max_distance距离内的直播列表
 
 ### 返回结果
 

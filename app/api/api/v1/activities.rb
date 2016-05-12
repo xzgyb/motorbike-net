@@ -20,13 +20,26 @@ module Api::V1
         optional :latitude,  type: Float
         optional :page,      type: Integer
         optional :per_page,  type: Integer
+        optional :max_distance, type: Integer
       end
       get do
         longitude = params[:longitude] || 0
         latitude  = params[:latitude] || 0
 
-        activities = Action.circle_actions_for(current_user).activity.latest
-        activities = paginate(activities)
+        if params[:max_distance].present?
+          page     = params[:page] || 1
+          per_page = params[:per_page] || 25
+
+          activities = Action.nearby_actions(current_user, 
+                                          'activity',
+                                          [longitude, latitude],
+                                          max_distance: params[:max_distance],
+                                          page: page,
+                                          per_page: per_page)
+        else
+          activities = Action.circle_actions_for(current_user).activity.latest
+          activities = paginate(activities)
+        end
 
         present activities, with: Api::Entities::Activity
         present paginate_record_for(activities), with: Api::Entities::Paginate
@@ -36,7 +49,13 @@ module Api::V1
 
       desc 'create a activity'
       post do
-        current_user.actions.activities.create!(activity_params)
+        activity = current_user.actions.activities.new(activity_params)
+        activity.save!
+
+        ActionPushJob.perform_later(current_user, 
+                                    activity, 
+                                    ActionPushJob::ACTION_ADD)
+
         respond_ok
       end
 
@@ -52,6 +71,11 @@ module Api::V1
       delete ':id' do
         activity = current_user.actions.activities.find(params[:id])
         activity.destroy!
+
+        ActionPushJob.perform_later(current_user, 
+                                    activity, 
+                                    ActionPushJob::ACTION_DELETE)
+
         respond_ok
       end
 
@@ -59,6 +83,10 @@ module Api::V1
       put ':id' do
         activity = current_user.actions.activities.find(params[:id])
         activity.update!(activity_params)
+
+        ActionPushJob.perform_later(current_user, 
+                                    activity, 
+                                    ActionPushJob::ACTION_UPDATE)
 
         respond_ok
       end

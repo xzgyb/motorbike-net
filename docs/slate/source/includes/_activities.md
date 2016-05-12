@@ -47,6 +47,7 @@ page       | 否       | 要获取第几页数据
 per_page   | 否       | 指定每页多少条记录
 longitude  | 否       | 指定当前位置的经度
 latitude   | 否       | 指定当前位置的纬度
+max_distance | 否     | 获取指定max_distance距离内的活动列表
 
 ### 返回结果
 
@@ -151,7 +152,7 @@ images_attributes | 是      | 上传的图片数据
 ```shell
 curl -H 'Content-Type:application/json'
      --request PUT
-     -d '{"title":"another title", "longitude":55.2, "latitude":66.8]}'
+     -d '{"title":"another title", "longitude":55.2, "latitude":66.8}'
      http://localhost:3000/api/v1/activities/57148394495576297f2d30f7
 ```
 

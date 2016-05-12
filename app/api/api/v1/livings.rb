@@ -19,13 +19,26 @@ module Api::V1
         optional :latitude,  type: Float
         optional :page,      type: Integer
         optional :per_page,  type: Integer
+        optional :max_distance, type: Integer
       end
       get do
         longitude = params[:longitude] || 0
         latitude  = params[:latitude] || 0
 
-        livings = Action.circle_actions_for(current_user).living.latest
-        livings = paginate(livings)
+        if params[:max_distance].present?
+          page     = params[:page] || 1
+          per_page = params[:per_page] || 25
+
+          livings = Action.nearby_actions(current_user, 
+                                          'living',
+                                          [longitude, latitude],
+                                          max_distance: params[:max_distance],
+                                          page: page,
+                                          per_page: per_page)
+        else
+          livings = Action.circle_actions_for(current_user).living.latest
+          livings = paginate(livings)
+        end
 
         present livings, with: Api::Entities::Living
         present paginate_record_for(livings), with: Api::Entities::Paginate
@@ -35,8 +48,12 @@ module Api::V1
 
       desc 'create a living'
       post do
-        current_user.actions.livings.create!(living_params)
+        living = current_user.actions.livings.new(living_params)
+        living.save!
 
+        ActionPushJob.perform_later(current_user, 
+                                    living, 
+                                    ActionPushJob::ACTION_ADD)
         respond_ok
       end
 
@@ -52,6 +69,10 @@ module Api::V1
       delete ':id' do
         living = current_user.actions.livings.find(params[:id])
         living.destroy!
+
+        ActionPushJob.perform_later(current_user, 
+                                    living, 
+                                    ActionPushJob::ACTION_DELETE)
         respond_ok
       end
 
@@ -60,6 +81,9 @@ module Api::V1
         living = current_user.actions.livings.find(params[:id])
         living.update!(living_params)
 
+        ActionPushJob.perform_later(current_user, 
+                                    living, 
+                                    ActionPushJob::ACTION_UPDATE)
         respond_ok
       end
     end

@@ -123,7 +123,6 @@ module Api::V1
         requires :password, type: String, desc: 'user password'
         requires :password_confirmation, type: String, desc: 'user password confirmation'
         optional :avatar, type: File
-        optional :max_distance, type: Integer
       end
       put :update do
         doorkeeper_authorize!

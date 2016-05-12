@@ -43,6 +43,14 @@ class ActivitiesApiTest < ActiveSupport::TestCase
     assert_includes result["activities"][0]["images"][0], "thumb_url"
   end
 
+  test 'GET /api/v1/activities with max_distance returns a nearby activities list' do
+    create_list(:activity_with_images, 10, coordinates:[33.5, 55.8], user: @current_user) 
+    get '/api/v1/activities', longitude: 33.5, latitude: 55.8, max_distance: 5,
+        access_token: token
+
+    assert last_response.ok?
+  end
+
   test 'GET /api/v1/activities/:id returns a specified id activity' do
     activity = create(:activity_with_images, user: @current_user)
     get "api/v1/activities/#{activity.id}", access_token: token

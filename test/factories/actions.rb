@@ -42,6 +42,9 @@ FactoryGirl.define do
       start_at { Time.current     }
       end_at   { 10.hour.from_now }
 
+      sender
+      receiver
+
       factory :take_along_something_with_images do
         transient do
           images_count 1

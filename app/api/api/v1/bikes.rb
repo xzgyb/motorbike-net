@@ -64,9 +64,9 @@ module Api::V1
           bike.locations.create!(longitude: params[:longitude],
                                  latitude: params[:latitude])
 
-          NearbyActionsPushJob.perform_later(current_user, 
-                                             params[:longitude],
-                                             params[:latitude])
+          FriendLocationPushJob.perform_later(current_user, 
+                                              params[:longitude],
+                                              params[:latitude])
         end
 
         respond_ok

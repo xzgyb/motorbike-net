@@ -3,6 +3,7 @@ class Action
   include Mongoid::Timestamps
   include Mongoid::Enum
   include GeoNearable
+  include GlobalID::Identification
 
   enum :type, [:activity, :living, :take_along_something]
     
@@ -19,9 +20,12 @@ class Action
   has_many :images, class_name: "ActionImageAttachment"
   has_many :videos, class_name: "ActionVideoAttachment"
 
+  has_one :sender
+  has_one :receiver
+
   belongs_to :user
 
-  accepts_nested_attributes_for :images, :videos, allow_destroy: true
+  accepts_nested_attributes_for :images, :videos, :sender, :receiver, allow_destroy: true
 
   validates :title, :place, :coordinates, presence: true
   validates :images, :start_at, :end_at, presence: true, 

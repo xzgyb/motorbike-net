@@ -1,6 +1,7 @@
 class User
   include Mongoid::Document
   include HasFriends
+  include GlobalID::Identification
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
@@ -45,10 +46,13 @@ class User
   field :admin, type: Boolean, default: false
   field :phone, type: String, default: ""
   field :oauth_login_code, type: String, default: ""
-  field :max_distance, type: Integer, default: 5
+  field :online, type: Boolean, default: false
 
   field :avatar, type: String
   mount_uploader :avatar, AvatarUploader
+
+  field :longitude, type: Float, default: 0
+  field :latitude, type: Float, default: 0
   
   validates :name, presence: true, uniqueness: true
   validates :phone, uniqueness: true, allow_blank: true
@@ -78,9 +82,14 @@ class User
   has_many :oauth_applications, class_name: 'Doorkeeper::Application', as: :owner
 
   scope :name_ordered, -> { order_by(name: :asc) }
+  scope :onlined,      -> { where(online: true) }
 
   def valid_oauth_login_code?(code)
     oauth_login_code && oauth_login_code == code
+  end
+
+  def onlined_friends
+    self.friends.onlined
   end
 
   protected
