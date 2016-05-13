@@ -7,21 +7,20 @@ module ApplicationCable
 
     def connect
       self.current_user = find_verified_user
-      self.current_user.update_attribute(:online, true)
+      self.current_user.update_attribute(:online, true) if self.current_user
     end
 
     def disconnect
-      self.current_user.update_attribute(:online, false)
+      self.current_user.update_attribute(:online, false) if self.current_user
     end
 
     protected
       def find_verified_user
-        reject_unauthorized_connection if doorkeeper_token.nil?
-
-        current_user = User.where(id: doorkeeper_token.resource_owner_id).first
-        reject_unauthorized_connection if current_user.nil?
-
-        current_user
+        if doorkeeper_token && doorkeeper_token.accessible?
+          User.where(id: doorkeeper_token.resource_owner_id).first
+        else
+          nil
+        end
       end
   end
 end

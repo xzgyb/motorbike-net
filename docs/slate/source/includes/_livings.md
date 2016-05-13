@@ -97,7 +97,7 @@ curl -H 'Content-Type:application/json'
      --request POST
      -d '{"title":"hello"
           "place":"地点名称",
-          "price":"35.5,",
+          "price":"35.5",
           "longitude":12.5,
           "latitude":234.6,
           "videos_attributes":[

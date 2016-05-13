@@ -80,7 +80,7 @@ module HasFriends
   private
     def destroy_all_friendships
       Friendship.where(user_id: id).delete_all
-      Firendship.where(friend_id: id).delete_all
+      Friendship.where(friend_id: id).delete_all
     end
 
 end

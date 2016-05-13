@@ -1,5 +1,4 @@
 # encoding: utf-8
-require 'securerandom'
 
 module Api::V1
   class Users < Grape::API
@@ -78,8 +77,7 @@ module Api::V1
 
         respond_error!('该用户已存在，无法注册！') if user
 
-        user = User.new(phone: phone,
-                        oauth_login_code: SecureRandom.hex(10))
+        user = User.new(phone: phone)
 
         respond_error!('用户注册失败!') unless user.save(validate: false)
 

@@ -11,10 +11,10 @@ curl --request GET  http://localhost:3000/api/v1/friends
 ```json
 {"result":1,
  "friends":[
-    {"id":"571db5d849557627ae3a3de3", "name":"amy", avatar_url:"http://localhost:3000/images/a.png", longitude:33.5, latitude: 44.8},
-    {"id":"571db5d849557627ae3a3de0", "name":"john", avatar_url:"http://localhost:3000/images/b.png", longitude:33.5, latitude: 24.8},
-    {"id":"571db5d849557627ae3a3de2", "name":"mike", avatar_url:"http://localhost:3000/images/c.png", longitude:33.5, latitude: 34.8},
-    {"id":"571db5d849557627ae3a3de1", "name":"peter", avatar_url:"http://localhost:3000/images/d.png", longitude:33.5, latitude: 54.8}
+    {"id":"571db5d849557627ae3a3de3", "name":"amy", "avatar_url":"http://localhost:3000/images/a.png", longitude:33.5, latitude: 44.8},
+    {"id":"571db5d849557627ae3a3de0", "name":"john", "avatar_url":"http://localhost:3000/images/b.png", longitude:33.5, latitude: 24.8},
+    {"id":"571db5d849557627ae3a3de2", "name":"mike", "avatar_url":"http://localhost:3000/images/c.png", longitude:33.5, latitude: 34.8},
+    {"id":"571db5d849557627ae3a3de1", "name":"peter", "avatar_url":"http://localhost:3000/images/d.png", longitude:33.5, latitude: 54.8}
   ],
  "paginate_meta": {"current_page":1,
                    "next_page":null,

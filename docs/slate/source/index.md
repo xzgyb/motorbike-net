@@ -14,6 +14,7 @@ includes:
   - livings
   - actions
   - friends
+  - circle_info_updates
 
 search: true
 ---

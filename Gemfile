@@ -8,8 +8,8 @@ gem 'coffee-rails', '~> 4.1.0'
 gem 'jquery-rails'
 gem 'turbolinks', :git => 'https://github.com/turbolinks/turbolinks-classic.git'
 gem 'jbuilder', '~> 2.0'
-# Use Redis adapter to run Action Cable in production
-# gem 'redis', '~> 3.0'
+gem 'redis', '~> 3.0'
+gem 'sidekiq'
 gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'slim'
 gem 'bootstrap-sass', '~> 3.3.5'

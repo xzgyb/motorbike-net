@@ -1,3 +1,5 @@
+require 'securerandom'
+
 class User
   include Mongoid::Document
   include HasFriends
@@ -83,6 +85,10 @@ class User
 
   scope :name_ordered, -> { order_by(name: :asc) }
   scope :onlined,      -> { where(online: true) }
+
+  before_create do
+    self.oauth_login_code = SecureRandom.hex(10)
+  end
 
   def valid_oauth_login_code?(code)
     oauth_login_code && oauth_login_code == code

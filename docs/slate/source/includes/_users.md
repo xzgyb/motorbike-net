@@ -5,7 +5,7 @@
 > 调用实例:
 
 ```shell
-curl --request GET http://localhost:3000/api/v1/users/ validation_code?phone=13812345678&type=1
+curl --request GET http://localhost:3000/api/v1/users/validation_code?phone=13812345678&type=1
 ```
 > 返回:
 
@@ -74,6 +74,14 @@ validation_code | 是       | 手机上收到的短信校验码, 这个校验码
 失败  | `{"result":0,"error":"错误原因"}`
 
 ## oauth登录
+
+> 调用实例:
+
+```shell
+curl -H 'Content-Type:application/json' --request POST -d '{"grant_type":"password","username":"13889210325","password":"7274e2fcbbcc402f0abb","client_id":"3a1ef442","client_secret":"14bd5fd3ef8dbd0e3e28cfa959c72a6549824aa0632a74bbb6bf8ab76ab298b4"}' http://localhost:3000/oauth/token
+
+curl -H 'Content-Type:application/json' --request POST -d '{"grant_type":"password","username":"gg","password":"11111111","client_id":"3a1ef442","client_secret":"14bd5fd3ef8dbd0e3e28cfa959c72a6549824aa0632a74bbb6bf8ab76ab298b4"}' http://localhost:3000/oauth/token
+```
 
 使用`创建oauth应用`步骤获取的Application Id和Secret， 用手机号作为oauth密码登录方式的用户名， 用`注册用户`步骤获取的oauth_login_code作为oauth密码登录方式的密码, 进行oauth登录，具体用法可参见相关的第三方库使用说明.
 

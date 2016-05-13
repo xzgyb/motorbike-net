@@ -34,5 +34,7 @@ module MotorbikeNet
 
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.action_cable.disable_request_forgery_protection = true
+
+    config.active_job.queue_adapter = :sidekiq
   end
 end
