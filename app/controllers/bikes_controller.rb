@@ -1,4 +1,6 @@
 class BikesController < ApplicationController
+  MAX_POINTS = 300
+
   load_resource :user
   decorates_assigned :users, :bike, :bikes, :user
 
@@ -24,7 +26,17 @@ class BikesController < ApplicationController
     if @bike
       gon.longitude = @bike.longitude
       gon.latitude  = @bike.latitude
-      gon.travelTrackHistories = @bike.locations
+
+      count = @bike.locations.count
+      offset = count > MAX_POINTS ? count - MAX_POINTS : 0
+
+      locations = @bike.locations.offset(offset)
+
+      gon.travelTrackHistories = locations.map do |location|
+        {longitude: location.longitude,
+         latitude: location.latitude}
+      end
+
       gon.userName = @user.name
       gon.bikeName = @bike.name
     end
