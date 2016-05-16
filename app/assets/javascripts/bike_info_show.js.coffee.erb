@@ -17,8 +17,9 @@ displayBikeLocationMap = (container, userName, bikeName, longitude, latitude) ->
     convertor = new BMap.Convertor()
     convertor.translate([point], 1, 5, (data) ->
       if data.status == 0
+        icon = new BMap.Icon("<%= asset_url('bike_marker.gif') %>", new BMap.Size(75, 65)) 
         convertedPoint = data.points[0]
-        marker = new BMap.Marker(convertedPoint)
+        marker = new BMap.Marker(convertedPoint, {icon: icon})
 
         label = new BMap.Label(userName + "的" + bikeName + "的位置",
                                {offset: new BMap.Size(-30, 30)})
@@ -34,24 +35,32 @@ displayBikeLocationMap = (container, userName, bikeName, longitude, latitude) ->
     )
 
 # Display bike track map.
-displayBikeTrackMap = (container, locationPoints) ->
+displayBikeTrackMap = (container, locations) ->
     map = createBMap(container)
 
-    points = new Array()
-    lastPoint = null
+    count = locations.length
 
-    for locationPoint in locationPoints
-        point = new BMap.Point(locationPoint[0], locationPoint[1])
-        lastPoint = point
+    return if count == 0
+
+    points = new Array()
+
+    for location in locations
+        point = new BMap.Point(location.longitude, location.latitude)
         points.push(point)
 
-    polyline = new BMap.Polyline(points, 
-        strokeColor: "#FF264F",
-        strokeWeight: 4,
-        strokeOpacity: 0.5)
+    map.centerAndZoom(points[count - 1], 19)
 
-    map.addOverlay(polyline)
-    map.centerAndZoom(lastPoint, 19)
+    convertor = new BMap.Convertor()
+    convertor.translate(points, 1, 5, (data)->
+      if data.status == 0
+        polyline = new BMap.Polyline(data.points,
+            strokeColor: "#FF264F",
+            strokeWeight: 4,
+            strokeOpacity: 0.8)
+        map.addOverlay(polyline)
+        polyline.enableEditing()
+        map.centerAndZoom(data.points[count - 1], 17)
+    )
 
 # Set bike maps size.
 setBikeMapsSize = ->
