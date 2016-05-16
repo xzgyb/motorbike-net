@@ -61,6 +61,9 @@ module Api::V1
         bike.update!(bike_params)
 
         if params.has_key?(:longitude) && params.has_key?(:latitude)
+          current_user.update!(longitude: params[:longitude],
+                               latitude: params[:latitude])
+
           bike.locations.create!(longitude: params[:longitude],
                                  latitude: params[:latitude])
 
