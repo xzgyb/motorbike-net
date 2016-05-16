@@ -6,6 +6,23 @@ createBMap = (container) ->
     map.enableScrollWheelZoom()
     return map
 
+# Display bike location marker
+displayBikeLocationMarker = (map, point, title) ->
+  icon = new BMap.Icon("<%= asset_url('bike_marker.gif') %>",
+                       new BMap.Size(75, 65)) 
+
+  marker = new BMap.Marker(point, {icon: icon})
+
+  label = new BMap.Label(title, {offset: new BMap.Size(-30, 30)})
+  label.setStyle(
+     color: "rgb(255,65,54)"
+     fontWeight: "bold"
+     fontSize: "18px"
+     borderStyle: "none")
+
+  marker.setLabel(label)
+  map.addOverlay(marker)
+
 # Display bike location map.
 displayBikeLocationMap = (container, userName, bikeName, longitude, latitude) ->
     map = createBMap(container)
@@ -17,25 +34,15 @@ displayBikeLocationMap = (container, userName, bikeName, longitude, latitude) ->
     convertor = new BMap.Convertor()
     convertor.translate([point], 1, 5, (data) ->
       if data.status == 0
-        icon = new BMap.Icon("<%= asset_url('bike_marker.gif') %>", new BMap.Size(75, 65)) 
         convertedPoint = data.points[0]
-        marker = new BMap.Marker(convertedPoint, {icon: icon})
-
-        label = new BMap.Label(userName + "的" + bikeName + "的位置",
-                               {offset: new BMap.Size(-30, 30)})
-        label.setStyle(
-               color: "rgb(255,65,54)"
-               fontWeight: "bold"
-               fontSize: "18px"
-               borderStyle: "none")
-
-        marker.setLabel(label)
-        map.addOverlay(marker)
+        displayBikeLocationMarker(map,
+                                  convertedPoint,
+                                  userName + "的" + bikeName + "的位置")
         map.centerAndZoom(convertedPoint, 19)
     )
 
 # Display bike track map.
-displayBikeTrackMap = (container, locations) ->
+displayBikeTrackMap = (container, userName, bikeName, locations) ->
     map = createBMap(container)
 
     count = locations.length
@@ -59,6 +66,11 @@ displayBikeTrackMap = (container, locations) ->
             strokeOpacity: 0.8)
         map.addOverlay(polyline)
         polyline.enableEditing()
+
+        displayBikeLocationMarker(map,
+                                  data.points[count - 1],
+                                  userName + "的" + bikeName + "行驶轨迹")
+
         map.centerAndZoom(data.points[count - 1], 17)
     )
 
@@ -82,5 +94,5 @@ $ ->
   isBikeTrackMapShown = false
   $('a[href="#map-track-tab"]').on 'shown.bs.tab', ->
       if !isBikeTrackMapShown
-          displayBikeTrackMap("bike-track-map", gon.travelTrackHistories)
+          displayBikeTrackMap("bike-track-map", gon.userName, gon.bikeName, gon.travelTrackHistories)
           isBikeTrackMapShown = true
