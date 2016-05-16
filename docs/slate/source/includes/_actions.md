@@ -90,6 +90,7 @@ max_distance | 否     | 获取指定max_distance距离内的行为列表
 ---------------------|--------|------
 id                   | 字符串 | 一条action记录的id
 type                 | 字符串 | activity: 表示活动, take_along_something: 表示捎东西, living: 表示直播
+user_id              | 字符串 | 表示创建该条记录的用户id 
 title                | 字符串 | 标题
 place                | 字符串 | 地点名称
 price                | 字符串 | 价格
