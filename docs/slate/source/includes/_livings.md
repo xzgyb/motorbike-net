@@ -102,8 +102,8 @@ curl -H 'Content-Type:application/json'
           "longitude":12.5,
           "latitude":234.6,
           "videos_attributes":[
-            "file":"视频文件数据",
-            "file":"视频文件数据"
+            {"file":"视频文件数据"},
+            {"file":"视频文件数据"}
             ]
           }'
      http://localhost:3000/api/v1/livings

@@ -142,7 +142,7 @@ curl -H 'Content-Type:application/json'
           "sender_attributes":{
              "name":"ggg",
              "phone":"13811111111",
-             "adress":"sgsfgsdfgsfg"
+             "address":"sgsfgsdfgsfg"
            },
            "receiver_attributes":{
              "name":"fff",
@@ -150,8 +150,8 @@ curl -H 'Content-Type:application/json'
              "adress":"sgsfgsdfgsfg"
            },
           "images_attributes":[
-            "file":"图片文件数据",
-            "file":"图片文件数据"
+            {"file":"图片文件数据"},
+            {"file":"图片文件数据"}
             ]
           }'
      http://localhost:3000/api/v1/take_along_somethings

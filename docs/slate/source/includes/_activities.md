@@ -108,8 +108,8 @@ curl -H 'Content-Type:application/json'
           "start_at": "2016-05-01 12:00:50",
           "end_at": "2016-05-04 18:30:00",
           "images_attributes":[
-            "file":"图片文件数据",
-            "file":"图片文件数据"
+            {"file":"图片文件数据"},
+            {"file":"图片文件数据"}
             ]
           }'
      http://localhost:3000/api/v1/activities
