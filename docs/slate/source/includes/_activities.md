@@ -45,8 +45,8 @@ curl --request GET  http://localhost:3000/api/v1/activities?longitude=32.3&latit
 -----------|----------|------
 page       | 否       | 要获取第几页数据
 per_page   | 否       | 指定每页多少条记录
-longitude  | 否       | 指定当前位置的经度
-latitude   | 否       | 指定当前位置的纬度
+longitude  | 否       | 指定当前位置的经度, 范围为-180.0至180.0
+latitude   | 否       | 指定当前位置的纬度, 范围为-90.0至90.0
 max_distance | 否     | 获取指定max_distance距离内的活动列表
 
 ### 返回结果
@@ -72,7 +72,7 @@ updated_at           | 字符串 | 更新时间
 start_at             | 字符串 | 开始时间
 end_at               | 字符串 | 结束时间
 content              | 字符串 | 具体的内容
-images               | image类型的数组 | 图片相关信息
+images               | image类型的数组 | 图片相关信息， 如果没有图片，为[]
 
 #### image类型说明
 
@@ -132,11 +132,11 @@ curl -H 'Content-Type:application/json'
 title      | 是      | 标题
 place      | 是      | 地点名称
 price      | 是      | 价格
-longitude  | 是      | 经度
-latitude   | 是      | 纬度
+longitude  | 是      | 经度, 范围为-180.0至180.0
+latitude   | 是      | 纬度, 范围为-90.0至90.0
 start_at   | 是      | 开始时间
 end_at     | 是      | 结束时间
-images_attributes | 是      | 上传的图片数据
+images_attributes | 否      | 上传的图片数据
 
 
 ### 返回结果
@@ -175,11 +175,11 @@ id         | 是       | 一条活动记录的id
 title      | 是       | 标题
 place      | 是       | 地点名称
 price      | 是       | 价格
-longitude  | 是       | 经度
-latitude   | 是       | 纬度
+longitude  | 是       | 经度, 范围为-180.0至180.0
+latitude   | 是       | 纬度, 范围为-90.0至90.0
 start_at   | 是       | 开始时间
 end_at     | 是       | 结束时间
-images_attributes | 是 | 上传的图片数据
+images_attributes | 否 | 上传的图片数据
 
 
 ### 返回结果

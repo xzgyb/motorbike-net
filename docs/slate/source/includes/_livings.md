@@ -43,8 +43,8 @@ curl --request GET  http://localhost:3000/api/v1/livings?longitude=32.3&latitude
 -----------|----------|------
 page       | 否       | 要获取第几页数据
 per_page   | 否       | 指定每页多少条记录
-longitude  | 否       | 指定当前位置的经度
-latitude   | 否       | 指定当前位置的纬度
+longitude  | 否       | 指定当前位置的经度, 范围为-180.0至180.0
+latitude   | 否       | 指定当前位置的纬度, 范围为-90.0至90.0
 max_distance | 否     | 获取指定max_distance距离内的直播列表
 
 ### 返回结果
@@ -68,7 +68,8 @@ latitude             | 浮点数 | 纬度
 distance             | 整数   | 与当前位置的距离, 单位为米
 updated_at           | 字符串 | 更新时间
 content              | 字符串 | 具体的内容
-videos               | video类型的数组 | 视频相关信息
+videos               | video类型的数组 | 视频相关信息, 如果没有视频，可能为[]
+images               | image类型的数组 | 图片相关信息, 如果没有图片，可能为[]
 
 #### video类型说明
 
@@ -77,6 +78,14 @@ videos               | video类型的数组 | 视频相关信息
 id                   | 字符串 | 一条视频记录的id
 url                  | 字符串 | 视频的url
 thumb_url            | 字符串 | 该视频的thumb图片的url，用于显示缩略图
+
+#### image类型说明
+
+名称               | 类型   | 描述
+---------------------|--------|------
+id                   | 字符串 | 一条图片记录的id
+url                  | 字符串 | 图片的url
+thumb_url            | 字符串 | thumb图片的url，用于显示缩略图
 
 #### paginate_meta类型说明
 
@@ -126,9 +135,10 @@ curl -H 'Content-Type:application/json'
 title      | 是      | 标题
 place      | 是      | 地点名称
 price      | 是      | 价格
-longitude  | 是      | 经度
-latitude   | 是      | 纬度
-videos_attributes | 是      | 上传的视频数据
+longitude  | 是      | 经度, 范围为-180.0至180.0
+latitude   | 是      | 纬度, 范围为-90.0至90.0
+videos_attributes | 否      | 上传的视频数据
+images_attributes | 否      | 上传的图片数据
 
 
 ### 返回结果
@@ -167,9 +177,10 @@ id         | 是       | 一条直播记录的id
 title      | 是       | 标题
 place      | 是       | 地点名称
 price      | 是       | 价格
-longitude  | 是       | 经度
-latitude   | 是       | 纬度
-videos_attributes | 是      | 上传的视频数据
+longitude  | 是       | 经度, 范围为-180.0至180.0
+latitude   | 是       | 纬度, 范围为-90.0至90.0
+videos_attributes | 否      | 上传的视频数据
+images_attributes | 否      | 上传的图片数据
 
 
 ### 返回结果
