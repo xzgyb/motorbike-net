@@ -63,6 +63,23 @@ class TakeAlongSomethingsApiTest < ActiveSupport::TestCase
     assert last_response.ok?
   end
 
+  test 'GET /api/v1/take_along_somethings returns a take_along_something list when create record without images' do
+    create_list(:take_along_something, 10, coordinates:[33.5, 55.8], user: @current_user) 
+
+    get '/api/v1/take_along_somethings', access_token: token
+    
+    assert last_response.ok?
+
+    result = JSON.parse(last_response.body)
+
+    assert_includes result, "take_along_somethings"
+    assert_includes result, "paginate_meta"
+
+    assert_equal 10, result["take_along_somethings"].count 
+
+    assert last_response.ok?
+  end
+
   test 'GET /api/v1/take_along_somethings/:id returns a specified id take_along_something' do
     take_along_something = create(:take_along_something_with_images, user: @current_user)
     get "api/v1/take_along_somethings/#{take_along_something.id}", access_token: token

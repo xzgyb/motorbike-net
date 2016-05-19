@@ -56,9 +56,9 @@ class ActionTest < ActiveSupport::TestCase
     assert_equal [18.2, 15.5], @activity_action.coordinates
   end
 
-  test "images should be present when type is activity" do
+  test "images can be not present when type is activity" do
     @activity_action.images = []
-    assert_not @activity_action.valid?
+    assert @activity_action.valid?
   end
 
   test "should be valid with a title, place, coordinates and videos when type is living" do
@@ -80,9 +80,9 @@ class ActionTest < ActiveSupport::TestCase
     assert_not @living_action.valid?
   end
 
-  test "videos should be present when type is living" do
+  test "videos can be not present when type is living" do
     @living_action.videos = []
-    assert_not @living_action.valid?
+    assert @living_action.valid?
   end
 
 
@@ -113,9 +113,9 @@ class ActionTest < ActiveSupport::TestCase
     assert_not @take_along_something_action.valid?
   end
 
-  test "images should be present when type is take_along_something" do
+  test "images can be not present when type is take_along_something" do
     @take_along_something_action.images = []
-    assert_not @take_along_something_action.valid?
+    assert @take_along_something_action.valid?
   end
 
 end
