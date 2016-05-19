@@ -6,9 +6,10 @@ module Api::Entities
     format_with(:time) { |dt| dt.strftime("%Y-%m-%d %H:%M:%S") }
 
     expose(:_id, as: :id) { |instance, _| instance._id.to_s } 
+    expose(:user_id)      { |instance, _| instance.user_id.to_s }
 
     expose :type
-    expose :user_id
+
     expose :title, :place, :price, :longitude, :latitude
     expose :content, if: :export_content
 
