@@ -9,16 +9,16 @@ module Api::V1
         def take_along_something_params
           ActionController::Parameters.new(params).permit(
             :title, :price, :place, :content, :start_at, :end_at, :longitude, :latitude,
-            {images_attributes: [:id, :file, :_destroy]},
-            {sender_attributes: [:id, :name, :phone, :address, :_destroy]},
-            {receiver_attributes: [:id, :name, :phone, :address, :_destroy]})
+            images_attributes: [:id, :file, :_destroy],
+            sender_attributes: [:id, :name, :phone, :address, :_destroy],
+            receiver_attributes: [:id, :name, :phone, :address, :_destroy])
         end
       end
       
       desc 'get take_along_somethings list'
       params do
-        optional :longitude, type: Float
-        optional :latitude,  type: Float
+        optional :longitude, type: Float, values: -180.0..+180.0
+        optional :latitude,  type: Float, values: -90.0..+90.0
         optional :page,      type: Integer
         optional :per_page,  type: Integer
         optional :max_distance, type: Integer
@@ -52,7 +52,21 @@ module Api::V1
       end
 
       desc 'create a take_along_something'
+      params do
+        requires :title, type: String
+        requires :place, type: String
+        requires :price, type: String
+        requires :longitude, type: Float, values: -180.0..+180.0
+        requires :latitude,  type: Float, values: -90.0..+90.0
+        requires :start_at, type: String
+        requires :end_at, type: String
+        optional :images_attributes, type: Array
+        optional :sender_attributes, type: Hash
+        optional :receiver_attributes, type: Hash
+      end
       post do
+        normalize_uploaded_file_attributes(params[:images_attributes])
+
         take_along_something = current_user.actions.take_along_somethings.new(
           take_along_something_params)
 
@@ -84,8 +98,17 @@ module Api::V1
       end
 
       desc 'update a take_along_something'
+      params do
+        optional :longitude, type: Float, values: -180.0..+180.0
+        optional :latitude,  type: Float, values: -90.0..+90.0
+        optional :images_attributes, type: Array
+        optional :sender_attributes, type: Hash
+        optional :receiver_attributes, type: Hash
+      end
       put ':id' do
         take_along_something = current_user.actions.take_along_somethings.find(params[:id])
+        normalize_uploaded_file_attributes(params[:images_attributes])
+
         take_along_something.update!(take_along_something_params)
 
         ActionPushJob.perform_later(current_user, 

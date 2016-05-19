@@ -7,8 +7,8 @@ module Api::V1
 
       desc 'get actions list'
       params do
-        optional :longitude, type: Float
-        optional :latitude,  type: Float
+        optional :longitude, type: Float, values: -180.0..+180.0
+        optional :latitude,  type: Float, values: -90.0..+90.0
         optional :page,      type: Integer
         optional :per_page,  type: Integer
         optional :max_distance, type: Integer

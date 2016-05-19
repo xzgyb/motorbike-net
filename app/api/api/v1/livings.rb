@@ -9,14 +9,15 @@ module Api::V1
         def living_params
           ActionController::Parameters.new(params).permit(
             :title, :price, :place, :content, :longitude, :latitude,
-            videos_attributes: [:id, :file, :_destroy])
+            videos_attributes: [:id, :file, :_destroy],
+            images_attributes: [:id, :file, :_destroy])
         end
       end
       
       desc 'get livings list'
       params do
-        optional :longitude, type: Float
-        optional :latitude,  type: Float
+        optional :longitude, type: Float, values: -180.0..+180.0
+        optional :latitude,  type: Float, values: -90.0..+90.0
         optional :page,      type: Integer
         optional :per_page,  type: Integer
         optional :max_distance, type: Integer
@@ -47,7 +48,19 @@ module Api::V1
       end
 
       desc 'create a living'
+      params do
+        requires :title, type: String
+        requires :place, type: String
+        requires :price, type: String
+        requires :longitude, type: Float, values: -180.0..+180.0
+        requires :latitude,  type: Float, values: -90.0..+90.0
+        optional :videos_attributes, type: Array
+        optional :images_attributes, type: Array
+      end
       post do
+        normalize_uploaded_file_attributes(params[:videos_attributes])
+        normalize_uploaded_file_attributes(params[:images_attributes])
+
         living = current_user.actions.livings.new(living_params)
         living.save!
 
@@ -77,8 +90,18 @@ module Api::V1
       end
 
       desc 'update a living'
+      params do
+        optional :longitude, type: Float, values: -180.0..+180.0
+        optional :latitude,  type: Float, values: -90.0..+90.0
+        optional :videos_attributes, type: Array
+        optional :images_attributes, type: Array
+      end
       put ':id' do
         living = current_user.actions.livings.find(params[:id])
+        
+        normalize_uploaded_file_attributes(params[:videos_attributes])
+        normalize_uploaded_file_attributes(params[:images_attributes])
+
         living.update!(living_params)
 
         ActionPushJob.perform_later(current_user, 

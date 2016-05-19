@@ -16,8 +16,8 @@ module Api::V1
       
       desc 'get activities list'
       params do
-        optional :longitude, type: Float
-        optional :latitude,  type: Float
+        optional :longitude, type: Float, values: -180.0..+180.0
+        optional :latitude,  type: Float, values: -90.0..+90.0
         optional :page,      type: Integer
         optional :per_page,  type: Integer
         optional :max_distance, type: Integer
@@ -48,7 +48,19 @@ module Api::V1
       end
 
       desc 'create a activity'
+      params do
+        requires :title, type: String
+        requires :place, type: String
+        requires :price, type: String
+        requires :longitude, type: Float, values: -180.0..+180.0
+        requires :latitude,  type: Float, values: -90.0..+90.0
+        requires :start_at, type: String
+        requires :end_at, type: String
+        optional :images_attributes, type: Array
+      end
       post do
+        normalize_uploaded_file_attributes(params[:images_attributes])
+
         activity = current_user.actions.activities.new(activity_params)
         activity.save!
 
@@ -80,8 +92,15 @@ module Api::V1
       end
 
       desc 'update a activity'
+      params do
+        optional :longitude, type: Float, values: -180.0..+180.0
+        optional :latitude,  type: Float, values: -90.0..+90.0
+        optional :images_attributes, type: Array
+      end
       put ':id' do
         activity = current_user.actions.activities.find(params[:id])
+        normalize_uploaded_file_attributes(params[:images_attributes])
+
         activity.update!(activity_params)
 
         ActionPushJob.perform_later(current_user, 

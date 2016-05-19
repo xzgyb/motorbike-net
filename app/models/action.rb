@@ -28,9 +28,8 @@ class Action
   accepts_nested_attributes_for :images, :videos, :sender, :receiver, allow_destroy: true
 
   validates :title, :place, :coordinates, presence: true
-  validates :images, :start_at, :end_at, presence: true, 
+  validates :start_at, :end_at, presence: true, 
                      if: -> (action) { action.activity? || action.take_along_something? }
-  validates :videos, presence: true, if: :living?
 
   validate do
     if self.coordinates.length != 2 

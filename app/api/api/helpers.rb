@@ -40,5 +40,15 @@ module Api
       result.members.each { |member| result[member] = resource.send(member) }
       result
     end
+
+    def normalize_uploaded_file_attributes(attrs)
+      if attrs.present?
+        attrs.each do |attr|
+          if attr[:file].present?
+            attr[:file] = ActionDispatch::Http::UploadedFile.new(attr[:file])
+          end
+        end
+      end
+    end
   end
 end
