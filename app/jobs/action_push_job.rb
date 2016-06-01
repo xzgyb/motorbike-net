@@ -7,7 +7,7 @@ class ActionPushJob < ActiveJob::Base
   ACTION_UPDATE = 2
 
   def perform(user, action, status)
-    onlined_users = user.onlined_friends
+    onlined_users = user.onlined_friends.to_a
     onlined_users << user if user.online?
 
     data = action_data(action, status)

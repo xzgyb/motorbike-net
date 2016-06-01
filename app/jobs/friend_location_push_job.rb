@@ -3,7 +3,9 @@ class FriendLocationPushJob < ActiveJob::Base
 
 
   def perform(user, longitude, latitude)
-    onlined_users = user.onlined_friends
+    onlined_users = user.onlined_friends.to_a
+    onlined_users << user if user.online?
+
     data = location_data(user, longitude, latitude)
 
     onlined_users.each do |user|
