@@ -1,9 +1,3 @@
-class Receiver
-  include Mongoid::Document
-
-  field :name, type: String, default: ""
-  field :phone, type: String, default: ""
-  field :address, type: String, default: ""
-
+class Receiver < ApplicationRecord 
   belongs_to :action
 end

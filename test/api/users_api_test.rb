@@ -14,6 +14,71 @@ class UsersApiTest < ActiveSupport::TestCase
     @amy   = create(:user, name: 'amy')
   end
 
+  test "GET /api/v1/users/validation_code should work" do
+    get '/api/v1/users/validation_code?phone=13811111111&type=1'
+    assert last_response.ok?
+  end
+
+  test "POST /api/v1/users/register should work" do
+    get '/api/v1/users/validation_code?phone=13811111111&type=1'
+    assert last_response.ok?
+
+    get '/api/v1/users/get_validation_code/13811111111'
+    assert last_response.ok?
+    
+    validation_code = last_response.body.delete('"')
+    post '/api/v1/users/register?phone=13811111111&validation_code=' + validation_code
+    assert last_response.created?
+    
+    result = JSON.parse(last_response.body)
+    assert_includes result, 'oauth_login_code'
+  end
+
+  test "POST /api/v1/users/login should work" do
+    get "/api/v1/users/validation_code?phone=#{@john.phone}&type=2"
+    assert last_response.ok?
+
+    get "/api/v1/users/get_validation_code/#{@john.phone}"
+    assert last_response.ok?
+
+    validation_code = last_response.body.delete('"')
+    post "/api/v1/users/login?phone=#{@john.phone}&validation_code=" + validation_code
+    assert last_response.created?
+
+    result = JSON.parse(last_response.body)
+    assert_includes result, 'oauth_login_code'
+  end
+
+  test "PUT /api/v1/users/reset should work" do
+    old_encrypted_password = @john.encrypted_password
+
+    get "/api/v1/users/validation_code?phone=#{@john.phone}&type=3"
+    assert last_response.ok?
+
+    get "/api/v1/users/get_validation_code/#{@john.phone}"
+    assert last_response.ok?
+
+    validation_code = last_response.body.delete('"')
+    put "/api/v1/users/reset?phone=#{@john.phone}&validation_code=" + 
+      validation_code + "&password=12345678&password_confirmation=12345678"
+
+    assert last_response.ok?
+    assert_not_equal old_encrypted_password, @john.reload.encrypted_password
+  end
+
+  test "PUT /api/v1/users/update should work" do
+    old_encrypted_password = @current_user.encrypted_password
+    old_name               = @current_user.name
+
+    put "/api/v1/users/update?name=hello&password=12345678&password_confirmation=12345678", access_token: token
+
+    assert last_response.ok?
+    @current_user.reload
+
+    assert_not_equal old_name, @current_user.name
+    assert_not_equal old_encrypted_password, @current_user.encrypted_password
+  end
+
   test "GET /api/v1/users/query query the empty user name, and returns a full users list which orderd by name"  do
     get '/api/v1/users/query', access_token: token
     assert last_response.ok?
@@ -34,7 +99,7 @@ class UsersApiTest < ActiveSupport::TestCase
     assert_equal 6, result["users"].count
 
     result_ids = result["users"].map { |elem| elem["id"] }
-    expect_ids = [@amy, @gyb, @john, @joyce, @mike, @peter].map { |e| e.id.to_s }
+    expect_ids = [@amy, @gyb, @john, @joyce, @mike, @peter].map { |e| e.id }
 
     assert_equal expect_ids, result_ids
   end
@@ -48,7 +113,7 @@ class UsersApiTest < ActiveSupport::TestCase
     assert_equal 2, result["users"].count
 
     result_ids = result["users"].map { |elem| elem["id"] }
-    expect_ids = [@john, @joyce].map { |e| e.id.to_s }
+    expect_ids = [@john, @joyce].map { |e| e.id }
 
     assert_equal expect_ids, result_ids
 
@@ -59,7 +124,7 @@ class UsersApiTest < ActiveSupport::TestCase
     result = JSON.parse(last_response.body)
 
     assert_equal 1, result["users"].count
-    assert_equal @gyb.id.to_s, result["users"][0]["id"]
+    assert_equal @gyb.id, result["users"][0]["id"]
   end
 
   test "GET /api/v1/users/:id returns the specified user info" do

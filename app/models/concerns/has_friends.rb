@@ -2,8 +2,6 @@ module HasFriends
   extend ActiveSupport::Concern
 
   included do
-    include Mongoid::Attributes::Dynamic
-
     has_many :friendships
     after_destroy :destroy_all_friendships
   end
@@ -59,7 +57,7 @@ module HasFriends
   end
 
   def friends
-    User.in(id: friend_ids)
+    User.where(id: friend_ids)
   end
 
   def friend_ids
@@ -68,7 +66,7 @@ module HasFriends
 
   def pending_friends
     pending_friend_ids = self.friendships.where(status: 'pending').pluck(:friend_id).to_a
-    User.in(id: pending_friend_ids)
+    User.where(id: pending_friend_ids)
   end
 
   def delete_friend(friend)

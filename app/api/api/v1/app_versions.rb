@@ -3,14 +3,6 @@ require 'markdown_render'
 module Api::V1
   class AppVersions < Grape::API
 
-    formatter :json, ->(object, env) do
-      if object.is_a?(String) && object.html_safe?
-        object
-      else
-        Grape::Formatter::Json.call(object, env)
-      end
-    end
-
     resource :app_versions do
       desc 'Get newest app version with the specified app name'
       params do
@@ -32,8 +24,7 @@ module Api::V1
                                                  params[:version]).first
 
         respond_error!('没有这个版本的App') unless app_version
-        full_url = "#{env['rack.url_scheme']}://#{env['HTTP_HOST']}#{app_version.app.url}"
-        respond_ok(url: full_url)
+        respond_ok(url: app_version.app.url)
       end
 
       desc 'Get changelog with the specified app name and version'
@@ -46,7 +37,7 @@ module Api::V1
                                                  params[:version]).first
 
         respond_error!('没有这个版本的App') unless app_version
-        %({"result":1,"changelog":"#{MarkdownRender.markdown(app_version.changelog)}"}).html_safe
+        respond_ok(changelog: MarkdownRender.markdown(app_version.changelog))
       end
 
     end

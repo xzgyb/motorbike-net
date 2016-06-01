@@ -12,17 +12,18 @@ curl --request GET  http://localhost:3000/api/v1/livings?longitude=32.3&latitude
 ```json
 { "result":1,
   "livings":[
-    {"id":"57148394495576297f2d30f7",
+    {"id":1,
+     "user_id":2,
      "title":"example title",
      "place":"example place",
      "price":"0.0",
-     "longitude":32.5,
-     "latitude":62.8,
+     "longitude":"32.5",
+     "latitude":"62.8",
      "distance":110,
      "updated_at":"2016-04-20 14:49:56",
      "videos":[{"url":"http://115.29.110.82/public/uploads/sample.mp4",
                 "thumb_url":"http://115.29.110.82/public/uploads/sample.jpg",
-                "id":"57148394495576297f2d30f6"}]},
+                "id":2}]},
      ...],
 
   "paginate_meta":{"current_page":1,
@@ -58,13 +59,13 @@ max_distance | 否     | 获取指定max_distance距离内的直播列表
 
 名称               | 类型   | 描述
 ---------------------|--------|------
-id                   | 字符串 | 一条直播记录的id
-user_id              | 字符串 | 表示创建该条记录的用户id 
+id                   | 整型 | 一条直播记录的id
+user_id              | 整型 | 表示创建该条记录的用户id
 title                | 字符串 | 标题
 place                | 字符串 | 地点名称
 price                | 字符串 | 价格
-longitude            | 浮点数 | 经度
-latitude             | 浮点数 | 纬度
+longitude            | 字符串 | 经度
+latitude             | 字符串 | 纬度
 distance             | 整数   | 与当前位置的距离, 单位为米
 updated_at           | 字符串 | 更新时间
 content              | 字符串 | 具体的内容
@@ -108,8 +109,8 @@ curl -H 'Content-Type:application/json'
      -d '{"title":"hello"
           "place":"地点名称",
           "price":"35.5",
-          "longitude":12.5,
-          "latitude":234.6,
+          "longitude":"12.5",
+          "latitude":"234.6",
           "videos_attributes":[
             {"file":"视频文件数据"},
             {"file":"视频文件数据"}
@@ -135,6 +136,7 @@ curl -H 'Content-Type:application/json'
 title      | 是      | 标题
 place      | 是      | 地点名称
 price      | 是      | 价格
+content    | 是      | 详细内容
 longitude  | 是      | 经度, 范围为-180.0至180.0
 latitude   | 是      | 纬度, 范围为-90.0至90.0
 videos_attributes | 否      | 上传的视频数据
@@ -155,8 +157,8 @@ images_attributes | 否      | 上传的图片数据
 ```shell
 curl -H 'Content-Type:application/json'
      --request PUT
-     -d '{"title":"another title", "longitude":55.2,"latitude":66.8}'
-     http://localhost:3000/api/v1/livings/57148394495576297f2d30f7
+     -d '{"title":"another title", "longitude":"55.2","latitude":"66.8"}'
+     http://localhost:3000/api/v1/livings/2
 ```
 
 > 返回:
@@ -197,8 +199,8 @@ images_attributes | 否      | 上传的图片数据
 ```shell
 curl -H 'Content-Type:application/json'
      --request PUT
-     -d '{"videos_attributes":[{"id":"57148394495576297f2d30f6", "_destroy":1}]}'
-     http://localhost:3000/api/v1/livings/57148394495576297f2d30f7
+     -d '{"videos_attributes":[{"id":1, "_destroy":1}]}'
+     http://localhost:3000/api/v1/livings/2
 ```
 
 > 返回:
@@ -233,7 +235,7 @@ videos_attributes | 是 | 为一个要删除的视频信息数组, 数组中每�
 > 调用实例:
 
 ```shell
-curl --request DELETE http://localhost:3000/api/v1/livings/57148394495576297f2d30f7
+curl --request DELETE http://localhost:3000/api/v1/livings/2
 ```
 
 > 返回:
@@ -265,7 +267,7 @@ id         | 是       | 一条直播记录的id
 > 调用实例:
 
 ```shell
-curl --request GET http://localhost:3000/api/v1/livings/57148394495576297f2d30f7
+curl --request GET http://localhost:3000/api/v1/livings/2
 ```
 
 > 返回:
@@ -273,18 +275,18 @@ curl --request GET http://localhost:3000/api/v1/livings/57148394495576297f2d30f7
 ```json
 { "result":1,
   "video":
-    {"id":"57148394495576297f2d30f7",
+    {"id":2,
      "title":"example title",
      "place":"example place",
      "price":"0.0",
-     "longitude":32.5,
-     "latitude":62.8,
-     "content":"",
+     "longitude":"32.5",
+     "latitude":"62.8",
+     "content":"adfasdf",
      "updated_at":"2016-04-20 14:49:56",
      "videos":[
         {"url":"http://115.29.110.82/public/uploads/sample.mp4",
          "thumb_url":"http://115.29.110.82/public/uploads/sample.jpg",
-         "id":"57148394495576297f2d30f6"}]}}
+         "id":1}]}}
 ```
 
 ### HTTP请求

@@ -1,8 +1,6 @@
 module Api::Entities
   class Location < Grape::Entity
-
-    expose :longitude
-    expose :latitude
+    expose :longitude, :latitude
 
     root "locations", "location"
   end

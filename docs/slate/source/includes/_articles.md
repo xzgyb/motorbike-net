@@ -55,7 +55,7 @@ curl --request GET http://localhost:3000/api/v1/articles/56e9227d636239120278a40
 
 ```json
 {"result":1,
- "article":{"id":"56e9227d636239120278a400",
+ "article":{"id":1,
             "title":"人生自古",
             "title_image_url":"http://192.168.33.10:3000/uploads/article_images/thumb_201603161708058cf67a34c9d6856396010586ca972790.jpg",
             "body":"...",

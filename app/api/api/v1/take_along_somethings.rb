@@ -24,26 +24,16 @@ module Api::V1
         optional :max_distance, type: Integer
       end
       get do
-        longitude = params[:longitude] || 0
-        latitude  = params[:latitude] || 0
+        take_along_somethings = Action.circle_for(current_user)
+                                      .take_along_something
 
         if params[:max_distance].present?
-          page     = params[:page] || 1
-          per_page = params[:per_page] || 25
-
-          take_along_somethings = Action.nearby_actions(current_user, 
-                                                        'take_along_something',
-                                                        [longitude, latitude],
-                                                        max_distance: params[:max_distance],
-                                                        page: page,
-                                                        per_page: per_page)
-        else
-          take_along_somethings = Action.circle_actions_for(current_user)
-                                        .take_along_something
-                                        .latest
-
-          take_along_somethings = paginate(take_along_somethings)
+          take_along_somethings = take_along_somethings.near(params[:longitude],
+                                                             params[:latitude],
+                                                             params[:max_distance])
         end
+
+        take_along_somethings = paginate(take_along_somethings.latest)
 
         present take_along_somethings, with: Api::Entities::TakeAlongSomething
         present paginate_record_for(take_along_somethings), with: Api::Entities::Paginate
@@ -67,7 +57,7 @@ module Api::V1
       post do
         normalize_uploaded_file_attributes(params[:images_attributes])
 
-        take_along_something = current_user.actions.take_along_somethings.new(
+        take_along_something = current_user.take_along_somethings.new(
           take_along_something_params)
 
         take_along_something.save!
@@ -88,7 +78,7 @@ module Api::V1
 
       desc 'delete a take_along_something'
       delete ':id' do
-        take_along_something = current_user.actions.take_along_somethings.find(params[:id])
+        take_along_something = current_user.take_along_somethings.find(params[:id])
         take_along_something.destroy!
 
         ActionPushJob.perform_later(current_user, 
@@ -106,7 +96,7 @@ module Api::V1
         optional :receiver_attributes, type: Hash
       end
       put ':id' do
-        take_along_something = current_user.actions.take_along_somethings.find(params[:id])
+        take_along_something = current_user.take_along_somethings.find(params[:id])
         normalize_uploaded_file_attributes(params[:images_attributes])
 
         take_along_something.update!(take_along_something_params)

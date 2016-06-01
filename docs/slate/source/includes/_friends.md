@@ -11,10 +11,10 @@ curl --request GET  http://localhost:3000/api/v1/friends
 ```json
 {"result":1,
  "friends":[
-    {"id":"571db5d849557627ae3a3de3", "name":"amy", "avatar_url":"http://localhost:3000/images/a.png", longitude:33.5, latitude: 44.8},
-    {"id":"571db5d849557627ae3a3de0", "name":"john", "avatar_url":"http://localhost:3000/images/b.png", longitude:33.5, latitude: 24.8},
-    {"id":"571db5d849557627ae3a3de2", "name":"mike", "avatar_url":"http://localhost:3000/images/c.png", longitude:33.5, latitude: 34.8},
-    {"id":"571db5d849557627ae3a3de1", "name":"peter", "avatar_url":"http://localhost:3000/images/d.png", longitude:33.5, latitude: 54.8}
+    {"id":1, "name":"amy", "avatar_url":"http://localhost:3000/images/a.png", longitude:33.5, latitude: 44.8},
+    {"id":2, "name":"john", "avatar_url":"http://localhost:3000/images/b.png", longitude:33.5, latitude: 24.8},
+    {"id":3, "name":"mike", "avatar_url":"http://localhost:3000/images/c.png", longitude:33.5, latitude: 34.8},
+    {"id":4, "name":"peter", "avatar_url":"http://localhost:3000/images/d.png", longitude:33.5, latitude: 54.8}
   ],
  "paginate_meta": {"current_page":1,
                    "next_page":null,
@@ -46,11 +46,11 @@ per_page   | 否       | 指定每页多少条记录
 
 名称               | 类型   | 描述
 ---------------------|--------|------
-id                   | 字符串 | 好友的user id, 对应于users中的一条记录的id
+id                   | 整型 | 好友的user id, 对应于users中的一条记录的id
 name                 | 字符串 | 好友名称
 avatar_url           | 字符串 | 好友的头像url
-longitude            | 浮点数 | 好友最新位置的经度
-latitude             | 浮点数 | 好友最新位置的纬度
+longitude            | 字符串 | 好友最新位置的经度
+latitude             | 字符串 | 好友最新位置的纬度
 
 #### paginate_meta类型说明
 
@@ -75,9 +75,9 @@ curl --request GET  http://localhost:3000/api/v1/friends/pending
 ```json
 {"result":1,
  "pending_friends":[
-    {"id":"571db5d849557627ae3a3de3", "name":"amy"},
-    {"id":"571db5d849557627ae3a3de0", "name":"john"},
-    {"id":"571db5d849557627ae3a3de1", "name":"peter"}
+    {"id":1, "name":"amy"},
+    {"id":2, "name":"john"},
+    {"id":3, "name":"peter"}
   ],
  "paginate_meta": {"current_page":1,
                    "next_page":null,
@@ -109,7 +109,7 @@ per_page   | 否       | 指定每页多少条记录
 
 名称               | 类型   | 描述
 ---------------------|--------|------
-id                   | 字符串 | 好友的user id, 对应于users中的一条记录的id
+id                   | 整型 | 好友的user id, 对应于users中的一条记录的id
 name                 | 字符串 | 好友名称
 
 #### paginate_meta类型说明
@@ -130,7 +130,7 @@ total_count          | 整型   | 总共记录数
 ```shell
 curl -H 'Content-Type:application/json'
      --request POST
-     -d '{"friend_id":"571db5d849557627ae3a3de0"}'
+     -d '{"friend_id":2}'
      http://localhost:3000/api/v1/friends
 ```
 
@@ -170,7 +170,7 @@ friend_id  | 是      | 要加入好友的user id
 ```shell
 curl -H 'Content-Type:application/json'
      --request POST
-     -d '{"friend_id":"571db5d849557627ae3a3de0"}'
+     -d '{"friend_id":2}'
      http://localhost:3000/api/v1/friends/accept
 ```
 
@@ -211,7 +211,7 @@ friend_id  | 是      | 加入好友请求的user id
 ```shell
 curl -H 'Content-Type:application/json'
      --request DELETE
-     http://localhost:3000/api/v1/friends/deny/571db5d849557627ae3a3de0
+     http://localhost:3000/api/v1/friends/deny/2
 ```
 
 > 返回:
@@ -247,7 +247,7 @@ friend_id  | 是      | 加入好友请求的user id
 ```shell
 curl -H 'Content-Type:application/json'
      --request DELETE
-     http://localhost:3000/api/v1/friends/571db5d849557627ae3a3de0
+     http://localhost:3000/api/v1/friends/2
 ```
 
 > 返回:

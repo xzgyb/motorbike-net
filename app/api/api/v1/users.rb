@@ -134,7 +134,7 @@ module Api::V1
       # Get validation code api temporary.
       get "get_validation_code/:phone" do
         validation_code_object = SmsValidationCode.where(phone: params[:phone])
-                                                  .order_by(created_at: :desc)
+                                                  .order(created_at: :desc)
                                                   .first
         if validation_code_object.nil?
           respond_error!("validation code not found")
@@ -149,7 +149,8 @@ module Api::V1
         if params[:user_name].blank?
           users = User.all.name_ordered
         else
-          users = User.where(name:/^#{params[:user_name]}/).name_ordered
+          users = User.where('name ~* :name', 
+                             name: "^#{params[:user_name]}").name_ordered
         end
 
         users = paginate(users)

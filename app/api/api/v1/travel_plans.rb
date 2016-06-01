@@ -6,7 +6,7 @@ module Api::V1
       helpers do
         def travel_plan_params
           ActionController::Parameters.new(params).permit(
-              :content, :start_off_time, :status, passing_locations: [], destination_location: [])
+              :content, :start_off_time, :status, :dest_loc_longitude, :dest_loc_latitude, passing_locations_attributes: [:id, :longitude, :latitude, :_destroy])
         end
       end
 
@@ -22,9 +22,10 @@ module Api::V1
       params do
         requires :content, type: String
         requires :start_off_time, type: Time
-        requires :destination_location, type: Array
+        requires :dest_loc_longitude, type: Float, values: -180.0..+180.0
+        optional :dest_loc_latitude,  type: Float, values: -90.0..+90.0
         requires :status, type: Integer
-        optional :passing_locations, type: Array
+        optional :passing_locations_attributes, type: Array
       end
       post do
         current_user.travel_plans.create!(travel_plan_params)
@@ -33,9 +34,11 @@ module Api::V1
 
       desc 'update a travel plan for current user'
       params do
+        optional :content, type: String
         optional :start_off_time, type: Time
-        optional :destination_location, type: Array
-        optional :passing_locations, type: Array
+        requires :dest_loc_longitude, type: Float, values: -180.0..+180.0
+        optional :dest_loc_latitude,  type: Float, values: -90.0..+90.0
+        optional :passing_locations_attributes, type: Array
         optional :status, type: Integer
       end
       put ':id' do

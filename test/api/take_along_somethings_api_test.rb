@@ -15,7 +15,7 @@ class TakeAlongSomethingsApiTest < ActiveSupport::TestCase
     create_list(:take_along_something_with_images, 5, user: @gyb)
     create_list(:take_along_something_with_images, 5, user: create(:user))
 
-    first_take_along_something = @current_user.actions.take_along_somethings.first
+    first_take_along_something = @current_user.take_along_somethings.first
 
     get '/api/v1/take_along_somethings',
       longitude: first_take_along_something.longitude,
@@ -55,7 +55,7 @@ class TakeAlongSomethingsApiTest < ActiveSupport::TestCase
   end
 
   test 'GET /api/v1/take_along_somethings with max_distance returns a nearby take_along_something list' do
-    create_list(:take_along_something_with_images, 10, coordinates:[33.5, 55.8], user: @current_user) 
+    create_list(:take_along_something_with_images, 10, longitude: 33.5, latitude:55.8, user: @current_user) 
 
     get '/api/v1/take_along_somethings', longitude: 33.5, latitude: 55.8, max_distance: 5,
         access_token: token
@@ -64,7 +64,7 @@ class TakeAlongSomethingsApiTest < ActiveSupport::TestCase
   end
 
   test 'GET /api/v1/take_along_somethings returns a take_along_something list when create record without images' do
-    create_list(:take_along_something, 10, coordinates:[33.5, 55.8], user: @current_user) 
+    create_list(:take_along_something, 10, longitude: 33.5, latitude: 55.8, user: @current_user) 
 
     get '/api/v1/take_along_somethings', access_token: token
     
@@ -89,7 +89,7 @@ class TakeAlongSomethingsApiTest < ActiveSupport::TestCase
 
     assert_includes result, "take_along_something"
     assert_includes result["take_along_something"], "content"
-    assert_equal take_along_something.id.to_s, result["take_along_something"]["id"] 
+    assert_equal take_along_something.id, result["take_along_something"]["id"] 
   end
 
   test 'DELETE /api/v1/take_along_somethings/:id should work' do
@@ -98,7 +98,7 @@ class TakeAlongSomethingsApiTest < ActiveSupport::TestCase
     delete "api/v1/take_along_somethings/#{take_along_something.id}", access_token: token
 
     assert last_response.ok?
-    assert_equal 0, @current_user.actions.take_along_somethings.count
+    assert_equal 0, @current_user.take_along_somethings.count
   end
 
   test 'PUT /api/v1/take_along_somethings/:id should update the specified id take_along_something' do
@@ -127,7 +127,8 @@ class TakeAlongSomethingsApiTest < ActiveSupport::TestCase
     assert_equal "hello take_along_something", take_along_something.title 
     assert_equal "25.2", take_along_something.price.to_s 
     assert_equal "example content", take_along_something.content 
-    assert_equal [112, 80], take_along_something.coordinates 
+    assert_equal 112, take_along_something.longitude 
+    assert_equal 80, take_along_something.latitude 
     assert_equal 3, take_along_something.images.count
 
     put "api/v1/take_along_somethings/#{take_along_something.id}",
@@ -186,9 +187,9 @@ class TakeAlongSomethingsApiTest < ActiveSupport::TestCase
         access_token: token
 
     assert last_response.created?
-    assert_equal 1, @current_user.actions.take_along_somethings.count
+    assert_equal 1, @current_user.take_along_somethings.count
 
-    take_along_something = @current_user.actions.take_along_somethings.first
+    take_along_something = @current_user.take_along_somethings.first
     assert_equal "hello take_along_something", take_along_something.title
     assert_equal 2, take_along_something.images.count
   end

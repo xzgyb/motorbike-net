@@ -10,9 +10,9 @@ module Api
     # Handle errors.
     rescue_from :all do |e|
       case e
-        when Mongoid::Errors::DocumentNotFound
+        when ActiveRecord::RecordNotFound
           error!({result: 0, error: '数据不存在'}, 404)
-        when Mongoid::Errors::Validations
+        when ActiveRecord::RecordInvalid
           message = e.record.errors.full_messages.join(', ')
           error!({result: 0, error: message}, 200)
         when Grape::Exceptions::ValidationErrors

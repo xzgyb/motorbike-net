@@ -1,8 +1,4 @@
-class ActionImageAttachment
-  include Mongoid::Document
+class ActionImageAttachment < ApplicationRecord
   belongs_to :action
-
-  field :file, type: String
-
   mount_uploader :file, ActionImageUploader
 end

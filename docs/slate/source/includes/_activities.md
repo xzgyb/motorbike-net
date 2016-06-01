@@ -12,12 +12,13 @@ curl --request GET  http://localhost:3000/api/v1/activities?longitude=32.3&latit
 ```json
 { "result":1,
   "activities":[
-    {"id":"57148394495576297f2d30f7",
+    {"id":1,
+     "user_id":2,
      "title":"example title",
      "place":"example place",
      "price":"0.0",
-     "longitude":32.5,
-     "latitude":62.8,
+     "longitude":"32.5",
+     "latitude":"62.8",
      "distance":110,
      "updated_at":"2016-04-20 14:49:56",
      "start_at":"2016-04-18 14:49:56",
@@ -60,13 +61,13 @@ max_distance | 否     | 获取指定max_distance距离内的活动列表
 
 名称               | 类型   | 描述
 ---------------------|--------|------
-id                   | 字符串 | 一条活动记录的id
-user_id              | 字符串 | 表示创建该条记录的用户id 
+id                   | 整型 | 一条活动记录的id
+user_id              | 整型 | 表示创建该条记录的用户id
 title                | 字符串 | 标题
 place                | 字符串 | 地点名称
 price                | 字符串 | 价格
-longitude            | 浮点数 | 经度
-latitude             | 浮点数 | 纬度
+longitude            | 字符串 | 经度
+latitude             | 字符串 | 纬度
 distance             | 整数   | 与当前位置的距离, 单位为米
 updated_at           | 字符串 | 更新时间
 start_at             | 字符串 | 开始时间
@@ -78,7 +79,7 @@ images               | image类型的数组 | 图片相关信息， 如果没有
 
 名称               | 类型   | 描述
 ---------------------|--------|------
-id                   | 字符串 | 一条图片记录的id
+id                   | 整型 | 一条图片记录的id
 url                  | 字符串 | 图片的url
 thumb_url            | 字符串 | thumb图片的url，用于显示缩略图
 
@@ -103,8 +104,9 @@ curl -H 'Content-Type:application/json'
      -d '{"title":"hello"
           "place":"地点名称",
           "price":"35.5",
-          "longitude":12.5,
-          "latitude":234.6,
+          "content":"sdfsdf",
+          "longitude":"12.5",
+          "latitude":"234.6",
           "start_at": "2016-05-01 12:00:50",
           "end_at": "2016-05-04 18:30:00",
           "images_attributes":[
@@ -132,6 +134,7 @@ curl -H 'Content-Type:application/json'
 title      | 是      | 标题
 place      | 是      | 地点名称
 price      | 是      | 价格
+content    | 否      | 详细内容
 longitude  | 是      | 经度, 范围为-180.0至180.0
 latitude   | 是      | 纬度, 范围为-90.0至90.0
 start_at   | 是      | 开始时间
@@ -153,8 +156,8 @@ images_attributes | 否      | 上传的图片数据
 ```shell
 curl -H 'Content-Type:application/json'
      --request PUT
-     -d '{"title":"another title", "longitude":55.2, "latitude":66.8}'
-     http://localhost:3000/api/v1/activities/57148394495576297f2d30f7
+     -d '{"title":"another title", "longitude":"55.2", "latitude":"66.8"}'
+     http://localhost:3000/api/v1/activities/1
 ```
 
 > 返回:
@@ -175,6 +178,7 @@ id         | 是       | 一条活动记录的id
 title      | 是       | 标题
 place      | 是       | 地点名称
 price      | 是       | 价格
+content    | 否      | 详细内容
 longitude  | 是       | 经度, 范围为-180.0至180.0
 latitude   | 是       | 纬度, 范围为-90.0至90.0
 start_at   | 是       | 开始时间
@@ -196,8 +200,8 @@ images_attributes | 否 | 上传的图片数据
 ```shell
 curl -H 'Content-Type:application/json'
      --request PUT
-     -d '{"images_attributes":[{"id":"57148394495576297f2d30f6", "_destroy":1}]}'
-     http://localhost:3000/api/v1/activities/57148394495576297f2d30f7
+     -d '{"images_attributes":[{"id":"1", "_destroy":1}]}'
+     http://localhost:3000/api/v1/activities/1
 ```
 
 > 返回:
@@ -232,7 +236,7 @@ images_attributes | 是 | 为一个要删除的图片信息数组, 数组中每�
 > 调用实例:
 
 ```shell
-curl --request DELETE http://localhost:3000/api/v1/activities/57148394495576297f2d30f7
+curl --request DELETE http://localhost:3000/api/v1/activities/1
 ```
 
 > 返回:
@@ -264,7 +268,7 @@ id         | 是       | 一条活动记录的id
 > 调用实例:
 
 ```shell
-curl --request GET http://localhost:3000/api/v1/activities/57148394495576297f2d30f7
+curl --request GET http://localhost:3000/api/v1/activities/1
 ```
 
 > 返回:
@@ -272,12 +276,12 @@ curl --request GET http://localhost:3000/api/v1/activities/57148394495576297f2d3
 ```json
 { "result":1,
   "activity":
-    {"id":"57148394495576297f2d30f7",
+    {"id":1,
      "title":"example title",
      "place":"example place",
      "price":"0.0",
-     "longitude":32.5,
-     "latitude":62.8,
+     "longitude":"32.5",
+     "latitude":"62.8",
      "content":"",
      "updated_at":"2016-04-20 14:49:56",
      "start_at":"2016-04-18 14:49:56",

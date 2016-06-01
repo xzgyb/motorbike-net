@@ -1,15 +1,8 @@
-class AppVersion
-  include Mongoid::Document
-  include Mongoid::Timestamps
-
-  field :version, type: String
-  field :changelog, type: String
-  field :name, type: String
-
+class AppVersion < ApplicationRecord
   mount_uploader :app, AppUploader
 
-  scope :ordered, -> { order_by(:created_at => :desc) }
-  scope :named, ->(name) { where(name: /#{name}/i) }
+  scope :ordered, -> { order(created_at: :desc) }
+  scope :named, ->(name) { where("name ~* :name", name: name) }
   scope :versioned, ->(version) { where(version: version) }
 
   scope :newest, ->(name) {  named(name).ordered.limit(1) }

@@ -3,11 +3,12 @@ FactoryGirl.define do
 
     title       "example title"
     place       "example place"
-    coordinates [32.5, 62.8]
+    longitude    32.5
+    latitude     62.8
     user
 
     factory :activity, class: Action do
-      type     :activity
+      category :activity
       start_at { Time.current     }
       end_at   { 10.hour.from_now }
 
@@ -16,28 +17,28 @@ FactoryGirl.define do
           images_count 1
         end
 
-        after(:build) do |activity, evaluator|
-          build_list(:action_image_attachment, evaluator.images_count, action: activity)
+        after(:create) do |activity, evaluator|
+          create_list(:action_image_attachment, evaluator.images_count, action: activity)
         end
       end
     end
 
     factory :living, class: Action do
-      type :living
+      category :living
 
       factory :living_with_videos do
         transient do
           videos_count 1
         end
 
-        after(:build) do |living, evaluator|
-          build_list(:action_video_attachment, evaluator.videos_count, action: living)
+        after(:create) do |living, evaluator|
+          create_list(:action_video_attachment, evaluator.videos_count, action: living)
         end
       end
     end
 
     factory :take_along_something, class: Action do
-      type :take_along_something
+      category :take_along_something
 
       start_at { Time.current     }
       end_at   { 10.hour.from_now }
@@ -50,8 +51,8 @@ FactoryGirl.define do
           images_count 1
         end
 
-        after(:build) do |take_along_something, evaluator|
-          build_list(:action_image_attachment, evaluator.images_count, action: take_along_something)
+        after(:create) do |take_along_something, evaluator|
+          create_list(:action_image_attachment, evaluator.images_count, action: take_along_something)
         end
       end
     end

@@ -44,11 +44,11 @@ mConsumer.open();
 
 ```json
 {"action": {
-  "id":"1234141324",
- "user_id":"32345345345",
+ "id":1,
+ "user_id":2,
  "type":"activity",
- "longitude":33.5,
- "latitude":44.8,
+ "longitude":"33.5",
+ "latitude":"44.8",
  "status":0}
 }
 ```
@@ -67,8 +67,10 @@ accessToken  | 是       | oauth access token
 
 名称    | 类型      | 描述
 -------|----------|------
-id      | 字符串    | 该条action的id
-user_id | 字符串    | 创建该条action的用户id
+id      | 整型    | 该条action的id
+user_id | 整型     | 创建该条action的用户id
+longitude|字符串    | 经度
+latitude |字符串    | 纬度
 type    | 字符串    | 该条action的类型, activity为活动, living为直播, take_along_something为捎东西.
 status  | 整数      | 该条action的状态, 0为添加, 1为删除, 2为更新.
 
@@ -108,9 +110,9 @@ mConsumer.open();
 
 ```json
 {"friend_location":{
-  "user_id":"32345345345",
-  "longitude":33.5,
-  "latitude":44.8
+  "user_id":2,
+  "longitude":"33.5",
+  "latitude":"44.8"
   }
 }
 ```
@@ -129,6 +131,6 @@ accessToken  | 是       | oauth access token
 
 名称    | 类型      | 描述
 -------|----------|------
-user_id  | 字符串    | 好友的用户id
-longitude| 浮点数    | 好友位置的经度
-latitude  | 浮点数   | 好友位置的纬度
+user_id  | 整型    | 好友的用户id
+longitude| 字符串    | 好友位置的经度
+latitude  | 字符串   | 好友位置的纬度

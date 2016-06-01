@@ -1,15 +1,9 @@
 require 'validation_code_generator'
 
-class SmsValidationCode
-  include Mongoid::Document
-  include Mongoid::Timestamps
+class SmsValidationCode < ApplicationRecord 
+  self.inheritance_column = :_type 
 
   include Expirable
-
-  field :validation_code, type: String
-  field :phone, type: String
-  field :expires_in, type: Integer
-  field :type, type: Integer
 
   DEFAULT_EXPIRES_IN = 24 * 60 * 60  # Default expire time is 10 minutes.
 

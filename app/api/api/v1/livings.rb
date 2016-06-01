@@ -23,23 +23,15 @@ module Api::V1
         optional :max_distance, type: Integer
       end
       get do
-        longitude = params[:longitude] || 0
-        latitude  = params[:latitude] || 0
+        livings = Action.circle_for(current_user).living
 
         if params[:max_distance].present?
-          page     = params[:page] || 1
-          per_page = params[:per_page] || 25
-
-          livings = Action.nearby_actions(current_user, 
-                                          'living',
-                                          [longitude, latitude],
-                                          max_distance: params[:max_distance],
-                                          page: page,
-                                          per_page: per_page)
-        else
-          livings = Action.circle_actions_for(current_user).living.latest
-          livings = paginate(livings)
+          livings = livings.near(params[:longitude],
+                                 params[:latitude],
+                                 params[:max_distance])
         end
+
+        livings = paginate(livings.latest)
 
         present livings, with: Api::Entities::Living
         present paginate_record_for(livings), with: Api::Entities::Paginate
@@ -61,7 +53,7 @@ module Api::V1
         normalize_uploaded_file_attributes(params[:videos_attributes])
         normalize_uploaded_file_attributes(params[:images_attributes])
 
-        living = current_user.actions.livings.new(living_params)
+        living = current_user.livings.new(living_params)
         living.save!
 
         ActionPushJob.perform_later(current_user, 
@@ -80,7 +72,7 @@ module Api::V1
 
       desc 'delete a living'
       delete ':id' do
-        living = current_user.actions.livings.find(params[:id])
+        living = current_user.livings.find(params[:id])
         living.destroy!
 
         ActionPushJob.perform_later(current_user, 
@@ -97,7 +89,7 @@ module Api::V1
         optional :images_attributes, type: Array
       end
       put ':id' do
-        living = current_user.actions.livings.find(params[:id])
+        living = current_user.livings.find(params[:id])
         
         normalize_uploaded_file_attributes(params[:videos_attributes])
         normalize_uploaded_file_attributes(params[:images_attributes])

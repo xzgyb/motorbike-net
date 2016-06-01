@@ -13,10 +13,12 @@ ccurl --request GET  http://localhost:3000/api/v1/travel_plans
 ```json
 {"result":1,
  "travel_plans":
-     [{"id":"5667e1dde54396160e00000b",
+     [{"id":2,
        "content":"11123asdfasfasdfasf",
-       "passing_locations":[[115, 12.0],[34,56]],
-       "destination_location":[118.28,55.22],
+       "passing_locations":[{"longitude":"33.8","latitude":"42.5"},
+                             {"longitude":"115","latitude":"12.0"}],
+       "dest_loc_longitude":"118.28",
+       "dest_loc_latitude":"55.22",
        "status":1,
        "start_off_time":"2015-12-12 03:00:00"}]}
 ```
@@ -40,12 +42,20 @@ ccurl --request GET  http://localhost:3000/api/v1/travel_plans
 
 名称               | 类型   | 描述
 ---------------------|--------|------
-id                   | 字符串 | 一条出行计划记录的id
+id                   | 整型 | 一条出行计划记录的id
 content              | 字符串 | 出行计划的内容
-passing_locations    | 数组   | 途经地的坐标数组，元素类型为[经度,纬度]的数组. 经度，纬度为浮点数。如[[115,12.0],[34,56]]. 
-destination_location | 数组   | 目的地的经纬度数组，如[118.28,55.22]
+passing_locations    | 数组   | 途经地的坐标数组，元素类型为passing_location.
+dest_loc_longitude   | 字符串   | 目的地的经度
+dest_loc_latitude    | 字符串   | 目的地的纬度
 status               | 整型   | 出行计划状态 
 start_off_time       | 字符串 | 出发时间 
+
+#### passing_location类型说明
+
+名称               | 类型   | 描述
+---------------------|--------|------
+longitude   | 字符串   | 经度
+latitude    | 字符串   | 纬度
 
 ## 创建一条出行计划 
 
@@ -54,8 +64,12 @@ start_off_time       | 字符串 | 出发时间
 ```shell
 curl -H 'Content-Type:application/json'
      --request POST
-     -d '{"content":"hello","passing_locations":[[12,3],[23,5]],
-          "destination_location":[23.35,18.2],status:1,
+     -d '{"content":"hello",
+          "passing_locations_attributes":[{"longitude":"33.8","latitude":"42.5"},
+                                           {"longitude":"115","latitude":"12.0"}],
+          "dest_loc_longitude":"23.35",
+          "dest_loc_latitude":"18.2",
+          status:1,
           "start_off_time":"2015-12-30 08:30:00"}'
      http://localhost:3000/api/v1/travel_plans
 ```
@@ -75,8 +89,9 @@ curl -H 'Content-Type:application/json'
 名称               | 类型   | 描述
 ---------------------|--------|------
 content              | 字符串 | 出行计划的内容
-passing_locations    | 数组   | 途经地的坐标数组，元素类型为[经度,纬度]的数组. 经度，纬度为浮点数。如[[115,12.0],[34,56]]. 
-destination_location | 数组   | 目的地的经纬度数组，如[118.28,55.22]
+passing_locations_attributes    | 数组   | 途经地的坐标数组，元素类型为passing_location.
+dest_loc_longitude | 字符串   | 目的地的经度
+dest_loc_latitude | 字符串   | 目的地的纬度
 status               | 整型   | 出行计划状态 
 start_off_time       | 字符串 | 出发时间 
 
@@ -95,7 +110,7 @@ start_off_time       | 字符串 | 出发时间
 curl -H 'Content-Type:application/json'
      --request PUT
      -d '{"content":"hello", status:2}'
-     http://localhost:3000/api/v1/travel_plans/5667e1dde54396160e00000b`
+     http://localhost:3000/api/v1/travel_plans/2`
 ```
 
 > 返回:
@@ -112,12 +127,13 @@ curl -H 'Content-Type:application/json'
 
 名称                 | 是否必需 |  类型   | 描述
 ---------------------|----------|---------|------
-id                   | 是       | 字符串  | 一条出行计划的id
-content              | 否       | 字符串  | 出行计划的内容
-passing_locations    | 否       |  数组   | 途经地的坐标数组，元素类型为[经度,纬度]的数组. 经度，纬度为浮点数。如[[115,12.0],[34,56]]. 
-destination_location | 否       |  数组   | 目的地的经纬度数组，如[118.28,55.22]
-status               | 否       |  整型   | 出行计划状态 
-start_off_time       | 否       |  字符串 | 出发时间 
+id                   | 是       | 整型  | 一条出行计划的id
+content              | 字符串 | 出行计划的内容
+passing_locations_attributes    | 数组   | 途经地的坐标数组，元素类型为passing_location.
+dest_loc_longitude | 字符串   | 目的地的经度
+dest_loc_latitude | 字符串   | 目的地的纬度
+status               | 整型   | 出行计划状态
+start_off_time       | 字符串 | 出发时间
 
 ### 返回结果
 
@@ -131,7 +147,7 @@ start_off_time       | 否       |  字符串 | 出发时间
 > 调用实例:
 
 ```shell
-curl --request DELETE http://localhost:3000/api/v1/travel_plans/5667e1dde54396160e00000b
+curl --request DELETE http://localhost:3000/api/v1/travel_plans/1
 ```
 
 > 返回:
@@ -148,7 +164,7 @@ curl --request DELETE http://localhost:3000/api/v1/travel_plans/5667e1dde5439616
 
 名称                 | 是否必需 |  类型   | 描述
 ---------------------|----------|---------|------
-id                   | 是       | 字符串  | 一条出行计划的id
+id                   | 是       | 整型  | 一条出行计划的id
 
 ### 返回结果
 
@@ -162,7 +178,7 @@ id                   | 是       | 字符串  | 一条出行计划的id
 > 调用实例:
 
 ```shell
-curl --request GET http://localhost:3000/api/v1/travel_plans/5667e1dde54396160e00000b
+curl --request GET http://localhost:3000/api/v1/travel_plans/2
 ```
 
 > 返回:
@@ -170,10 +186,12 @@ curl --request GET http://localhost:3000/api/v1/travel_plans/5667e1dde54396160e0
 ```json
 { "result":1,
   "travel_plan":
-   {"id":"5667e1dde54396160e00000b",
+   {"id":2,
      "content":"11123asdfasfasdfasf",
-     "passing_locations":[[115, 12.0],[34,56]],
-     "destination_location":[118.28,55.22],
+     "passing_locations":[{"longitude":"33.8","latitude":"42.5"},
+                           {"longitude":"115","latitude":"12.0"}],
+     "dest_loc_longitude":"118.28",
+     "dest_loc_latitude":"55.22",
      "status":1,
      "start_off_time":"2015-12-12 03:00:00"}}
 ```
@@ -186,7 +204,7 @@ curl --request GET http://localhost:3000/api/v1/travel_plans/5667e1dde54396160e0
 
 名称                 | 是否必需 |  类型   | 描述
 ---------------------|----------|---------|------
-id                   | 是       | 字符串  | 一条出行计划的id
+id                   | 是       | 整型  | 一条出行计划的id
 
 ### 返回结果
 

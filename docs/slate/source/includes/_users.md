@@ -221,8 +221,8 @@ curl --request GET  http://localhost:3000/api/v1/users/query/jo
 ```json
 {"result":1,
  "friends":[
-    {"id":"571db5d849557627ae3a3de0", "name":"john", "avatar_url":"http://localhost:3000/upload/avatar/1.png"},
-    {"id":"571dc9424955763a2b3a3e17", "name":"joyce", "avatar_url":"http://localhost:3000/upload/avatar/2.png"}
+    {"id":1, "name":"john", "avatar_url":"http://localhost:3000/upload/avatar/1.png"},
+    {"id":2, "name":"joyce", "avatar_url":"http://localhost:3000/upload/avatar/2.png"}
   ],
  "paginate_meta": {"current_page":1,
                    "next_page":null,
@@ -255,7 +255,7 @@ per_page   | 否       | 指定每页多少条记录
 
 名称               | 类型   | 描述
 ---------------------|--------|------
-id                   | 字符串 | 用户id
+id                   | 整型 | 用户id
 name                 | 字符串 | 用户名称
 avatar_url           | 字符串 | 用户头像url
 
@@ -273,14 +273,14 @@ total_count          | 整型   | 总共记录数
 > 调用实例:
 
 ```shell
-curl --request GET  http://localhost:3000/api/v1/users/571db5d849557627ae3a3de0
+curl --request GET  http://localhost:3000/api/v1/users/2
 ```
 > 返回:
 
 ```json
 {"result":1,
  "user":{
-    "id":"571dcb184955763ade3a3ed5",
+    "id":2,
     "name":"john",
     "email":"email45@hello.com",
     "avatar_url":"http://localhost:3000/upload/avatar/2.png"
@@ -309,7 +309,7 @@ id         | 否       | 用户id
 
 名称               | 类型   | 描述
 ---------------------|--------|------
-id                   | 字符串 | 用户id
+id                   | 整型 | 用户id
 name                 | 字符串 | 用户名称
 email                | 字符串 | 用户email
 avatar_url           | 字符串 | 用户头像url

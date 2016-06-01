@@ -15,7 +15,7 @@ class LivingsApiTest < ActiveSupport::TestCase
     create_list(:living_with_videos, 5, user: @gyb)
     create_list(:living_with_videos, 5, user: create(:user))
     
-    first_living = @current_user.actions.livings.first
+    first_living = @current_user.livings.first
 
     get '/api/v1/livings', longitude: first_living.longitude, latitude: first_living.latitude, access_token: token
 
@@ -44,7 +44,7 @@ class LivingsApiTest < ActiveSupport::TestCase
   end
 
   test 'GET /api/v1/livings with max_distance returns a nearby livings list' do
-    create_list(:living_with_videos, 10, coordinates:[33.5, 55.8], user: @current_user) 
+    create_list(:living_with_videos, 10, longitude: 33.5, latitude: 55.8, user: @current_user) 
     get '/api/v1/livings', longitude: 33.5, latitude: 55.8, max_distance: 5,
         access_token: token
 
@@ -60,7 +60,7 @@ class LivingsApiTest < ActiveSupport::TestCase
 
     assert_includes result, "living"
     assert_includes result["living"], "content"
-    assert_equal living.id.to_s, result["living"]["id"] 
+    assert_equal living.id, result["living"]["id"] 
   end
 
   test 'DELETE /api/v1/livings/:id should work' do
@@ -69,7 +69,7 @@ class LivingsApiTest < ActiveSupport::TestCase
     delete "api/v1/livings/#{living.id}", access_token: token
 
     assert last_response.ok?
-    assert_equal 0, @current_user.actions.livings.count
+    assert_equal 0, @current_user.livings.count
   end
 
   test 'PUT /api/v1/livings/:id should update the specified id living' do
@@ -96,7 +96,8 @@ class LivingsApiTest < ActiveSupport::TestCase
     assert_equal "hello living", living.title 
     assert_equal "25.2", living.price.to_s 
     assert_equal "example content", living.content 
-    assert_equal [112, 80], living.coordinates 
+    assert_equal 112, living.longitude 
+    assert_equal 80, living.latitude 
     assert_equal 3, living.videos.count
 
     put "api/v1/livings/#{living.id}",
@@ -147,9 +148,9 @@ class LivingsApiTest < ActiveSupport::TestCase
         access_token: token
 
     assert last_response.created?
-    assert_equal 1, @current_user.actions.livings.count
+    assert_equal 1, @current_user.livings.count
 
-    living = @current_user.actions.livings.first
+    living = @current_user.livings.first
     assert_equal "hello living", living.title
     assert_equal 2, living.videos.count
   end

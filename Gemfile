@@ -14,7 +14,6 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'slim'
 gem 'bootstrap-sass', '~> 3.3.5'
 gem 'devise', '~> 4.0.0.rc1'
-gem 'mongoid', :git => 'https://github.com/xzgyb/mongoid-for-rails5.git'
 gem 'bson_ext'
 gem 'devise-bootstrap-views'
 gem 'grape'
@@ -22,21 +21,21 @@ gem 'kaminari'
 gem 'simple_form'
 gem 'redcarpet'
 gem 'cancancan'
+gem 'activemodel-serializers-xml'
 gem 'draper', :git => 'https://github.com/xzgyb/draper.git'
 gem 'puma'
 gem 'gon'
 gem 'doorkeeper', '4.0.0.rc2'
-gem "doorkeeper-mongodb", github: "doorkeeper-gem/doorkeeper-mongodb"
 gem 'china_sms', :git => 'https://github.com/xzgyb/china_sms.git'
-gem 'carrierwave-mongoid', :require => 'carrierwave/mongoid'
+gem 'carrierwave'
 gem 'versionomy'
 gem 'grape-entity'
 gem 'nested_form_fields'
 gem 'mini_magick'
 gem 'nokogiri'
-gem 'mongoid-enum'
 gem 'carrierwave-video'
 gem 'carrierwave-video-thumbnailer'
+gem 'pg'
 
 group :development, :test do
   gem "awesome_print", require:"ap"
@@ -64,5 +63,5 @@ end
 group :test do
   gem 'mocha'
   gem 'database_cleaner', :git => 'https://github.com/DatabaseCleaner/database_cleaner.git'
- gem 'minitest-hooks'
+  gem 'minitest-hooks'
 end

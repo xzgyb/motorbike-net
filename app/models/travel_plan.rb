@@ -1,12 +1,5 @@
-class TravelPlan
-  include Mongoid::Document
-  include Mongoid::Timestamps
-
+class TravelPlan < ApplicationRecord 
   belongs_to :user
-
-  field :content, type: String, default: ""
-  field :start_off_time, type: DateTime
-  field :passing_locations, type: Array, default: []
-  field :destination_location, type: Array, default: []
-  field :status, type: Integer, default: 0
+  has_many :passing_locations
+  accepts_nested_attributes_for :passing_locations, allow_destroy: true
 end

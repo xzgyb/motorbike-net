@@ -1,21 +1,10 @@
-class Action
-  include Mongoid::Document
-  include Mongoid::Timestamps
-  include Mongoid::Enum
+class Action < ApplicationRecord
   include GeoNearable
   include GlobalID::Identification
 
-  enum :type, [:activity, :living, :take_along_something]
-    
-  field :title,      type: String
-  field :place,      type: String
-  field :start_at,   type: DateTime
-  field :end_at,     type: DateTime
-  field :content,    type: String, default: ''
-  field :price,      type: BigDecimal, default: 0
+  enum category: [:activity, :living, :take_along_something]
 
-  field :coordinates, type: Array, default: []
-  index({coordinates: Mongo::Index::GEO2D}, {background: true})
+  belongs_to :user
 
   has_many :images, class_name: "ActionImageAttachment"
   has_many :videos, class_name: "ActionVideoAttachment"
@@ -23,23 +12,30 @@ class Action
   has_one :sender
   has_one :receiver
 
-  belongs_to :user
-
   accepts_nested_attributes_for :images, :videos, :sender, :receiver, allow_destroy: true
 
-  validates :title, :place, :coordinates, presence: true
-  validates :start_at, :end_at, presence: true, 
-                     if: -> (action) { action.activity? || action.take_along_something? }
+  validates :title, :place, :longitude, :latitude, presence: true
+  validates :start_at, :end_at, 
+            presence: true, 
+            if: -> (action) { action.activity? || action.take_along_something? }
 
-  validate do
-    if self.coordinates.length != 2 
-      errors.add(:coordinates, 'Must have two elements: [longitude, latitude]')
-    end
-  end
+  scope :latest, -> { order(updated_at: :desc) }
 
-  scope :latest, -> { order_by(:updated_at => :desc) }
+  scope :near, -> (longitude, latitude, max_distance = 1000) {
+    where(%{
+      ST_DWithin(
+        ST_GeographyFromText(
+          'SRID=4326;POINT(' || actions.longitude || ' ' || actions.latitude || ')'
+        ),
+        ST_GeographyFromText('SRID=4326;POINT(%f %f)'),
+        %d
+      )
+    } % [longitude, latitude, max_distance])
+  }
 
-  before_save :normalize_coordinates
+  scope :circle_for, -> (user) {
+    where(user_id: user.friend_ids + [user.id])
+  }
 
   class << self
     def circle_actions_for(user)
@@ -62,25 +58,4 @@ class Action
         {"$and" => and_expressions}
       end
   end
-
-  def longitude
-    (self.coordinates.try(:first) || 0).to_f
-  end
-
-  def latitude
-    (self.coordinates.try(:last) || 0).to_f
-  end
-
-  def longitude=(value)
-    self.coordinates[0] = value 
-  end
-
-  def latitude=(value)
-    self.coordinates[1] = value
-  end
-
-  private
-    def normalize_coordinates
-      self.coordinates = self.coordinates.map { |field| field.to_f } 
-    end
 end

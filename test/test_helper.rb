@@ -4,7 +4,7 @@ require 'rails/test_help'
 require 'mocha/mini_test'
 require 'minitest/hooks/test'
 
-DatabaseCleaner.strategy = :truncation
+DatabaseCleaner.strategy = :transaction
 
 class ActiveSupport::TestCase
   include Rack::Test::Methods  

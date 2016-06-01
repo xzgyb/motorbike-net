@@ -20,11 +20,11 @@ class ActionPushJob < ActiveJob::Base
 
   private
     def action_data(action, status)
-      {id:        action.id.to_s, 
-       user_id:   action.user_id.to_s,
+      {id:        action.id,
+       user_id:   action.user_id,
        type:      action.type,
-       longitude: action.longitude,
-       latitude:  action.latitude,
+       longitude: action.longitude.to_s,
+       latitude:  action.latitude.to_s,
        status:    status}
     end
 end

@@ -1,9 +1,3 @@
-class Location
-  include Mongoid::Document
-  include Mongoid::Timestamps
-
+class Location < ApplicationRecord 
   belongs_to :bike
-
-  field :longitude, type: Float, default: 0
-  field :latitude, type: Float, default: 0
 end

@@ -13,13 +13,13 @@ curl --request GET  http://localhost:3000/api/v1/bikes
 ```json
 { "result":1,
   "bikes":
-   [{"id":"5673a4a8e5439637e1000000",
+   [{"id":1,
      "name":"rensheng1234",
      "module_id":"123123123",
-     "longitude":112.5,
-     "latitude":318.5,
-     "battery":12.5,
-     "travel_mileage":0.0,
+     "longitude":"112.5",
+     "latitude":"318.5",
+     "battery":"12.5",
+     "travel_mileage":"0.0",
      "diag_info":{"sdf":"234"}}]}
 ```
 
@@ -42,13 +42,13 @@ curl --request GET  http://localhost:3000/api/v1/bikes
 
 名称               | 类型   | 描述
 ---------------------|--------|------
-id                   | 字符串 | 一条车辆信息记录的id
+id                   | 整型 | 一条车辆信息记录的id
 name                 | 字符串 | 车辆名称
 module_id            | 字符串 | 模块id 
-longitude            | 浮点数 | 经度
-latitude             | 浮点数 | 纬度
-battery              | 浮点数 | 电量
-travel_mileage       | 浮点数 | 行驶里程数 
+longitude            | 字符串 | 经度
+latitude             | 字符串 | 纬度
+battery              | 字符串 | 电量
+travel_mileage       | 字符串 | 行驶里程数
 diag_info            | 哈希类型 | 车辆的诊断信息 
 
 ## 添加一个电动车信息
@@ -95,8 +95,8 @@ name       | 否       | 电动车的名称
 ```shell
 curl -H 'Content-Type:application/json'
      --request PUT
-     -d '{"longitude":134.5, "latitude":5, "diag_info":{"sdf":"234"}}'
-     http://localhost:3000/api/v1/bikes/5673a4a8e5439637e1000000
+     -d '{"longitude":"134.5", "latitude":"5", "diag_info":{"sdf":"234"}}'
+     http://localhost:3000/api/v1/bikes/2
 ```
 
 > 返回:
@@ -135,7 +135,7 @@ diag_info  | 否       | 车辆的诊断信息
 > 调用实例:
 
 ```shell
-curl --request DELETE http://localhost:3000/api/v1/bikes/5673a4a8e5439637e1000000
+curl --request DELETE http://localhost:3000/api/v1/bikes/2
 ```
 
 > 返回:
@@ -167,7 +167,7 @@ id         | 是       | 一条车辆信息记录的id
 > 调用实例:
 
 ```shell
-curl --request GET http://localhost:3000/api/v1/bikes/5673a4a8e5439637e1000000
+curl --request GET http://localhost:3000/api/v1/bikes/2
 ```
 
 > 返回:
@@ -175,13 +175,13 @@ curl --request GET http://localhost:3000/api/v1/bikes/5673a4a8e5439637e1000000
 ```json
 { "result":1,
   "bike":
-   {"id":"5673a4a8e5439637e1000000",
+   {"id":2,
      "name":"rensheng1234",
      "module_id":"123123123",
-     "longitude":112.5,
-     "latitude":318.5,
-     "battery":12.5,
-     "travel_mileage":0.0,
+     "longitude":"112.5",
+     "latitude":"318.5",
+     "battery":"12.5",
+     "travel_mileage":"0.0",
      "diag_info":{"sdf":"234"}}
 ```
 
@@ -208,7 +208,7 @@ id         | 是       | 一条车辆信息记录的id
 > 调用实例:
 
 ```shell
-`curl --request GET http://localhost:3000/api/v1/bikes/5673a4a8e5439637e1000000/locations
+`curl --request GET http://localhost:3000/api/v1/bikes/2/locations
 ```
 
 > 返回:
@@ -216,8 +216,8 @@ id         | 是       | 一条车辆信息记录的id
 ```json
 {"result":1,
  "locations":
-   [{"longitude":12.5,"latitude":118.5},
-    {"longitude":112.5,"latitude":318.5}]}
+   [{"longitude":"12.5","latitude":"118.5"},
+    {"longitude":"112.5","latitude":"318.5"}]}
 ```
 
 ### HTTP请求
@@ -245,7 +245,7 @@ id         | 是       | 一条车辆信息记录的id
 ```shell
 curl -H 'Content-Type:application/json'
      --request PUT
-     -d '{"longitude":134.5, "latitude":5, "diag_info":{"sdf":"234"}}'
+     -d '{"longitude":"134.5", "latitude":"5", "diag_info":{"sdf":"234"}}'
      http://localhost:3000/api/v1/bikes/upload/123123123`
 ```
 

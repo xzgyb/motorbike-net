@@ -14,23 +14,15 @@ module Api::V1
         optional :max_distance, type: Integer
       end
       get do
-        longitude = params[:longitude] || 0
-        latitude  = params[:latitude] || 0
+        actions = Action.circle_for(current_user)
 
         if params[:max_distance].present?
-          page     = params[:page] || 1
-          per_page = params[:per_page] || 25
-
-          actions = Action.nearby_actions(current_user, 
-                                          :all,
-                                          [longitude, latitude],
-                                          max_distance: params[:max_distance],
-                                          page: page,
-                                          per_page: per_page)
-        else
-          actions = Action.circle_actions_for(current_user).latest
-          actions = paginate(actions)
+          actions = actions.near(params[:longitude],
+                                 params[:latitude],
+                                 params[:max_distance])
         end
+
+        actions = paginate(actions.latest)
 
         present actions, with: Api::Entities::Action
         present paginate_record_for(actions), with: Api::Entities::Paginate

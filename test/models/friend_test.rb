@@ -22,7 +22,7 @@ class FriendTest < ActiveSupport::TestCase
     create_friendship(@leia,  @han_solo)
 
     assert_equal [@luke, @leia], @vader.friends
-    assert_equal [@leia, @luke], @vader.friends.order(name: -1)
+    assert_equal [@leia, @luke], @vader.friends.order(name: :desc)
 
     assert_equal [@vader, @luke, @han_solo], @leia.friends
     assert_equal [@luke], @yoda.friends

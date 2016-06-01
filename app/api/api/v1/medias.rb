@@ -6,8 +6,8 @@ module Api::V1
       
       desc 'Upload media file'
       params do
-        requires :media, type: Rack::Multipart::UploadedFile
-        requires :type, type: Integer, values: [1, 2, 3]
+        optional :media, type: Rack::Multipart::UploadedFile
+        optional :type, type: Integer, values: [1, 2, 3]
       end
       post do
         media = Media.new

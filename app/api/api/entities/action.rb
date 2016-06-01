@@ -5,10 +5,9 @@ module Api::Entities
   class Action < Grape::Entity
     format_with(:time) { |dt| dt.strftime("%Y-%m-%d %H:%M:%S") }
 
-    expose(:_id, as: :id) { |instance, _| instance._id.to_s } 
-    expose(:user_id)      { |instance, _| instance.user_id.to_s }
+    expose :id, :user_id
 
-    expose :type
+    expose(:type) { |instance, _| ::Action.categories[instance.category] }
 
     expose :title, :place, :price, :longitude, :latitude
     expose :content, if: :export_content

@@ -42,7 +42,7 @@ class FriendsApiTest < ActiveSupport::TestCase
     assert_equal 4, result["friends"].count
 
     result_ids = result["friends"].map { |elem| elem["id"] }
-    expect_ids = [@amy, @john, @mike, @peter].map { |e| e.id.to_s }
+    expect_ids = [@amy, @john, @mike, @peter].map { |e| e.id }
 
     assert_equal expect_ids, result_ids
   end
@@ -71,7 +71,7 @@ class FriendsApiTest < ActiveSupport::TestCase
     assert_equal 3, result["pending_friends"].count
 
     result_ids = result["pending_friends"].map { |elem| elem["id"] }
-    expect_ids = [@amy, @john, @peter].map { |e| e.id.to_s }
+    expect_ids = [@amy, @john, @peter].map { |e| e.id }
 
     assert_equal expect_ids, result_ids
 
@@ -98,7 +98,7 @@ class FriendsApiTest < ActiveSupport::TestCase
     result = JSON.parse(last_response.body)
 
     assert_equal 1, result["friends"].count
-    assert_equal @john.id.to_s, result["friends"][0]['id']
+    assert_equal @john.id, result["friends"][0]['id']
 
     login_user(@john)
 
@@ -108,7 +108,7 @@ class FriendsApiTest < ActiveSupport::TestCase
     result = JSON.parse(last_response.body)
 
     assert_equal 1, result["friends"].count
-    assert_equal @gyb.id.to_s, result["friends"][0]['id']
+    assert_equal @gyb.id, result["friends"][0]['id']
   end
 
   test 'DELETE /api/v1/friends/deny/:friend_id denies a friend request for current user' do

@@ -32,7 +32,7 @@ class ActionsApiTest < ActiveSupport::TestCase
   end
 
   test 'GET /api/v1/actions with max_distance returns a nearby actions list' do
-    create_list(:activity_with_images, 10, coordinates:[33.5, 55.8], user: @current_user) 
+    create_list(:activity_with_images, 10, longitude: 33.5, latitude: 55.8, user: @current_user) 
     get '/api/v1/actions', longitude: 33.5, latitude: 55.8, max_distance: 5,
         access_token: token
 

@@ -4,6 +4,7 @@ FactoryGirl.define do
     sequence(:email) { |n| "email#{n}@hello.com" }
     password 'password'
     password_confirmation 'password'
+    phone            { "138" + (1..8).to_a.shuffle.join }
 
     factory :user_with_bikes do
       transient do

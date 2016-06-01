@@ -52,10 +52,10 @@ curl --request GET http://localhost:3000/api/v1/medias
 
 ```json
 {"result":1,
- "medias":[{"id":"568cccc863623925ad000000",
+ "medias":[{"id":2,
              "type":1,
              "url":"http://localhost:3000/uploads/media/media/568cccc863623925ad000000/a1.jpg"},
-            {"id":"568ccccb63623925ad000001",
+            {"id":3,
              "type":1,
              "url":"http://localhost:3000/uploads/media/media/568ccccb63623925ad000001/a1.jpg"}]}
 ```
@@ -82,7 +82,7 @@ type       | 是       | 要获取的文件类型, 1: 图片 2: 视频 3: 音频
 
 名称               | 类型   | 描述
 ---------------------|--------|------
-id                   | 字符串 | 一条媒体文件信息记录的id
+id                   | 整数 | 一条媒体文件信息记录的id
 type                 | 整数   | 文件类型, 1: 图片 2: 视频 3: 音频
 url                  | 字符串 | 媒体文件的url 
 
@@ -91,7 +91,7 @@ url                  | 字符串 | 媒体文件的url
 > 调用实例:
 
 ```shell
-curl --request DELETE http://localhost:3000/api/v1/medias/568cccc863623925ad000000
+curl --request DELETE http://localhost:3000/api/v1/medias/2
 ```
 
 > 返回:

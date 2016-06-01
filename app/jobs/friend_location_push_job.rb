@@ -16,8 +16,8 @@ class FriendLocationPushJob < ActiveJob::Base
 
   private
     def location_data(user, longitude, latitude)
-      {user_id: user.id.to_s,
-       longitude: longitude.to_f,
-       latitude: latitude.to_f}
+      {user_id: user.id,
+       longitude: longitude.to_s,
+       latitude: latitude.to_s}
     end
 end

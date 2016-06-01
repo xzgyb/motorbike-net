@@ -15,7 +15,7 @@ class ActivitiesApiTest < ActiveSupport::TestCase
     create_list(:activity_with_images, 5, user: @gyb)
     create_list(:activity_with_images, 5, user: create(:user))
 
-    first_activity = @current_user.actions.activities.first
+    first_activity = @current_user.activities.first
 
     get '/api/v1/activities', longitude: first_activity.longitude, latitude: first_activity.latitude, access_token: token
 
@@ -44,7 +44,7 @@ class ActivitiesApiTest < ActiveSupport::TestCase
   end
 
   test 'GET /api/v1/activities with max_distance returns a nearby activities list' do
-    create_list(:activity_with_images, 10, coordinates:[33.5, 55.8], user: @current_user) 
+    create_list(:activity_with_images, 10, longitude: 33.5, latitude:55.8, user: @current_user) 
     get '/api/v1/activities', longitude: 33.5, latitude: 55.8, max_distance: 5,
         access_token: token
 
@@ -60,7 +60,7 @@ class ActivitiesApiTest < ActiveSupport::TestCase
 
     assert_includes result, "activity"
     assert_includes result["activity"], "content"
-    assert_equal activity.id.to_s, result["activity"]["id"] 
+    assert_equal activity.id, result["activity"]["id"] 
   end
 
   test 'DELETE /api/v1/activities/:id should work' do
@@ -69,7 +69,7 @@ class ActivitiesApiTest < ActiveSupport::TestCase
     delete "api/v1/activities/#{activity.id}", access_token: token
 
     assert last_response.ok?
-    assert_equal 0, @current_user.actions.activities.count
+    assert_equal 0, @current_user.activities.count
   end
 
   test 'PUT /api/v1/activities/:id should update the specified id activity' do
@@ -96,7 +96,8 @@ class ActivitiesApiTest < ActiveSupport::TestCase
     assert_equal "hello activity", activity.title 
     assert_equal "25.2", activity.price.to_s 
     assert_equal "example content", activity.content 
-    assert_equal [112, 80], activity.coordinates 
+    assert_equal 112, activity.longitude 
+    assert_equal 80, activity.latitude 
     assert_equal 3, activity.images.count
 
     put "api/v1/activities/#{activity.id}",
@@ -150,9 +151,9 @@ class ActivitiesApiTest < ActiveSupport::TestCase
         access_token: token
 
     assert last_response.created?
-    assert_equal 1, @current_user.actions.activities.count
+    assert_equal 1, @current_user.activities.count
 
-    activity = @current_user.actions.activities.first
+    activity = @current_user.activities.first
     assert_equal "hello activity", activity.title
     assert_equal 2, activity.images.count
   end

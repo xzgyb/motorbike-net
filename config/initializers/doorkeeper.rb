@@ -1,6 +1,6 @@
 Doorkeeper.configure do
   # Change the ORM that doorkeeper will use (needs plugins)
-  orm :mongoid4
+  orm :active_record
 
   resource_owner_authenticator do
     current_user || warden.authenticate!(scope: :user)

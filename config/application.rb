@@ -1,16 +1,6 @@
 require File.expand_path('../boot', __FILE__)
 
-require "rails"
-require "active_model/railtie"
-require "active_job/railtie"
-require "action_cable/engine"
-require "action_controller/railtie"
-require "action_mailer/railtie"
-require "action_view/railtie"
-require "sprockets/railtie"
-require "rails/test_unit/railtie"
-
-ActiveSupport::Deprecation.instance.silenced = true
+require 'rails/all'
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -36,5 +26,6 @@ module MotorbikeNet
     config.action_cable.disable_request_forgery_protection = true
 
     config.active_job.queue_adapter = :sidekiq
+    config.active_record.schema_format = :sql
   end
 end

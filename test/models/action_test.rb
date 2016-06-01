@@ -8,7 +8,7 @@ class ActionTest < ActiveSupport::TestCase
     @take_along_something_action = build(:take_along_something_with_images)
   end
 
-  test "should be valid with a title, place, start_time, end_time, coordinates and images when type is activity" do
+  test "should be valid with a title, place, start_time, end_time, longitude, latitude and images when type is activity" do
     assert @activity_action.valid? 
   end
 
@@ -30,30 +30,9 @@ class ActionTest < ActiveSupport::TestCase
     assert_not @activity_action.valid?
   end
 
-  test "coordinates should be present when type is activity" do
-    @activity_action.coordinates = [] 
+  test "longitude, latitude should be present when type is activity" do
+    @activity_action.longitude = @activity_action.latitude = '' 
     assert_not @activity_action.valid?
-  end
-
-  test "should be invalid when coordinates length not equal 2" do
-    @activity_action.coordinates = [25.6]
-    assert_not @activity_action.valid?
-
-    @activity_action.coordinates = [25.6, 33.5, 34.2]
-    assert_not @activity_action.valid?
-  end
-
-  test "longitude should be fist element of coordinates, and latitude should be last element of coordinates" do
-    @activity_action.coordinates = [13.5, 28.6]
-
-    assert_equal 13.5, @activity_action.longitude
-    assert_equal 28.6, @activity_action.latitude
-
-    @activity_action.longitude = 18.2
-    @activity_action.latitude  = 15.5
-    @activity_action.save
-
-    assert_equal [18.2, 15.5], @activity_action.coordinates
   end
 
   test "images can be not present when type is activity" do
@@ -61,7 +40,7 @@ class ActionTest < ActiveSupport::TestCase
     assert @activity_action.valid?
   end
 
-  test "should be valid with a title, place, coordinates and videos when type is living" do
+  test "should be valid with a title, place, longitude, latitude and videos when type is living" do
     assert @living_action.valid?
   end
 
@@ -75,8 +54,8 @@ class ActionTest < ActiveSupport::TestCase
     assert_not @living_action.valid?
   end
 
-  test "coordinates should be present when type is living" do
-    @living_action.coordinates = []
+  test "longitude, latitude should be present when type is living" do
+    @living_action.longitude, latitude = []
     assert_not @living_action.valid?
   end
 
@@ -86,7 +65,7 @@ class ActionTest < ActiveSupport::TestCase
   end
 
 
-  test "should be valid with a title, place, coordinates and images when type is take_along_something" do
+  test "should be valid with a title, place, longitude, latitude and images when type is take_along_something" do
     assert @take_along_something_action.valid?
   end
 
@@ -108,8 +87,10 @@ class ActionTest < ActiveSupport::TestCase
     assert_not @take_along_something_action.valid?
   end
 
-  test "coordinates should be present when type is take_along_something" do
-    @take_along_something_action.coordinates = []
+  test "longitude, latitude should be present when type is take_along_something" do
+    @take_along_something_action.longitude = ''
+    @take_along_something_action.latitude  = ''
+     
     assert_not @take_along_something_action.valid?
   end
 

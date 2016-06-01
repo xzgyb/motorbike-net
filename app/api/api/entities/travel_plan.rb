@@ -1,16 +1,12 @@
+require 'api/entities/passing_location'
+
 module Api::Entities
   class TravelPlan < Grape::Entity
 
     format_with(:time) { |dt| dt ? dt.strftime("%Y-%m-%d %H:%M:%S") : "" }
 
-    expose :_id, as: :id do |instance, options|
-      instance._id.to_s
-    end
-    expose :content
-    expose :passing_locations
-    expose :destination_location
-    expose :status
-
+    expose :id, :content, :dest_loc_longitude, :dest_loc_latitude, :status
+    expose :passing_locations, using: PassingLocation
 
     root "travel_plans", "travel_plan"
 
