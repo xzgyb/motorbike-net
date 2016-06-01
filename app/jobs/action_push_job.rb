@@ -22,7 +22,7 @@ class ActionPushJob < ActiveJob::Base
     def action_data(action, status)
       {id:        action.id,
        user_id:   action.user_id,
-       type:      action.type,
+       type:      Action.categories[action.category],
        longitude: action.longitude.to_s,
        latitude:  action.latitude.to_s,
        status:    status}
