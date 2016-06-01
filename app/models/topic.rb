@@ -1,6 +1,6 @@
 class Topic < ApplicationRecord 
   belongs_to :user
-  has_many :posts, dependent: :delete
+  has_many :posts, dependent: :delete_all
 
   validates :subject, presence: true 
   validates :text, presence: true 
