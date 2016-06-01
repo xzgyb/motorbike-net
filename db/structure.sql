@@ -136,6 +136,7 @@ CREATE TABLE actions (
     price numeric(10,2) DEFAULT 0,
     longitude numeric(9,6) DEFAULT 0,
     latitude numeric(9,6) DEFAULT 0,
+    distance integer DEFAULT 0,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     user_id integer

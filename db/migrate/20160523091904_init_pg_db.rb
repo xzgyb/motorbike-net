@@ -63,6 +63,7 @@ class InitPgDb < ActiveRecord::Migration[5.0]
       t.decimal  :price,     precision: 10, scale: 2, default: 0
       t.decimal  :longitude, precision: 9, scale: 6, default: 0
       t.decimal  :latitude,  precision: 9, scale: 6, default: 0
+      t.integer  :distance, default: 0
       t.timestamps
       t.belongs_to :user
     end
