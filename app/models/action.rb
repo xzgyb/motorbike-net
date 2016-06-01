@@ -1,5 +1,4 @@
 class Action < ApplicationRecord
-  include GeoNearable
   include GlobalID::Identification
 
   enum category: [:activity, :living, :take_along_something]
@@ -37,25 +36,4 @@ class Action < ApplicationRecord
     where(user_id: user.friend_ids + [user.id])
   }
 
-  class << self
-    def circle_actions_for(user)
-      user_ids = user.friend_ids << user.id
-      self.in(user_id: user_ids)
-    end
-
-    def nearby_actions(user, action_type, coordinates, opts = {})
-      opts[:match] = mongodb_match_expression(user, action_type) 
-      self.near(coordinates, opts)
-    end
-
-    private
-      def mongodb_match_expression(user, action_type)
-        user_ids = user.friend_ids << user.id
-
-        and_expressions = [{"user_id" => {"$in" => user_ids}}] 
-        and_expressions << {"_enumtype" => action_type} if action_type != :all
-
-        {"$and" => and_expressions}
-      end
-  end
 end
