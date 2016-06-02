@@ -58,6 +58,8 @@ group :development do
   gem 'guard'
   gem 'guard-minitest'
   gem 'guard-ctags-bundler'
+  gem 'mongo'
+  gem 'bulk_insert'
 end
 
 group :test do

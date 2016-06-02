@@ -3,7 +3,7 @@ class UsersController < ApplicationController
   decorates_assigned :users
   
   def index
-    @users = User.order_by(['email']).page(params[:page])
+    @users = User.email_ordered.page(params[:page])
   end
 
   def destroy

@@ -33,8 +33,9 @@ class User < ApplicationRecord
 
   has_many :oauth_applications, class_name: 'Doorkeeper::Application', as: :owner
 
-  scope :name_ordered, -> { order(:name) }
-  scope :onlined,      -> { where(online: true) }
+  scope :name_ordered,  -> { order(:name) }
+  scope :email_ordered, -> { order(:email) }
+  scope :onlined,       -> { where(online: true) }
 
   before_create do
     self.oauth_login_code = SecureRandom.hex(10)

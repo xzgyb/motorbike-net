@@ -98,8 +98,11 @@ GEM
     bootstrap-sass (3.3.6)
       autoprefixer-rails (>= 5.2.1)
       sass (>= 3.3.4)
+    bson (4.1.1)
     bson_ext (1.5.1)
     builder (3.2.2)
+    bulk_insert (1.2.0)
+      activerecord (>= 4.1.0)
     byebug (8.2.2)
     cancancan (1.13.1)
     carrierwave (0.10.0)
@@ -216,6 +219,8 @@ GEM
     minitest-hooks (1.4.0)
     mocha (1.1.0)
       metaclass (~> 0.0.1)
+    mongo (2.2.5)
+      bson (~> 4.0)
     multi_json (1.11.2)
     multi_xml (0.5.5)
     nenv (0.3.0)
@@ -361,6 +366,7 @@ DEPENDENCIES
   better_errors
   bootstrap-sass (~> 3.3.5)
   bson_ext
+  bulk_insert
   byebug
   cancancan
   carrierwave
@@ -389,6 +395,7 @@ DEPENDENCIES
   mini_magick
   minitest-hooks
   mocha
+  mongo
   nested_form_fields
   nokogiri
   pg

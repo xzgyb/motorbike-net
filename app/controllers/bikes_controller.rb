@@ -5,7 +5,7 @@ class BikesController < ApplicationController
   decorates_assigned :users, :bike, :bikes, :user
 
   def all
-    @users = User.order_by(['name']).page(params[:page])
+    @users = User.name_ordered.page(params[:page])
   end
 
   def index

@@ -20,6 +20,7 @@ class InitPgDb < ActiveRecord::Migration[5.0]
       t.string   :avatar
       t.decimal  :longitude,          null:    false, precision: 9, scale: 6, default: 0
       t.decimal  :latitude,           null:    false, precision: 9, scale: 6, default: 0
+      t.string   :mongo_id
     end
     
     add_index :users, :email, unique: true, using: :btree
@@ -93,10 +94,10 @@ class InitPgDb < ActiveRecord::Migration[5.0]
     end
 
     create_table :app_versions do |t|
-      t.string :version
-      t.string :changelog
+      t.string :version,   null: false
+      t.string :changelog, default: ''
       t.string :name
-      t.string :app
+      t.string :app,       null: false
       t.timestamps
     end
 
@@ -116,7 +117,7 @@ class InitPgDb < ActiveRecord::Migration[5.0]
       t.decimal :latitude,       precision: 9, scale: 6, default: 0.0
       t.decimal :battery,        precision: 6, scale: 2, default: 0.0
       t.decimal :travel_mileage, precision: 10,scale: 2, default: 0.0
-      t.hstore  :diag_info
+      t.hstore  :diag_info, default: {}
       t.belongs_to :user
     end
     add_index :bikes, :module_id, unique: true, using: :btree
@@ -170,6 +171,7 @@ class InitPgDb < ActiveRecord::Migration[5.0]
       t.timestamps
       t.integer :owner_id
       t.string  :owner_type
+      t.string  :mongo_id
     end
 
     add_index :oauth_applications, :uid, unique: true, using: :btree

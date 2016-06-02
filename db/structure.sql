@@ -168,10 +168,10 @@ ALTER SEQUENCE actions_id_seq OWNED BY actions.id;
 
 CREATE TABLE app_versions (
     id integer NOT NULL,
-    version character varying,
-    changelog character varying,
+    version character varying NOT NULL,
+    changelog character varying DEFAULT ''::character varying,
     name character varying,
-    app character varying,
+    app character varying NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
@@ -254,7 +254,7 @@ CREATE TABLE bikes (
     latitude numeric(9,6) DEFAULT 0.0,
     battery numeric(6,2) DEFAULT 0.0,
     travel_mileage numeric(10,2) DEFAULT 0.0,
-    diag_info hstore,
+    diag_info hstore DEFAULT ''::hstore,
     user_id integer
 );
 
@@ -463,7 +463,8 @@ CREATE TABLE oauth_applications (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     owner_id integer,
-    owner_type character varying
+    owner_type character varying,
+    mongo_id character varying
 );
 
 
@@ -751,7 +752,8 @@ CREATE TABLE users (
     online boolean DEFAULT false NOT NULL,
     avatar character varying,
     longitude numeric(9,6) DEFAULT 0 NOT NULL,
-    latitude numeric(9,6) DEFAULT 0 NOT NULL
+    latitude numeric(9,6) DEFAULT 0 NOT NULL,
+    mongo_id character varying
 );
 
 
