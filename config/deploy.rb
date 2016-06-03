@@ -12,7 +12,7 @@ set :branch, 'master'
 set :user, ENV['DEPLOY_USER'] 
 set :rails_env, 'production'
 
-set :shared_paths, ['config/secrets.yml', 'config/mongoid.yml', 'config/puma.rb', 'log', 'tmp/pids', 'tmp/sockets', 'public/uploads', 'public/docs']
+set :shared_paths, ['config/secrets.yml', 'config/database.yml', 'config/puma.rb', 'log', 'tmp/pids', 'tmp/sockets', 'public/uploads', 'public/docs']
 
 task :environment do
   invoke :'rvm:use[ruby-2.2.3@default]'
@@ -38,9 +38,9 @@ task :setup => :environment do
   queue! %(chmod g+rx,u+rwx "#{deploy_to}/#{shared_path}/public/docs")
 
   queue! %[touch "#{deploy_to}/#{shared_path}/config/secrets.yml"]
-  queue! %[touch "#{deploy_to}/#{shared_path}/config/mongoid.yml"]
+  queue! %[touch "#{deploy_to}/#{shared_path}/config/database.yml"]
   queue! %[touch "#{deploy_to}/#{shared_path}/config/puma.rb"]
-  queue  %[echo "-----> Be sure to edit '#{deploy_to}/#{shared_path}/config/mongoid.yml' , 'secrets.yml' and 'puma.rb'."]
+  queue  %[echo "-----> Be sure to edit '#{deploy_to}/#{shared_path}/config/database.yml' , 'secrets.yml' and 'puma.rb'."]
 end
 
 task :docs => :environment do
@@ -60,12 +60,12 @@ task :deploy => :environment do
     invoke :'git:clone'
     invoke :'deploy:link_shared_paths'
     invoke :'bundle:install'
+    invoke :'rails:db_migrate'
     invoke :'rails:assets_precompile'
     invoke :'deploy:cleanup'
 
     to :launch do
       queue "mkdir -p #{deploy_to}/#{current_path}/tmp/"
-      queue "RAILS_ENV=production bundle exec rails db:mongoid:create_indexes"
       invoke :'puma:restart'
     end
   end
