@@ -2,8 +2,8 @@ default: &default
   adapter: postgresql
   encoding: unicode
   host: localhost
-  username: motorbike_net
-  password: moto_2016_0523
+  username: <%= ENV['MOTORBIKE_NET_DATABASE_USERNAME'] %> 
+  password: <%= ENV['MOTORBIKE_NET_DATABASE_PASSWORD'] %>
   # For details on connection pooling, see rails configuration guide
   # http://guides.rubyonrails.org/configuring.html#database-pooling
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
@@ -68,4 +68,3 @@ test:
 production:
   <<: *default
   database: motorbike_net_production
-  password: <%= ENV['MOTORBIKE_NET_DATABASE_PASSWORD'] %>

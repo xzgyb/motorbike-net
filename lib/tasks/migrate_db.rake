@@ -1,7 +1,7 @@
 namespace :migrate do
   desc 'Migrate database from mongodb to postgresql'
   task :db => :environment do
-    client = Mongo::Client.new(['127.0.0.1:27017'], database: 'motorbike_net_development')
+    client = Mongo::Client.new(['127.0.0.1:27017'], database: Figaro.env.migrate_source_database_name!)
 
     ActiveRecord::Base.transaction do
       insert_data(client, User, :users)

@@ -12,7 +12,7 @@ set :branch, 'master'
 set :user, ENV['DEPLOY_USER'] 
 set :rails_env, 'production'
 
-set :shared_paths, ['config/secrets.yml', 'config/database.yml', 'config/puma.rb', 'log', 'tmp/pids', 'tmp/sockets', 'public/uploads', 'public/docs']
+set :shared_paths, ['config/secrets.yml', 'config/database.yml', 'config/application.yml', 'config/puma.rb', 'log', 'tmp/pids', 'tmp/sockets', 'public/uploads', 'public/docs']
 
 task :environment do
   invoke :'rvm:use[ruby-2.2.3@default]'
@@ -39,8 +39,9 @@ task :setup => :environment do
 
   queue! %[touch "#{deploy_to}/#{shared_path}/config/secrets.yml"]
   queue! %[touch "#{deploy_to}/#{shared_path}/config/database.yml"]
+  queue! %[touch "#{deploy_to}/#{shared_path}/config/application.yml"]
   queue! %[touch "#{deploy_to}/#{shared_path}/config/puma.rb"]
-  queue  %[echo "-----> Be sure to edit '#{deploy_to}/#{shared_path}/config/database.yml' , 'secrets.yml' and 'puma.rb'."]
+  queue  %[echo "-----> Be sure to edit '#{deploy_to}/#{shared_path}/config/database.yml' , 'application.yml', 'secrets.yml' and 'puma.rb'."]
 end
 
 task :docs => :environment do
