@@ -7,11 +7,11 @@ class UsersApiTest < ActiveSupport::TestCase
 
     login_user(@gyb)
 
-    @john  = create(:user, name: 'john')
-    @joyce = create(:user, name: 'joyce')
-    @peter = create(:user, name: 'peter')
-    @mike  = create(:user, name: 'mike')
-    @amy   = create(:user, name: 'amy')
+    @john  = create(:user, name: 'john', phone: '13811234567', email: 'john@example.com')
+    @joyce = create(:user, name: 'joyce', phone: '138123566897', email: 'joyce@example.com')
+    @peter = create(:user, name: 'peter', phone: '13911548765', email: 'peter@example.com')
+    @mike  = create(:user, name: 'mike', phone: '13812357890', email: 'mike@example.com')
+    @amy   = create(:user, name: 'amy', phone: '13334561278', email: 'amy@example.com')
   end
 
   test "GET /api/v1/users/validation_code should work" do
@@ -125,6 +125,29 @@ class UsersApiTest < ActiveSupport::TestCase
 
     assert_equal 1, result["users"].count
     assert_equal @gyb.id, result["users"][0]["id"]
+  end
+
+  test "GET /api/v1/users/query query the prefix phone and returns a users list whose phone contain the prefix phone and orderd by name"  do
+    get "/api/v1/users/query/#{@john.phone}", access_token: token
+    assert last_response.ok?
+
+    result = JSON.parse(last_response.body)
+
+    assert_equal 1, result["users"].count
+    assert_equal @john.id, result["users"][0]["id"]
+
+    get "/api/v1/users/query/1381", access_token: token
+    assert last_response.ok?
+
+    result = JSON.parse(last_response.body)
+
+    assert_equal 3, result["users"].count
+
+    result_ids = result["users"].map { |elem| elem["id"] }
+    expect_ids = [@john, @joyce, @mike].map { |e| e.id }
+
+    assert_equal expect_ids, result_ids
+
   end
 
   test "GET /api/v1/users/:id returns the specified user info" do

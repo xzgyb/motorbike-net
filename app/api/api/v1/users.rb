@@ -144,13 +144,15 @@ module Api::V1
       end
 
       # query users
-      get "query(/:user_name)" do
+      get "query(/:user_name_or_phone_or_email)" do
         doorkeeper_authorize!
-        if params[:user_name].blank?
+        if params[:user_name_or_phone_or_email].blank?
           users = User.all.name_ordered
         else
-          users = User.where('name ~* :name', 
-                             name: "^#{params[:user_name]}").name_ordered
+          users = User.where('name ~* :name or phone ~* :phone or email ~* :email', 
+                             name: "^#{params[:user_name_or_phone_or_email]}",
+                             phone: "^#{params[:user_name_or_phone_or_email]}",
+                             email: "^#{params[:user_name_or_phone_or_email]}").name_ordered
         end
 
         users = paginate(users)
@@ -165,7 +167,7 @@ module Api::V1
       get ":id" do
         doorkeeper_authorize!
         user = User.find(params[:id])
-        present user, with: Api::Entities::User, export_detail: true
+        present user, with: Api::Entities::User
         respond_ok
       end
       

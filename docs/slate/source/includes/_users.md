@@ -220,7 +220,7 @@ curl --request GET  http://localhost:3000/api/v1/users/query/jo
 
 ```json
 {"result":1,
- "friends":[
+ "users":[
     {"id":1, "name":"john", "avatar_url":"http://localhost:3000/upload/avatar/1.png"},
     {"id":2, "name":"joyce", "avatar_url":"http://localhost:3000/upload/avatar/2.png"}
   ],
@@ -234,13 +234,13 @@ curl --request GET  http://localhost:3000/api/v1/users/query/jo
 
 ### HTTP请求
 
-`GET /api/v1/users/query/:user_name`
+`GET /api/v1/users/query/:user_name_or_phone_or_email`
 
 ### 请求参数
 
 参数名     | 是否必需 | 描述
 -----------|----------|------
-user_name  | 否       | 要查询的用户名，可以只指定用户名的前缀部分，如果不指定该参数，则查询所有用户.
+user_name_or_phone_or_email  | 否       | 要查询的用户名，可以只指定用户名的前缀部分，或者指定要查询的手机号，或者指定要查询的email. 如果不指定该参数，则查询所有用户.
 page       | 否       | 要获取第几页数据
 per_page   | 否       | 指定每页多少条记录
 
@@ -257,6 +257,8 @@ per_page   | 否       | 指定每页多少条记录
 ---------------------|--------|------
 id                   | 整型 | 用户id
 name                 | 字符串 | 用户名称
+phone                | 字符串 | 用户手机号
+email                | 字符串 | 用户邮件
 avatar_url           | 字符串 | 用户头像url
 
 #### paginate_meta类型说明
