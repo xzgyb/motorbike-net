@@ -1285,14 +1285,14 @@ CREATE INDEX index_travel_plans_on_user_id ON travel_plans USING btree (user_id)
 -- Name: index_users_on_email; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_users_on_email ON users USING btree (email);
+CREATE INDEX index_users_on_email ON users USING btree (email);
 
 
 --
 -- Name: index_users_on_name; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_users_on_name ON users USING btree (name);
+CREATE INDEX index_users_on_name ON users USING btree (name);
 
 
 --
@@ -1324,6 +1324,6 @@ ALTER TABLE ONLY oauth_access_grants
 
 SET search_path TO "$user", public;
 
-INSERT INTO schema_migrations (version) VALUES ('20160523091904'), ('20160525071248'), ('20160525082438');
+INSERT INTO schema_migrations (version) VALUES ('20160523091904'), ('20160525071248'), ('20160525082438'), ('20160606035233');
 
 

@@ -19,7 +19,7 @@ class UsersApiTest < ActiveSupport::TestCase
     assert last_response.ok?
   end
 
-  test "POST /api/v1/users/register should work" do
+  test "POST /api/v1/users/register should work twice" do
     get '/api/v1/users/validation_code?phone=13811111111&type=1'
     assert last_response.ok?
 
@@ -32,6 +32,18 @@ class UsersApiTest < ActiveSupport::TestCase
     
     result = JSON.parse(last_response.body)
     assert_includes result, 'oauth_login_code'
+    
+    get '/api/v1/users/validation_code?phone=13811111112&type=1'
+    assert last_response.ok?
+
+    get '/api/v1/users/get_validation_code/13811111112'
+    assert last_response.ok?
+    
+    validation_code = last_response.body.delete('"')
+    post '/api/v1/users/register?phone=13811111112&validation_code=' + validation_code
+    assert last_response.created?
+    
+    result = JSON.parse(last_response.body)
   end
 
   test "POST /api/v1/users/login should work" do
