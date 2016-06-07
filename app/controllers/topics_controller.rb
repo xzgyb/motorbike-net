@@ -8,7 +8,7 @@ class TopicsController < ApplicationController
   end
 
   def show
-    @topic.inc(views_count: 1)
+    @topic.update_attribute(:views_count, @topic.views_count + 1)
     @posts = @topic.posts.page(params[:page])
     @post = Post.new
   end
