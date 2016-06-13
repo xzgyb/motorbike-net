@@ -23,7 +23,10 @@ module Api::V1
         optional :max_distance, type: Integer
       end
       get do
-        livings = Action.circle_for(current_user).living
+        livings = Action.select_all_with_distance(params[:longitude],
+                                                  params[:latitude])
+                        .circle_for(current_user)
+                        .living
 
         if params[:max_distance].present?
           livings = livings.near(params[:longitude],
@@ -63,8 +66,14 @@ module Api::V1
       end
 
       desc 'get a living'
+      params do
+        optional :longitude, type: Float, values: -180.0..+180.0
+        optional :latitude,  type: Float, values: -90.0..+90.0
+      end
       get ':id' do
-        living = Action.find(params[:id])
+        living = Action.select_all_with_distance(params[:longitude],
+                                                 params[:latitude])
+                         .find(params[:id])
 
         present living, with: Api::Entities::Living, export_content: true
         respond_ok

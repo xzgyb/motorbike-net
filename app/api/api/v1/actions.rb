@@ -14,7 +14,9 @@ module Api::V1
         optional :max_distance, type: Integer
       end
       get do
-        actions = Action.circle_for(current_user)
+        actions = Action.select_all_with_distance(params[:longitude],
+                                                  params[:latitude])
+                        .circle_for(current_user)
 
         if params[:max_distance].present?
           actions = actions.near(params[:longitude],

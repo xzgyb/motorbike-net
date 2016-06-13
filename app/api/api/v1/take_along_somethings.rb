@@ -24,7 +24,9 @@ module Api::V1
         optional :max_distance, type: Integer
       end
       get do
-        take_along_somethings = Action.circle_for(current_user)
+        take_along_somethings = Action.select_all_with_distance(params[:longitude],
+                                                               params[:latitude])
+                                      .circle_for(current_user)
                                       .take_along_something
 
         if params[:max_distance].present?
@@ -69,8 +71,14 @@ module Api::V1
       end
 
       desc 'get a take_along_something'
+      params do
+        optional :longitude, type: Float, values: -180.0..+180.0
+        optional :latitude,  type: Float, values: -90.0..+90.0
+      end
       get ':id' do
-        take_along_something = Action.find(params[:id])
+        take_along_something = Action.select_all_with_distance(params[:longitude],
+                                                               params[:latitude])
+                                     .find(params[:id])
 
         present take_along_something, with: Api::Entities::TakeAlongSomething, export_content: true
         respond_ok

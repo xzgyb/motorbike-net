@@ -66,7 +66,7 @@ place                | 字符串 | 地点名称
 price                | 字符串 | 价格
 longitude            | 字符串 | 经度
 latitude             | 字符串 | 纬度
-distance             | 整数   | 与当前位置的距离, 单位为米
+distance             | 浮点数 | 与当前位置的距离, 单位为米
 updated_at           | 字符串 | 更新时间
 content              | 字符串 | 具体的内容
 videos               | video类型的数组 | 视频相关信息, 如果没有视频，可能为[]
@@ -298,6 +298,8 @@ curl --request GET http://localhost:3000/api/v1/livings/2
 参数名     | 是否必需 | 描述
 -----------|----------|------
 id         | 是       | 一条直播记录的id
+longitude  | 否       | 指定当前位置的经度, 范围为-180.0至180.0
+latitude   | 否       | 指定当前位置的纬度, 范围为-90.0至90.0
 
 
 ### 返回结果

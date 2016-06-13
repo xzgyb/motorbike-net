@@ -23,8 +23,11 @@ module Api::V1
         optional :max_distance, type: Integer
       end
       get do
-        activities = Action.circle_for(current_user)
+        activities = Action.select_all_with_distance(params[:longitude],
+                                                     params[:latitude])
+                           .circle_for(current_user)
                            .activity
+
 
         if params[:max_distance].present?
           activities = activities.near(params[:longitude],
@@ -65,8 +68,14 @@ module Api::V1
       end
 
       desc 'get a activity'
+      params do
+        optional :longitude, type: Float, values: -180.0..+180.0
+        optional :latitude,  type: Float, values: -90.0..+90.0
+      end
       get ':id' do
-        activity = Action.find(params[:id])
+        activity = Action.select_all_with_distance(params[:longitude],
+                                                   params[:latitude])
+                         .find(params[:id])
 
         present activity, with: Api::Entities::Activity, export_content: true
         respond_ok

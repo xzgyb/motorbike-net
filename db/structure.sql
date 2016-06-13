@@ -136,7 +136,6 @@ CREATE TABLE actions (
     price numeric(10,2) DEFAULT 0,
     longitude numeric(9,6) DEFAULT 0,
     latitude numeric(9,6) DEFAULT 0,
-    distance integer DEFAULT 0,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     user_id integer
@@ -1299,7 +1298,7 @@ CREATE INDEX index_users_on_name ON users USING btree (name);
 -- Name: index_users_on_phone; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_users_on_phone ON users USING btree (phone);
+CREATE INDEX index_users_on_phone ON users USING btree (phone);
 
 
 --
@@ -1324,6 +1323,6 @@ ALTER TABLE ONLY oauth_access_grants
 
 SET search_path TO "$user", public;
 
-INSERT INTO schema_migrations (version) VALUES ('20160523091904'), ('20160525071248'), ('20160525082438'), ('20160606035233');
+INSERT INTO schema_migrations (version) VALUES ('20160523091904'), ('20160525071248'), ('20160525082438'), ('20160606035233'), ('20160613062612');
 
 

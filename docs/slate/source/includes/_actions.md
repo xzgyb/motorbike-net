@@ -99,7 +99,7 @@ place                | 字符串 | 地点名称
 price                | 字符串 | 价格
 longitude            | 字符串 | 经度
 latitude             | 字符串 | 纬度
-distance             | 整型   | 与当前位置的距离, 单位为米
+distance             | 浮点型   | 与当前位置的距离, 单位为米
 updated_at           | 字符串 | 更新时间
 start_at             | 字符串 | 开始时间, type为activity或take_along_something才有该字段
 end_at               | 字符串 | 结束时间, type为activity或take_along_something才有该字段

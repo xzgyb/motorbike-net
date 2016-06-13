@@ -68,7 +68,7 @@ place                | 字符串 | 地点名称
 price                | 字符串 | 价格
 longitude            | 字符串 | 经度
 latitude             | 字符串 | 纬度
-distance             | 整数   | 与当前位置的距离, 单位为米
+distance             | 浮点数 | 与当前位置的距离, 单位为米
 updated_at           | 字符串 | 更新时间
 start_at             | 字符串 | 开始时间
 end_at               | 字符串 | 结束时间
@@ -301,6 +301,8 @@ curl --request GET http://localhost:3000/api/v1/activities/1
 参数名     | 是否必需 | 描述
 -----------|----------|------
 id         | 是       | 一条活动记录的id
+longitude  | 否       | 指定当前位置的经度, 范围为-180.0至180.0
+latitude   | 否       | 指定当前位置的纬度, 范围为-90.0至90.0
 
 
 ### 返回结果
