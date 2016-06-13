@@ -19,6 +19,7 @@ class Action < ApplicationRecord
             if: -> (action) { action.activity? || action.take_along_something? }
 
   scope :latest, -> { order(updated_at: :desc) }
+  scope :by_distance, -> { order('distance') }
 
   scope :near, -> (longitude, latitude, max_distance = 1000) {
     where(%{
