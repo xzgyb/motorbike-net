@@ -351,9 +351,7 @@ curl --request GET  http://localhost:3000/api/v1/users/info
 
 ### 请求参数
 
-参数名     | 是否必需 | 描述
------------|----------|------
-id         | 否       | 用户id
+无
 
 ### 返回结果
 
