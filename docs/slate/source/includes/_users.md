@@ -285,6 +285,9 @@ curl --request GET  http://localhost:3000/api/v1/users/2
     "id":2,
     "name":"john",
     "email":"email45@hello.com",
+    "title":"3级飞车党",
+    "level":"LV.3",
+    "travel_mileage": "2.0",
     "avatar_url":"http://localhost:3000/upload/avatar/2.png"
   }
 }
@@ -304,7 +307,7 @@ id         | 否       | 用户id
 
 结果  | 内容
 ------|--------------
-成功  | `{"result":1","user":<user>, 其中`user`为带有详细用户信息的user
+成功  | `{"result":1","user":<user>`, 其中`user`为带有详细用户信息的user
 失败  | `{"result":0,"error":"错误原因"}`
 
 #### user类型说明
@@ -314,4 +317,59 @@ id         | 否       | 用户id
 id                   | 整型 | 用户id
 name                 | 字符串 | 用户名称
 email                | 字符串 | 用户email
+title                | 字符串 | 用户头衔
+level                | 字符串 | 用户级别 
+travel_mileage       | 字符串 | 行驶里程
+avatar_url           | 字符串 | 用户头像url
+
+## 查询当前用户的详细信息
+
+> 调用实例:
+
+```shell
+curl --request GET  http://localhost:3000/api/v1/users/info
+```
+> 返回:
+
+```json
+{"result":1,
+ "user":{
+    "id":2,
+    "name":"john",
+    "email":"email45@hello.com",
+    "title":"3级飞车党",
+    "level":"LV.3",
+    "travel_mileage": "2.0",
+    "avatar_url":"http://localhost:3000/upload/avatar/2.png"
+  }
+}
+```
+
+### HTTP请求
+
+`GET /api/v1/users/info`
+
+### 请求参数
+
+参数名     | 是否必需 | 描述
+-----------|----------|------
+id         | 否       | 用户id
+
+### 返回结果
+
+结果  | 内容
+------|--------------
+成功  | `{"result":1","user":<user>`, 其中`user`为带有详细用户信息的user
+失败  | `{"result":0,"error":"错误原因"}`
+
+#### user类型说明
+
+名称               | 类型   | 描述
+---------------------|--------|------
+id                   | 整型 | 用户id
+name                 | 字符串 | 用户名称
+email                | 字符串 | 用户email
+title                | 字符串 | 用户头衔
+level                | 字符串 | 用户级别 
+travel_mileage       | 字符串 | 行驶里程
 avatar_url           | 字符串 | 用户头像url

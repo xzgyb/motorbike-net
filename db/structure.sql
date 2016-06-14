@@ -752,7 +752,9 @@ CREATE TABLE users (
     avatar character varying,
     longitude numeric(9,6) DEFAULT 0 NOT NULL,
     latitude numeric(9,6) DEFAULT 0 NOT NULL,
-    mongo_id character varying
+    mongo_id character varying,
+    title character varying,
+    level character varying
 );
 
 
@@ -1323,6 +1325,6 @@ ALTER TABLE ONLY oauth_access_grants
 
 SET search_path TO "$user", public;
 
-INSERT INTO schema_migrations (version) VALUES ('20160523091904'), ('20160525071248'), ('20160525082438'), ('20160606035233'), ('20160613062612');
+INSERT INTO schema_migrations (version) VALUES ('20160523091904'), ('20160525071248'), ('20160525082438'), ('20160606035233'), ('20160613062612'), ('20160614015218');
 
 

@@ -163,6 +163,13 @@ module Api::V1
         respond_ok
       end
 
+      # get current user info
+      get :info do
+        doorkeeper_authorize!
+        present current_user, with: Api::Entities::User
+        respond_ok
+      end 
+
       # get user info
       get ":id" do
         doorkeeper_authorize!
@@ -170,7 +177,7 @@ module Api::V1
         present user, with: Api::Entities::User
         respond_ok
       end
-      
+
       get :test do
         doorkeeper_authorize!
         {'phone': current_user.phone}

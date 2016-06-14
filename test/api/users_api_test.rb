@@ -170,9 +170,21 @@ class UsersApiTest < ActiveSupport::TestCase
 
     assert_includes result, "user"
 
-    %w[id name email avatar_url].each do |field|
+    %w[id name email title level travel_mileage avatar_url].each do |field|
       assert_includes result["user"], field
     end
+  end
 
+  test "GET /api/v1/users/info returns the current user info" do
+    get "/api/v1/users/info", access_token: token
+
+    assert last_response.ok?
+
+    result = JSON.parse(last_response.body)
+    assert_includes result, "user"
+
+    %w[id name email title level travel_mileage avatar_url].each do |field|
+      assert_includes result["user"], field
+    end
   end
 end
