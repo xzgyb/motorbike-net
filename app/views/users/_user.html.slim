@@ -10,6 +10,10 @@ tr
           = f.check_box :admin
           | 管理员
 
+      = link_to('行驶轨迹',
+                user_bikes_path(user),
+                class: 'btn btn-success btn-xs')
+
       = link_to('删除', user, 
         class: 'btn btn-danger btn-xs', 
         method: :delete,

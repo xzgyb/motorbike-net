@@ -12,6 +12,7 @@ class Ability
 
       can [:edit, :update, :destroy], Post, :user_id => user.id
       can [:edit, :update, :destroy], Topic, :user_id => user.id
+      can [:read], Bike, :user_id => user.id
       cannot [:destroy, :update], User, :id => user.id
 
       can :create, Post

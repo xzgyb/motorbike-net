@@ -1,7 +1,11 @@
 div.row
   div.col-sm-8.col-sm-offset-2
     div.panel.panel-danger
-      div.panel-heading
-        h4 您还没有添加您的电动车信息！
-      div.panel-body
-        = link_to('请点击这里进行添加!', edit_user_registration_path)
+      - if user != current_user
+        div.panel-heading
+          h4 该用户没有电动车信息!
+      - else
+        div.panel-heading
+          h4 您还没有添加您的电动车信息！
+        div.panel-body
+          = link_to('请点击这里进行添加!', edit_user_registration_path)
