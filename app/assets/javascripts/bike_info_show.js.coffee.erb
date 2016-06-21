@@ -41,6 +41,59 @@ displayBikeLocationMap = (container, userName, bikeName, longitude, latitude) ->
         map.centerAndZoom(convertedPoint, 19)
     )
 
+# Global convertor object
+ConvertorData = {
+  convertor: null,
+  map: null,
+  points: null,
+  index: 0,
+  count: 0,
+  userName: "",
+  bikeName: ""
+}
+
+MAX_CONVERT_COUNT = 10
+
+# Add polyline to map
+addPolyline = (map, points, count, userName, bikeName) ->
+  polyline = new BMap.Polyline(points,
+      strokeColor: "#FF264F",
+      strokeWeight: 4,
+      strokeOpacity: 0.8)
+
+  map.addOverlay(polyline)
+  #polyline.enableEditing()
+
+  displayBikeLocationMarker(map,
+                            points[count - 1],
+                            userName + "的" + bikeName + "行驶轨迹")
+
+  map.centerAndZoom(points[count - 1], 17)
+
+# BMap convertor translate callback
+translateCallback = (data) ->
+  if data.status == 0
+    length     = data.points.length
+    totalCount = ConvertorData.count
+    index      = ConvertorData.index
+    points     = ConvertorData.points
+
+    points[index...index + length] = data.points
+    index += length
+
+    if index >= totalCount
+      addPolyline(ConvertorData.map,
+                  ConvertorData.points,
+                  ConvertorData.count,
+                  ConvertorData.userName,
+                  ConvertorData.bikeName)
+    else
+      ConvertorData.index = index
+      ConvertorData.convertor.translate(points[index...index + MAX_CONVERT_COUNT],
+        1, 5, translateCallback)
+      
+
+
 # Display bike track map.
 displayBikeTrackMap = (container, userName, bikeName, locations) ->
     map = createBMap(container)
@@ -58,21 +111,19 @@ displayBikeTrackMap = (container, userName, bikeName, locations) ->
     map.centerAndZoom(points[count - 1], 19)
 
     convertor = new BMap.Convertor()
-    convertor.translate(points, 1, 5, (data)->
-      if data.status == 0
-        polyline = new BMap.Polyline(data.points,
-            strokeColor: "#FF264F",
-            strokeWeight: 4,
-            strokeOpacity: 0.8)
-        map.addOverlay(polyline)
-        polyline.enableEditing()
 
-        displayBikeLocationMarker(map,
-                                  data.points[count - 1],
-                                  userName + "的" + bikeName + "行驶轨迹")
+    # Set global convertor data.
+    ConvertorData.convertor = convertor
+    ConvertorData.map       = map
+    ConvertorData.points    = points
+    ConvertorData.index     = 0
+    ConvertorData.userName  = userName
+    ConvertorData.bikeName  = bikeName
+    ConvertorData.count     = count
 
-        map.centerAndZoom(data.points[count - 1], 17)
-    )
+    firstPoints = points[ConvertorData.index ... ConvertorData.index + MAX_CONVERT_COUNT]
+
+    convertor.translate(firstPoints, 1, 5, translateCallback)
 
 # Set bike maps size.
 setBikeMapsSize = ->
