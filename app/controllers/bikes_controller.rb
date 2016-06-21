@@ -1,5 +1,5 @@
 class BikesController < ApplicationController
-  MAX_POINTS = 300
+  MAX_POINTS = 100
 
   load_resource :user
   decorates_assigned :users, :bike, :bikes, :user
