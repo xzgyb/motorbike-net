@@ -57,7 +57,7 @@ module Api::V1
 
       desc 'Upload bike data with the module id'
       put 'upload/:module_id' do
-        bike = current_user.bikes.find_by(module_id: params[:module_id])
+        bike = current_user.bikes.find_by!(module_id: params[:module_id])
         bike.update!(bike_params)
 
         if params.has_key?(:longitude) && params.has_key?(:latitude)
