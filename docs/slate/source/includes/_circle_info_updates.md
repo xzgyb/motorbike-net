@@ -46,7 +46,7 @@ mConsumer.open();
 {"action": {
  "id":1,
  "user_id":2,
- "type":"activity",
+ "type":0,
  "longitude":"33.5",
  "latitude":"44.8",
  "status":0}
@@ -71,7 +71,7 @@ id      | 整型    | 该条action的id
 user_id | 整型     | 创建该条action的用户id
 longitude|字符串    | 经度
 latitude |字符串    | 纬度
-type    | 字符串    | 该条action的类型, activity为活动, living为直播, take_along_something为捎东西.
+type    | 整型 |该条action的类型， 0:  表示活动(activity), 1: 表示直播(living), 2:表示捎东西(take_along_something)
 status  | 整数      | 该条action的状态, 0为添加, 1为删除, 2为更新.
 
 ## 圈子内好友位置实时更新

@@ -14,7 +14,7 @@ curl --request GET  http://localhost:3000/api/v1/actions?longitude=32.3&latitude
   "actions":[
     {"id":1,
      "user_id":2,
-     "type":"video",
+     "type":1,
      "title":"example title",
      "place":"example place",
      "price":"0.0",
@@ -27,7 +27,7 @@ curl --request GET  http://localhost:3000/api/v1/actions?longitude=32.3&latitude
                 "id":"57148394495576297f2d30f6"}]},
      {"id":2,
       "user_id":2,
-      "type":"activity",
+      "type":0,
       "title":"example title",
       "place":"example place",
       "price":"0.0",
@@ -42,7 +42,7 @@ curl --request GET  http://localhost:3000/api/v1/actions?longitude=32.3&latitude
                 "id":"57148394495574597f2d30f6"}]},
      {"id":3,
       "user_id":2,
-      "type":"take_along_something",
+      "type":2,
       "title":"example title",
       "place":"example place",
       "price":"0.0",
@@ -92,7 +92,7 @@ max_distance | 否     | 获取指定max_distance距离内的行为列表
 名称               | 类型   | 描述
 ---------------------|--------|------
 id                   | 整型 | 一条action记录的id
-type                 | 字符串 | activity: 表示活动, take_along_something: 表示捎东西, living: 表示直播
+type                 | 整型 | 0:  表示活动(activity), 1: 表示直播(living), 2:表示捎东西(take_along_something)
 user_id              | 整型 | 表示创建该条记录的用户id
 title                | 字符串 | 标题
 place                | 字符串 | 地点名称
@@ -101,11 +101,11 @@ longitude            | 字符串 | 经度
 latitude             | 字符串 | 纬度
 distance             | 浮点型   | 与当前位置的距离, 单位为米
 updated_at           | 字符串 | 更新时间
-start_at             | 字符串 | 开始时间, type为activity或take_along_something才有该字段
-end_at               | 字符串 | 结束时间, type为activity或take_along_something才有该字段
+start_at             | 字符串 | 开始时间, type为0或2才有该字段
+end_at               | 字符串 | 结束时间, type为0或2才有该字段
 content              | 字符串 | 具体的内容
-images               | image类型的数组 | 图片相关信息 , type为activity或take_along_something才有该字段
-videos               | videos类型的数组 | 视频相关信息, type为living才有该字段
+images               | image类型的数组 | 图片相关信息 , type为0或2才有该字段
+videos               | videos类型的数组 | 视频相关信息, type为1才有该字段
 
 #### image类型说明
 
