@@ -91,6 +91,21 @@ class UsersApiTest < ActiveSupport::TestCase
     assert_not_equal old_encrypted_password, @current_user.encrypted_password
   end
 
+  test "Update the user's avatar image only should work" do
+    file = Rack::Test::UploadedFile.new(Rails.root.join("test/files/sample.jpg"),
+                                        "image/jpg")
+
+    
+    put "/api/v1/users/update",
+        access_token: token,
+        avatar: file
+
+    assert last_response.ok?
+
+    @current_user.reload
+    assert @current_user.avatar.url
+  end
+
   test "GET /api/v1/users/query query the empty user name, and returns a full users list which orderd by name"  do
     get '/api/v1/users/query', access_token: token
     assert last_response.ok?

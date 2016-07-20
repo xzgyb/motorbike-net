@@ -117,13 +117,17 @@ module Api::V1
 
       desc 'Update user info'
       params do
-        requires :name, type: String, desc: 'user name'
-        requires :password, type: String, desc: 'user password'
-        requires :password_confirmation, type: String, desc: 'user password confirmation'
+        optional :name, type: String, desc: 'user name'
+        optional :password, type: String, desc: 'user password'
+        optional :password_confirmation, type: String, desc: 'user password confirmation'
         optional :avatar, type: File
       end
       put :update do
         doorkeeper_authorize!
+
+        if params[:avatar].present?
+          params[:avatar] = ActionDispatch::Http::UploadedFile.new(params[:avatar])
+        end
 
         api_request(current_user) do |user|
           user.update!(user_params)
