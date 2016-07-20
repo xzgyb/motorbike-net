@@ -122,7 +122,7 @@ curl -H 'Content-Type:application/json'
 
 参数名                | 是否必需 | 描述
 ----------------------|----------|------
-name                  | 是       | 用户名 
+name                  | 否       | 用户名 
 password              | 否       | 密码
 password_confirmation | 否       | 确认密码
 avatar                | 否       | 用户头像
