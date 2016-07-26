@@ -1,6 +1,8 @@
 tr class=(selected_bike.module_id == bike.module_id ? "selected" : "") data-href=(user_bike_url(user, bike))
   td = bike.name
   td = bike.module_id
+  td = bike.iccid
   td = bike.location
+  td = bike.remaining_data_usage
   td = bike.battery
   td = bike.travel_mileage

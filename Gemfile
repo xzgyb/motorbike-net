@@ -37,6 +37,7 @@ gem 'carrierwave-video'
 gem 'carrierwave-video-thumbnailer'
 gem 'pg'
 gem 'figaro'
+gem 'savon'
 
 group :development, :test do
   gem "awesome_print", require:"ap"

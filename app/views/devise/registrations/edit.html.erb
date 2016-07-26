@@ -38,11 +38,13 @@
         <table class="table">
           <tr>
             <th>模块id</th>
-            <td>名称</td>
+            <th>iccid</th>
+            <th>名称</th>
           </tr>
           <%= f.nested_fields_for :bikes,
                                   wrapper_tag: :tr do |ff| %>
             <td><%= ff.text_field :module_id, class: 'form-control' %></td>
+            <td><%= ff.text_field :iccid, class: 'form-control' %></td>
             <td><%= ff.text_field :name, class: 'form-control' %></td>
             <td>
               <%= ff.remove_nested_fields_link do %>

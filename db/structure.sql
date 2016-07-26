@@ -254,7 +254,8 @@ CREATE TABLE bikes (
     battery numeric(6,2) DEFAULT 0.0,
     travel_mileage numeric(10,2) DEFAULT 0.0,
     diag_info hstore DEFAULT ''::hstore,
-    user_id integer
+    user_id integer,
+    iccid character varying
 );
 
 
@@ -1300,7 +1301,7 @@ CREATE INDEX index_users_on_name ON users USING btree (name);
 -- Name: index_users_on_phone; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_users_on_phone ON users USING btree (phone);
+CREATE UNIQUE INDEX index_users_on_phone ON users USING btree (phone);
 
 
 --
@@ -1325,6 +1326,6 @@ ALTER TABLE ONLY oauth_access_grants
 
 SET search_path TO "$user", public;
 
-INSERT INTO schema_migrations (version) VALUES ('20160523091904'), ('20160525071248'), ('20160525082438'), ('20160606035233'), ('20160613062612'), ('20160614015218');
+INSERT INTO schema_migrations (version) VALUES ('20160523091904'), ('20160525071248'), ('20160525082438'), ('20160606035233'), ('20160613062612'), ('20160614015218'), ('20160726080254');
 
 
