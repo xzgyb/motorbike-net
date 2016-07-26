@@ -53,8 +53,8 @@ module Api::V1
         sms_content = SMS_CONTENTS[type] % [validation_code_object.validation_code]
 
         ChinaSMS.use(:yunxin, username: 'mhkjcf', password: 'mhkjcf467')
-        #result = ChinaSMS.to(phone, sms_content)
-        result = {success: true, code: '1231232132'}
+        result = ChinaSMS.to(phone, sms_content)
+        #result = {success: true, code: '1231232132'}
 
         if result[:success]
           respond_ok
