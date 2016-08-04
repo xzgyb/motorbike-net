@@ -69,10 +69,10 @@ module HasFriends
   end
 
   def common_friend_ids_with(user_id)
-    self.friendships.find_by_sql(<<-SQL).to_a
-      SELECT friend_id FROM friendships WHERE user_id=#{self.id} AND status="accepted" 
+    Friendship.find_by_sql(<<-SQL).pluck(:friend_id)
+      SELECT friend_id FROM friendships WHERE user_id=#{self.id} AND status='accepted' 
       INTERSECT
-      SELECT friend_id FROM friendships WHERE user_id=#{user_id} AND status="accepted"
+      SELECT friend_id FROM friendships WHERE user_id=#{user_id} AND status='accepted'
     SQL
   end
 

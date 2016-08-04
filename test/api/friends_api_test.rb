@@ -11,6 +11,8 @@ class FriendsApiTest < ActiveSupport::TestCase
     @peter = create(:user, name: 'peter')
     @mike  = create(:user, name: 'mike')
     @amy   = create(:user, name: 'amy')
+    @mary  = create(:user, name: 'mary')
+    @david = create(:user, name: 'david')
   end
 
   test "GET /api/v1/friends returns current user's friends list which ordered by name"  do
@@ -45,6 +47,32 @@ class FriendsApiTest < ActiveSupport::TestCase
     expect_ids = [@amy, @john, @mike, @peter].map { |e| e.id }
 
     assert_equal expect_ids, result_ids
+  end
+
+  test "GET /api/v1/friends/common_friends_with/:user_id returns current user's common friends list with the specified user" do
+
+    create_friendship(@gyb, @john)
+    create_friendship(@gyb, @peter)
+    create_friendship(@gyb, @mary)
+
+
+    create_friendship(@mike, @john)
+    create_friendship(@mike, @peter)
+    create_friendship(@mike, @david)
+
+    get "/api/v1/friends/common_friends_with/#{@mike.id}", access_token: token
+
+    assert last_response.ok?
+    
+    result = JSON.parse(last_response.body)
+
+    assert_includes result, "friends"
+    assert_includes result, "paginate_meta"
+
+    assert_equal 2, result["friends"].count
+    assert_equal @john.id, result["friends"][0]["id"]
+    assert_equal @peter.id, result["friends"][1]["id"]
+
   end
 
   test "GET /api/v1/friends/pending returns current user's pending friends list which ordered by name"  do

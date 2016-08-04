@@ -2,7 +2,7 @@ require 'test_helper'
 
 class UsersApiTest < ActiveSupport::TestCase
   def setup
-    @gyb = create(:user, name: 'gyb')
+    @gyb = create(:user, name: 'gyb', phone: '13801234567')
     @current_user = @gyb
 
     login_user(@gyb)
