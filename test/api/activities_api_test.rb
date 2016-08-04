@@ -43,6 +43,21 @@ class ActivitiesApiTest < ActiveSupport::TestCase
     assert_includes result["activities"][0]["images"][0], "thumb_url"
   end
 
+  test "GET /api/v1/activities/of_user/:user_id returns the sepcified user's activities list" do
+    create_list(:activity_with_images, 5, user: @gyb)
+
+    get "/api/v1/activities/of_user/#{@gyb.id}", access_token: token
+
+    assert last_response.ok?
+
+    result = JSON.parse(last_response.body)
+
+    assert_includes result, "activities"
+    assert_includes result, "paginate_meta"
+
+    assert_equal 5, result["activities"].count 
+  end
+
   test 'GET /api/v1/activities with max_distance returns a nearby activities list' do
     create_list(:activity_with_images, 10, longitude: 33.5, latitude:55.8, user: @current_user) 
     get '/api/v1/activities', longitude: 33.5, latitude: 55.8, max_distance: 5,

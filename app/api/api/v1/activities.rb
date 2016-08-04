@@ -28,7 +28,6 @@ module Api::V1
                            .circle_for(current_user)
                            .activity
 
-
         if params[:max_distance].present?
           activities = activities.near(params[:longitude],
                                        params[:latitude],
@@ -42,6 +41,20 @@ module Api::V1
        
         respond_ok
       end
+
+      desc "get the specified user's activities list"
+      get '/of_user/:user_id' do
+        activities = Action.select_all_with_distance(nil, nil)
+                           .where(user_id: params[:user_id])
+                           .activity
+        activities = paginate(activities.latest)
+
+        present activities, with: Api::Entities::Activity
+        present paginate_record_for(activities), with: Api::Entities::Paginate
+       
+        respond_ok
+      end
+      
 
       desc 'create a activity'
       params do

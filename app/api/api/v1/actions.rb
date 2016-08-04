@@ -31,6 +31,18 @@ module Api::V1
        
         respond_ok
       end
+
+      desc "get the specified user's actions list"
+      get '/of_user/:user_id' do
+        actions = Action.select_all_with_distance(nil, nil)
+                        .where(user_id: params[:user_id])
+        actions = paginate(actions.latest)
+
+        present actions, with: Api::Entities::Action
+        present paginate_record_for(actions), with: Api::Entities::Paginate
+       
+        respond_ok
+      end
     end
   end
 end

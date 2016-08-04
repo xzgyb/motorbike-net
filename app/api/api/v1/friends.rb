@@ -15,6 +15,17 @@ module Api::V1
         respond_ok
       end
 
+      desc 'get common friends list'
+      get 'common_friends_with/:user_id' do
+        friends = current_user.common_friends_with(params[:user_id]).name_ordered 
+        friends = paginate(friends)
+
+        present friends, with: Api::Entities::Friend
+        present paginate_record_for(friends), with: Api::Entities::Paginate
+       
+        respond_ok  
+      end
+
       desc 'get pending friends list'
       get :pending do
         friends = paginate(current_user.pending_friends.name_ordered)

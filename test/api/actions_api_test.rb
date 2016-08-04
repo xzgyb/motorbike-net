@@ -31,6 +31,23 @@ class ActionsApiTest < ActiveSupport::TestCase
     assert_equal 3, result["actions"].count 
   end
 
+  test "GET /api/v1/actions/of_user/:user_id returns the sepcified user's actions list" do
+    create(:activity_with_images, updated_at: Time.current, user: @gyb)
+    create(:living_with_videos, updated_at: 1.day.since, user: @gyb)
+    create(:take_along_something_with_images, updated_at: 2.days.since, user: @gyb) 
+    first_action = @gyb.actions.first
+    get "/api/v1/actions/of_user/#{@gyb.id}", access_token: token
+
+    assert last_response.ok?
+
+    result = JSON.parse(last_response.body)
+
+    assert_includes result, "actions"
+    assert_includes result, "paginate_meta"
+
+    assert_equal 3, result["actions"].count 
+  end
+
   test 'GET /api/v1/actions with max_distance returns a nearby actions list' do
     create_list(:activity_with_images, 10, longitude: 33.5, latitude: 55.8, user: @current_user) 
     get '/api/v1/actions', longitude: 33.5, latitude: 55.8, max_distance: 5,

@@ -43,6 +43,21 @@ class LivingsApiTest < ActiveSupport::TestCase
     assert_includes result["livings"][0]["videos"][0], "thumb_url"
   end
 
+  test "GET /api/v1/livings/of_user/:user_id returns the sepcified user's livings list" do
+    create_list(:living_with_videos, 5, user: @gyb)
+
+    get "/api/v1/livings/of_user/#{@gyb.id}", access_token: token
+
+    assert last_response.ok?
+
+    result = JSON.parse(last_response.body)
+
+    assert_includes result, "livings"
+    assert_includes result, "paginate_meta"
+
+    assert_equal 5, result["livings"].count 
+  end
+
   test 'GET /api/v1/livings with max_distance returns a nearby livings list' do
     create_list(:living_with_videos, 10, longitude: 33.5, latitude: 55.8, user: @current_user) 
     get '/api/v1/livings', longitude: 33.5, latitude: 55.8, max_distance: 5,

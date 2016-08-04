@@ -42,6 +42,19 @@ module Api::V1
         respond_ok
       end
 
+      desc "get the specified user's livings list"
+      get '/of_user/:user_id' do
+        livings = Action.select_all_with_distance(nil, nil)
+                        .where(user_id: params[:user_id])
+                        .living
+        livings = paginate(livings.latest)
+
+        present livings, with: Api::Entities::Living
+        present paginate_record_for(livings), with: Api::Entities::Paginate
+       
+        respond_ok
+      end
+
       desc 'create a living'
       params do
         requires :title, type: String

@@ -54,6 +54,21 @@ class TakeAlongSomethingsApiTest < ActiveSupport::TestCase
     assert_includes result["take_along_somethings"][0]["images"][0], "thumb_url"
   end
 
+  test "GET /api/v1/take_along_somethings/of_user/:user_id returns the sepcified user's take along somethings list" do
+    create_list(:take_along_something_with_images, 5, user: @gyb)
+
+    get "/api/v1/take_along_somethings/of_user/#{@gyb.id}", access_token: token
+
+    assert last_response.ok?
+
+    result = JSON.parse(last_response.body)
+
+    assert_includes result, "take_along_somethings"
+    assert_includes result, "paginate_meta"
+
+    assert_equal 5, result["take_along_somethings"].count 
+  end
+
   test 'GET /api/v1/take_along_somethings with max_distance returns a nearby take_along_something list' do
     create_list(:take_along_something_with_images, 10, longitude: 33.5, latitude:55.8, user: @current_user) 
 

@@ -43,6 +43,19 @@ module Api::V1
         respond_ok
       end
 
+      desc "get the specified user's take along somethings list"
+      get '/of_user/:user_id' do
+        take_along_somethings = Action.select_all_with_distance(nil, nil)
+                                      .where(user_id: params[:user_id])
+                                      .take_along_something
+        take_along_somethings = paginate(take_along_somethings.latest)
+
+        present take_along_somethings, with: Api::Entities::TakeAlongSomething
+        present paginate_record_for(take_along_somethings), with: Api::Entities::Paginate
+       
+        respond_ok
+      end
+
       desc 'create a take_along_something'
       params do
         requires :title, type: String
