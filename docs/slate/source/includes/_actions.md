@@ -133,3 +133,87 @@ next_page            | 整型   | 下一个页面号，可能为null
 prev_page            | 整型   | 前一个页面号, 可能为null
 total_pages          | 整型   | 总共页面数
 total_count          | 整型   | 总共记录数
+
+## 获取指定用户id的全部行为列表
+> 调用实例:
+
+```shell
+curl --request GET  http://localhost:3000/api/v1/actions/of_user/2
+```
+
+> 返回:
+
+```json
+{ "result":1,
+  "actions":[
+    {"id":1,
+     "user_id":2,
+     "type":1,
+     "title":"example title",
+     "place":"example place",
+     "price":"0.0",
+     "longitude":"32.5",
+     "latitude":"62.8",
+     "distance":110,
+     "updated_at":"2016-04-20 14:49:56",
+     "videos":[{"url":"http://115.29.110.82/public/uploads/sample.mp4",
+                "thumb_url":"http://115.29.110.82/public/uploads/sample.jpg",
+                "id":"57148394495576297f2d30f6"}]},
+     {"id":2,
+      "user_id":2,
+      "type":0,
+      "title":"example title",
+      "place":"example place",
+      "price":"0.0",
+      "longitude":"32.5",
+      "latitude":"62.8",
+      "distance":120,
+      "updated_at":"2016-04-20 14:49:56",
+      "start_at":"2016-04-18 14:49:56",
+      "end_at":"2016-04-19 00:49:56",
+      "images":[{"url":"http://115.29.110.82/public/uploads/sample.jpg",
+                "thumb_url":"http://115.29.110.82/public/uploads/sample.jpg",
+                "id":"57148394495574597f2d30f6"}]},
+     {"id":3,
+      "user_id":2,
+      "type":2,
+      "title":"example title",
+      "place":"example place",
+      "price":"0.0",
+      "longitude":"32.5",
+      "latitude":"62.8",
+      "distance":130,
+      "updated_at":"2016-04-20 14:49:56",
+      "start_at":"2016-04-18 14:49:56",
+      "end_at":"2016-04-19 00:49:56",
+      "images":[{"url":"http://115.29.110.82/public/uploads/sample.jpg",
+                "thumb_url":"http://115.29.110.82/public/uploads/sample.jpg",
+                "id":"57148394491274597f2d30f6"}]},
+     ],
+
+  "paginate_meta":{"current_page":1,
+                   "next_page":null,
+                   "prev_page":null,
+                   "total_pages":1,
+                   "total_count":17}
+}
+```
+
+
+### HTTP请求
+
+`GET /api/v1/actions/of_user/:user_id`
+
+### 请求参数
+
+参数名     | 是否必需 | 描述
+-----------|----------|------
+page       | 否       | 要获取第几页数据
+per_page   | 否       | 指定每页多少条记录
+user_id    | 是       | 指定用户id 
+
+### 返回结果
+
+结果  | 内容
+------|--------------
+成功  | `{"result":1","actions":[<action>, ...],"paginate_meta":<paginate_meta>}`, 其中`activities`为一数组，元素类型为action, paginate_meta为分页相关数据。

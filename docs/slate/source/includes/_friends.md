@@ -275,4 +275,46 @@ friend_id  | 是      | 好友的user id
 成功  | `{"result":1}`
 失败  | `{"result":0,"error":"错误原因"}`
 
+## 获取一个和指定用户id的共有的好友列表
+> 调用实例:
+
+```shell
+curl --request GET  http://localhost:3000/api/v1/friends/common_friends_with/2
+```
+> 返回:
+
+```json
+{"result":1,
+ "friends":[
+    {"id":1, "name":"amy", "avatar_url":"http://localhost:3000/images/a.png", longitude:33.5, latitude: 44.8},
+    {"id":2, "name":"john", "avatar_url":"http://localhost:3000/images/b.png", longitude:33.5, latitude: 24.8},
+    {"id":3, "name":"mike", "avatar_url":"http://localhost:3000/images/c.png", longitude:33.5, latitude: 34.8},
+    {"id":4, "name":"peter", "avatar_url":"http://localhost:3000/images/d.png", longitude:33.5, latitude: 54.8}
+  ],
+ "paginate_meta": {"current_page":1,
+                   "next_page":null,
+                   "prev_page":null,
+                   "total_pages":1,
+                   "total_count":4}
+}
+```
+
+### HTTP请求
+
+`GET /api/v1/friends/common_friends_with/:user_id`
+
+### 请求参数
+
+参数名     | 是否必需 | 描述
+-----------|----------|------
+page       | 否       | 要获取第几页数据
+per_page   | 否       | 指定每页多少条记录
+user_id    | 是       | 指定用户id
+
+### 返回结果
+
+结果  | 内容
+------|--------------
+成功  | `{"result":1","friends":[<friend>, ...],"paginate_meta":<paginate_meta>}`, 其中`friends`为一数组，元素类型为friend, paginate_meta为分页相关数据。
+失败  | `{"result":0,"error":"错误原因"}`
 

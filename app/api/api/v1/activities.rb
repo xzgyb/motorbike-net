@@ -73,6 +73,13 @@ module Api::V1
         activity = current_user.activities.new(activity_params)
         activity.save!
 
+        # addd a event for current user
+        event = current_user.events.new(event_type: :activity,
+                                        start_at: activity.start_at,
+                                        end_at: activity.end_at,
+                                        action_id: activity.id)
+        event.save!
+
         ActionPushJob.perform_later(current_user, 
                                     activity, 
                                     ActionPushJob::ACTION_ADD)

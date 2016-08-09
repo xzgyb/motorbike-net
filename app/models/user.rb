@@ -32,6 +32,7 @@ class User < ApplicationRecord
   has_many :take_along_somethings, -> { take_along_something }, class_name: 'Action'
 
   has_many :oauth_applications, class_name: 'Doorkeeper::Application', as: :owner
+  has_many :events
 
   scope :name_ordered,  -> { order(:name) }
   scope :email_ordered, -> { order(:email) }

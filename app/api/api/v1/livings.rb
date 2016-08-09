@@ -72,6 +72,11 @@ module Api::V1
         living = current_user.livings.new(living_params)
         living.save!
 
+        # addd a event for current user
+        event = current_user.events.new(event_type: :living,
+                                        action_id: living.id)
+        event.save!
+
         ActionPushJob.perform_later(current_user, 
                                     living, 
                                     ActionPushJob::ACTION_ADD)

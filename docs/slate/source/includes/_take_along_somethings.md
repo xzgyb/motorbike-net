@@ -373,3 +373,72 @@ latitude   | 否       | 指定当前位置的纬度, 范围为-90.0至90.0
 ------|--------------
 成功  | `{"result":1,"take_along_something":<take_along_something>}`, 其中`take_along_something`为一捎东西类型的记录
 失败  | `{"result":0,"error":"错误原因"}`
+
+## 获取一个指定用户id的捎东西的列表
+
+> 调用实例:
+
+```shell
+curl --request GET  http://localhost:3000/api/v1/take_along_somethings/of_user/2
+```
+
+> 返回:
+
+```json
+{ "result":1,
+  "take_along_somethings":[
+    {"id":2,
+     "user_id":1,
+     "title":"example title",
+     "place":"example place",
+     "price":"0.0",
+     "longitude":"32.5",
+     "latitude":"62.8",
+     "distance":110,
+     "updated_at":"2016-04-20 14:49:56",
+     "start_at":"2016-04-18 14:49:56",
+     "end_at":"2016-04-19 00:49:56",
+     "sender":{
+       "id":1,
+       "name":"ggg",
+       "phone":"13811111111",
+       "adress":"sgsfgsdfgsfg"
+     },
+     "receiver":{
+       "id":2,
+       "name":"fff",
+       "phone":"13911111111",
+       "adress":"sgsfgsdfgsfg"
+     },
+     "images":[{"url":"http://115.29.110.82/public/uploads/sample.jpg",
+                "thumb_url":"http://115.29.110.82/public/uploads/sample.jpg",
+                "id":"57148394495576297f2d30f6"}]},
+     ...],
+
+  "paginate_meta":{"current_page":1,
+                   "next_page":null,
+                   "prev_page":null,
+                   "total_pages":1,
+                   "total_count":17}
+}
+```
+
+### HTTP请求
+
+`GET /api/v1/take_along_somethings/of_user/:user_id`
+
+### 请求参数
+
+参数名     | 是否必需 | 描述
+-----------|----------|------
+page       | 否       | 要获取第几页数据
+per_page   | 否       | 指定每页多少条记录
+user_id    | 是       | 指定的用户id
+
+### 返回结果
+
+结果  | 内容
+------|--------------
+成功  | `{"result":1","take_along_somethings":[<take_along_something>, ...],"paginate_meta":<paginate_meta>}`, 其中`take_along_somethings`为一数组，元素类型为take_along_something, paginate_meta为分页相关数据。
+失败  | `{"result":0,"error":"错误原因"}`
+

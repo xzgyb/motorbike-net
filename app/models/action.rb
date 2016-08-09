@@ -10,6 +10,7 @@ class Action < ApplicationRecord
 
   has_one :sender
   has_one :receiver
+  has_one :event, dependent: :destroy
 
   accepts_nested_attributes_for :images, :videos, :sender, :receiver, allow_destroy: true
 

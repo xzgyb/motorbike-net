@@ -77,6 +77,13 @@ module Api::V1
 
         take_along_something.save!
 
+        # addd a event for current user
+        event = current_user.events.new(event_type: :take_along_something,
+                                        start_at: take_along_something.start_at,
+                                        end_at: take_along_something.end_at,
+                                        action_id: take_along_something.id)
+        event.save!
+
         ActionPushJob.perform_later(current_user, 
                                     take_along_something, 
                                     ActionPushJob::ACTION_ADD)

@@ -279,6 +279,47 @@ ALTER SEQUENCE bikes_id_seq OWNED BY bikes.id;
 
 
 --
+-- Name: events; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE events (
+    id integer NOT NULL,
+    title character varying,
+    content text DEFAULT ''::text,
+    start_at timestamp without time zone,
+    end_at timestamp without time zone,
+    longitude numeric(9,6) DEFAULT 0,
+    latitude numeric(9,6) DEFAULT 0,
+    distance integer DEFAULT 0,
+    event_type integer DEFAULT 0,
+    user_id integer,
+    action_id integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    place character varying
+);
+
+
+--
+-- Name: events_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE events_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: events_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE events_id_seq OWNED BY events.id;
+
+
+--
 -- Name: friendships; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -824,6 +865,13 @@ ALTER TABLE ONLY bikes ALTER COLUMN id SET DEFAULT nextval('bikes_id_seq'::regcl
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY events ALTER COLUMN id SET DEFAULT nextval('events_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY friendships ALTER COLUMN id SET DEFAULT nextval('friendships_id_seq'::regclass);
 
 
@@ -972,6 +1020,14 @@ ALTER TABLE ONLY articles
 
 ALTER TABLE ONLY bikes
     ADD CONSTRAINT bikes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: events_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY events
+    ADD CONSTRAINT events_pkey PRIMARY KEY (id);
 
 
 --
@@ -1134,6 +1190,13 @@ CREATE UNIQUE INDEX index_bikes_on_module_id ON bikes USING btree (module_id);
 --
 
 CREATE INDEX index_bikes_on_user_id ON bikes USING btree (user_id);
+
+
+--
+-- Name: index_events_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_events_on_user_id ON events USING btree (user_id);
 
 
 --
@@ -1326,6 +1389,6 @@ ALTER TABLE ONLY oauth_access_grants
 
 SET search_path TO "$user", public;
 
-INSERT INTO schema_migrations (version) VALUES ('20160523091904'), ('20160525071248'), ('20160525082438'), ('20160606035233'), ('20160613062612'), ('20160614015218'), ('20160726080254');
+INSERT INTO schema_migrations (version) VALUES ('20160523091904'), ('20160525071248'), ('20160525082438'), ('20160606035233'), ('20160613062612'), ('20160614015218'), ('20160726080254'), ('20160808024844'), ('20160808055827'), ('20160808072134');
 
 

@@ -308,3 +308,56 @@ latitude   | 否       | 指定当前位置的纬度, 范围为-90.0至90.0
 ------|--------------
 成功  | `{"result":1,"living":<living>}`, 其中`living`为一直播类型的记录
 失败  | `{"result":0,"error":"错误原因"}`
+
+## 获取指定用户id的直播的列表
+> 调用实例:
+
+```shell
+curl --request GET  http://localhost:3000/api/v1/livings/of_user/2
+```
+
+> 返回:
+
+```json
+{ "result":1,
+  "livings":[
+    {"id":1,
+     "user_id":2,
+     "title":"example title",
+     "place":"example place",
+     "price":"0.0",
+     "longitude":"32.5",
+     "latitude":"62.8",
+     "distance":110,
+     "updated_at":"2016-04-20 14:49:56",
+     "videos":[{"url":"http://115.29.110.82/public/uploads/sample.mp4",
+                "thumb_url":"http://115.29.110.82/public/uploads/sample.jpg",
+                "id":2}]},
+     ...],
+
+  "paginate_meta":{"current_page":1,
+                   "next_page":null,
+                   "prev_page":null,
+                   "total_pages":1,
+                   "total_count":17}
+}
+```
+
+### HTTP请求
+
+`GET /api/v1/livings/of_user/:user_id`
+
+### 请求参数
+
+参数名     | 是否必需 | 描述
+-----------|----------|------
+page       | 否       | 要获取第几页数据
+per_page   | 否       | 指定每页多少条记录
+user_id    | 是       | 指定用户id
+
+### 返回结果
+
+结果  | 内容
+------|--------------
+成功  | `{"result":1","livings":[<living>, ...],"paginate_meta":<paginate_meta>}`, 其中`livings`为一数组，元素类型为living, paginate_meta为分页相关数据。
+失败  | `{"result":0,"error":"错误原因"}`

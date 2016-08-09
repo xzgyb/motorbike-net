@@ -14,5 +14,6 @@ module Api::V1
     mount TakeAlongSomethings
     mount Actions
     mount Friends
+    mount Events
   end
 end
