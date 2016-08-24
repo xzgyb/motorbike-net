@@ -10,8 +10,9 @@ module Api::V1
           ActionController::Parameters.new(params).permit(
             :title, :price, :place, :content, :start_at, :end_at, :longitude, :latitude,
             images_attributes: [:id, :file, :_destroy],
-            sender_attributes: [:id, :name, :phone, :address, :_destroy],
-            receiver_attributes: [:id, :name, :phone, :address, :_destroy])
+            order_take_attributes: [:id, :user_id, :_destroy],
+            sender_attributes: [:id, :name, :phone, :address, :latitude, :longitude, :place, :_destroy],
+            receiver_attributes: [:id, :name, :phone, :address, :latitude, :longitude, :place, :_destroy])
         end
       end
       
@@ -24,10 +25,8 @@ module Api::V1
         optional :max_distance, type: Integer
       end
       get do
-        take_along_somethings = Action.select_all_with_distance(params[:longitude],
-                                                               params[:latitude])
-                                      .circle_for(current_user)
-                                      .take_along_something
+        take_along_somethings = TakeAlongSomething.select_all_with_distance(
+          params[:longitude], params[:latitude]).circle_for(current_user)
 
         if params[:max_distance].present?
           take_along_somethings = take_along_somethings.near(params[:longitude],
@@ -45,9 +44,9 @@ module Api::V1
 
       desc "get the specified user's take along somethings list"
       get '/of_user/:user_id' do
-        take_along_somethings = Action.select_all_with_distance(nil, nil)
-                                      .where(user_id: params[:user_id])
-                                      .take_along_something
+        take_along_somethings = TakeAlongSomething.select_all_with_distance(
+          nil, nil).where(user_id: params[:user_id])
+
         take_along_somethings = paginate(take_along_somethings.latest)
 
         present take_along_somethings, with: Api::Entities::TakeAlongSomething
@@ -68,6 +67,7 @@ module Api::V1
         optional :images_attributes, type: Array
         optional :sender_attributes, type: Hash
         optional :receiver_attributes, type: Hash
+        optional :order_take_attributes, type: Array
       end
       post do
         normalize_uploaded_file_attributes(params[:images_attributes])
@@ -81,8 +81,14 @@ module Api::V1
         event = current_user.events.new(event_type: :take_along_something,
                                         start_at: take_along_something.start_at,
                                         end_at: take_along_something.end_at,
-                                        action_id: take_along_something.id)
+                                        actionable: take_along_something)
         event.save!
+
+        # add a action for current user
+        action = current_user.actions.new(longitude: take_along_something.longitude,
+                                          latitude: take_along_something.latitude,
+                                          actionable: take_along_something)
+        action.save!
 
         ActionPushJob.perform_later(current_user, 
                                     take_along_something, 
@@ -96,9 +102,8 @@ module Api::V1
         optional :latitude,  type: Float, values: -90.0..+90.0
       end
       get ':id' do
-        take_along_something = Action.select_all_with_distance(params[:longitude],
-                                                               params[:latitude])
-                                     .find(params[:id])
+        take_along_something = TakeAlongSomething.select_all_with_distance(
+          params[:longitude], params[:latitude]).find(params[:id])
 
         present take_along_something, with: Api::Entities::TakeAlongSomething, export_content: true
         respond_ok
@@ -122,12 +127,20 @@ module Api::V1
         optional :images_attributes, type: Array
         optional :sender_attributes, type: Hash
         optional :receiver_attributes, type: Hash
+        optional :order_take_attributes, type: Array
       end
       put ':id' do
         take_along_something = current_user.take_along_somethings.find(params[:id])
         normalize_uploaded_file_attributes(params[:images_attributes])
 
         take_along_something.update!(take_along_something_params)
+
+        if take_along_something.action.present?
+          if params[:longitude].present? or params[:latitude].present? 
+            take_along_something.action.update!(longitude: params[:longitude],
+                                                latitude: params[:latitude])
+          end
+        end
 
         ActionPushJob.perform_later(current_user, 
                                     take_along_something, 

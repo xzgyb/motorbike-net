@@ -3,33 +3,33 @@ module Api::Entities
     expose :id
 
     expose :title do |event, _| 
-      event.event? ? event.title : event.action.title
+      event.event? ? event.title : event.actionable.title
     end
 
     expose :content do |event, _| 
-      event.event? ? event.content : event.action.content 
+      event.event? ? event.content : event.actionable.content 
     end
 
     expose :longitude do |event, _| 
-      event.event? ? event.longitude : event.action.longitude 
+      event.event? ? event.longitude : event.actionable.longitude 
     end
 
     expose :latitude do |event, _| 
-      event.event? ? event.latitude : event.action.latitude 
+      event.event? ? event.latitude : event.actionable.latitude 
     end
 
     expose :place do |event, _| 
-      event.event? ? event.place : event.action.place
+      event.event? ? event.place : event.actionable.place
     end 
 
     expose :image_url do |event, _|
       if event.activity? || event.take_along_something?
-        event.action.images.empty? ? ""
-                                   : event.action.images.first.file.url(:thumb)
+        event.actionable.images.empty? ? ""
+                                   : event.actionable.images.first.file.url(:thumb)
 
       elsif event.living?
-        event.action.videos.empty? ? ""
-                                   : event.action.videos.first.file.url(:thumb)
+        event.actionable.videos.empty? ? ""
+                                   : event.actionable.videos.first.file.url(:thumb)
       else
         ""
       end

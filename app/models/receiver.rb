@@ -1,3 +1,3 @@
 class Receiver < ApplicationRecord 
-  belongs_to :action
+  belongs_to :take_along_something
 end

@@ -23,10 +23,9 @@ module Api::V1
         optional :max_distance, type: Integer
       end
       get do
-        livings = Action.select_all_with_distance(params[:longitude],
+        livings = Living.select_all_with_distance(params[:longitude],
                                                   params[:latitude])
                         .circle_for(current_user)
-                        .living
 
         if params[:max_distance].present?
           livings = livings.near(params[:longitude],
@@ -44,9 +43,9 @@ module Api::V1
 
       desc "get the specified user's livings list"
       get '/of_user/:user_id' do
-        livings = Action.select_all_with_distance(nil, nil)
+        livings = Living.select_all_with_distance(nil, nil)
                         .where(user_id: params[:user_id])
-                        .living
+
         livings = paginate(livings.latest)
 
         present livings, with: Api::Entities::Living
@@ -74,8 +73,14 @@ module Api::V1
 
         # addd a event for current user
         event = current_user.events.new(event_type: :living,
-                                        action_id: living.id)
+                                        actionable: living)
         event.save!
+
+        # add a action for current user
+        action = current_user.actions.new(longitude: living.longitude,
+                                          latitude: living.latitude,
+                                          actionable: living)
+        action.save!
 
         ActionPushJob.perform_later(current_user, 
                                     living, 
@@ -89,7 +94,7 @@ module Api::V1
         optional :latitude,  type: Float, values: -90.0..+90.0
       end
       get ':id' do
-        living = Action.select_all_with_distance(params[:longitude],
+        living = Living.select_all_with_distance(params[:longitude],
                                                  params[:latitude])
                          .find(params[:id])
 
@@ -122,6 +127,13 @@ module Api::V1
         normalize_uploaded_file_attributes(params[:images_attributes])
 
         living.update!(living_params)
+
+        if living.action.present?
+          if params[:longitude].present? or params[:latitude].present? 
+            living.action.update!(longitude: params[:longitude],
+                                  latitude: params[:latitude])
+          end
+        end
 
         ActionPushJob.perform_later(current_user, 
                                     living, 

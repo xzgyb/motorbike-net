@@ -11,9 +11,9 @@ class LivingsApiTest < ActiveSupport::TestCase
   test 'GET /api/v1/livings returns a livings list published by current_user and his friends' do
     create_friendship(@current_user, @gyb)
 
-    create_list(:living_with_videos, 5, user: @current_user)
-    create_list(:living_with_videos, 5, user: @gyb)
-    create_list(:living_with_videos, 5, user: create(:user))
+    create_list(:living_with_videos_images, 5, user: @current_user)
+    create_list(:living_with_videos_images, 5, user: @gyb)
+    create_list(:living_with_videos_images, 5, user: create(:user))
     
     first_living = @current_user.livings.first
 
@@ -28,7 +28,7 @@ class LivingsApiTest < ActiveSupport::TestCase
 
     assert_equal 10, result["livings"].count 
     
-    %w[id title place price updated_at videos longitude latitude distance].each do |field|
+    %w[id title place price updated_at videos images longitude latitude distance].each do |field|
       assert_includes result["livings"][0], field
     end
 
@@ -44,7 +44,7 @@ class LivingsApiTest < ActiveSupport::TestCase
   end
 
   test "GET /api/v1/livings/of_user/:user_id returns the sepcified user's livings list" do
-    create_list(:living_with_videos, 5, user: @gyb)
+    create_list(:living_with_videos_images, 5, user: @gyb)
 
     get "/api/v1/livings/of_user/#{@gyb.id}", access_token: token
 
@@ -59,7 +59,7 @@ class LivingsApiTest < ActiveSupport::TestCase
   end
 
   test 'GET /api/v1/livings with max_distance returns a nearby livings list' do
-    create_list(:living_with_videos, 10, longitude: 33.5, latitude: 55.8, user: @current_user) 
+    create_list(:living_with_videos_images, 10, longitude: 33.5, latitude: 55.8, user: @current_user) 
     get '/api/v1/livings', longitude: 33.5, latitude: 55.8, max_distance: 5,
         access_token: token
 
@@ -67,7 +67,7 @@ class LivingsApiTest < ActiveSupport::TestCase
   end
 
   test 'GET /api/v1/livings/:id returns a specified id living' do
-    living = create(:living_with_videos, user: @current_user)
+    living = create(:living_with_videos_images, user: @current_user)
     get "api/v1/livings/#{living.id}", access_token: token
     
     assert last_response.ok?
@@ -79,7 +79,7 @@ class LivingsApiTest < ActiveSupport::TestCase
   end
 
   test 'DELETE /api/v1/livings/:id should work' do
-    living = create(:living_with_videos, user: @current_user)
+    living = create(:living_with_videos_images, user: @current_user)
 
     delete "api/v1/livings/#{living.id}", access_token: token
 
@@ -88,7 +88,7 @@ class LivingsApiTest < ActiveSupport::TestCase
   end
 
   test 'PUT /api/v1/livings/:id should update the specified id living' do
-    living = create(:living_with_videos, user: @current_user)
+    living = create(:living_with_videos_images, user: @current_user)
 
     put "api/v1/livings/#{living.id}", 
         title: "hello living",
@@ -160,6 +160,10 @@ class LivingsApiTest < ActiveSupport::TestCase
           {file: new_video_attachment},
           {file: new_video_attachment}
         ], 
+        images_attributes: [
+          {file: new_image_attachment},
+          {file: new_image_attachment}
+        ], 
         access_token: token
 
     assert last_response.created?
@@ -169,10 +173,4 @@ class LivingsApiTest < ActiveSupport::TestCase
     assert_equal "hello living", living.title
     assert_equal 2, living.videos.count
   end
-
-  def new_video_attachment
-    Rack::Test::UploadedFile.new(Rails.root.join("test/files/sample.mp4"),
-                                                 "video/mp4")
-  end
-
 end

@@ -4,7 +4,7 @@ class ActionTest < ActiveSupport::TestCase
 
   def setup
     @activity_action = build(:activity_with_images)
-    @living_action = build(:living_with_videos)
+    @living_action = build(:living_with_videos_images)
     @take_along_something_action = build(:take_along_something_with_images)
   end
 

@@ -10,7 +10,8 @@ module Api::V1
           ActionController::Parameters.new(params).permit(
             :title, :price, :place, :content, :start_at, 
             :end_at, :longitude, :latitude,
-            images_attributes: [:id, :file, :_destroy])
+            images_attributes: [:id, :file, :_destroy],
+            participations_attributes: [:id, :user_id, :_destroy])
         end
       end
       
@@ -23,10 +24,9 @@ module Api::V1
         optional :max_distance, type: Integer
       end
       get do
-        activities = Action.select_all_with_distance(params[:longitude],
-                                                     params[:latitude])
-                           .circle_for(current_user)
-                           .activity
+        activities = Activity.select_all_with_distance(params[:longitude],
+                                                       params[:latitude])
+                             .circle_for(current_user)
 
         if params[:max_distance].present?
           activities = activities.near(params[:longitude],
@@ -44,9 +44,8 @@ module Api::V1
 
       desc "get the specified user's activities list"
       get '/of_user/:user_id' do
-        activities = Action.select_all_with_distance(nil, nil)
-                           .where(user_id: params[:user_id])
-                           .activity
+        activities = Activity.select_all_with_distance(nil, nil)
+                             .where(user_id: params[:user_id])
         activities = paginate(activities.latest)
 
         present activities, with: Api::Entities::Activity
@@ -66,6 +65,7 @@ module Api::V1
         requires :start_at, type: String
         requires :end_at, type: String
         optional :images_attributes, type: Array
+        optional :participations_attributes, type: Array
       end
       post do
         normalize_uploaded_file_attributes(params[:images_attributes])
@@ -77,8 +77,14 @@ module Api::V1
         event = current_user.events.new(event_type: :activity,
                                         start_at: activity.start_at,
                                         end_at: activity.end_at,
-                                        action_id: activity.id)
+                                        actionable: activity)
         event.save!
+
+        # add a action for current user
+        action = current_user.actions.new(longitude: activity.longitude,
+                                          latitude: activity.latitude,
+                                          actionable: activity)
+        action.save!
 
         ActionPushJob.perform_later(current_user, 
                                     activity, 
@@ -93,11 +99,11 @@ module Api::V1
         optional :latitude,  type: Float, values: -90.0..+90.0
       end
       get ':id' do
-        activity = Action.select_all_with_distance(params[:longitude],
+        activity = Activity.select_all_with_distance(params[:longitude],
                                                    params[:latitude])
-                         .find(params[:id])
+                           .find(params[:id])
 
-        present activity, with: Api::Entities::Activity, export_content: true
+        present activity, with: Api::Entities::Activity, export_detail: true
         respond_ok
       end
 
@@ -118,12 +124,20 @@ module Api::V1
         optional :longitude, type: Float, values: -180.0..+180.0
         optional :latitude,  type: Float, values: -90.0..+90.0
         optional :images_attributes, type: Array
+        optional :participations_attributes, type: Array
       end
       put ':id' do
         activity = current_user.activities.find(params[:id])
         normalize_uploaded_file_attributes(params[:images_attributes])
 
         activity.update!(activity_params)
+
+        if activity.action.present?
+          if params[:longitude].present? or params[:latitude].present? 
+            activity.action.update!(longitude: params[:longitude],
+                                    latitude: params[:latitude])
+          end
+        end
 
         ActionPushJob.perform_later(current_user, 
                                     activity, 

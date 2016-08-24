@@ -27,9 +27,9 @@ class User < ApplicationRecord
   has_many :medias, dependent: :delete_all
 
   has_many :actions
-  has_many :activities, -> { activity }, class_name: 'Action'
-  has_many :livings,    -> { living   }, class_name: 'Action'
-  has_many :take_along_somethings, -> { take_along_something }, class_name: 'Action'
+  has_many :activities
+  has_many :livings
+  has_many :take_along_somethings
 
   has_many :oauth_applications, class_name: 'Doorkeeper::Application', as: :owner
   has_many :events

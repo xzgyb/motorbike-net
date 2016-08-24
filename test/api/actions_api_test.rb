@@ -13,10 +13,10 @@ class ActionsApiTest < ActiveSupport::TestCase
   end
 
   test 'GET /api/v1/actions returns a actions list' do
-    create(:activity_with_images, updated_at: Time.current, user: @current_user)
-    create(:living_with_videos, updated_at: 1.day.since, user: @gyb)
-    create(:take_along_something_with_images, updated_at: 2.days.since, user: @ww) 
-    create(:take_along_something_with_images, updated_at: 2.days.since, user: create(:user)) 
+    create_activity(@current_user)
+    create_living(@gyb)
+    create_take_along_something(@ww)
+    create_take_along_something(create(:user))
 
     first_action = @current_user.actions.first
     get '/api/v1/actions', longitude: first_action.longitude, latitude: first_action.latitude, access_token: token
@@ -32,9 +32,10 @@ class ActionsApiTest < ActiveSupport::TestCase
   end
 
   test "GET /api/v1/actions/of_user/:user_id returns the sepcified user's actions list" do
-    create(:activity_with_images, updated_at: Time.current, user: @gyb)
-    create(:living_with_videos, updated_at: 1.day.since, user: @gyb)
-    create(:take_along_something_with_images, updated_at: 2.days.since, user: @gyb) 
+    create_activity(@gyb)
+    create_living(@gyb)
+    create_take_along_something(@gyb)
+
     first_action = @gyb.actions.first
     get "/api/v1/actions/of_user/#{@gyb.id}", access_token: token
 
@@ -49,10 +50,79 @@ class ActionsApiTest < ActiveSupport::TestCase
   end
 
   test 'GET /api/v1/actions with max_distance returns a nearby actions list' do
-    create_list(:activity_with_images, 10, longitude: 33.5, latitude: 55.8, user: @current_user) 
+    create_activity(@current_user)
+    create_living(@gyb)
+    create_take_along_something(@ww)
+
     get '/api/v1/actions', longitude: 33.5, latitude: 55.8, max_distance: 5,
         access_token: token
 
     assert last_response.ok?
   end
+
+  private
+    def with_user(user)
+      login_user(user)
+      yield
+      login_user(@current_user)
+    end
+
+    def create_activity(user)
+      with_user(user) do
+        post "api/v1/activities", 
+            title: "hello activity",
+            price: 25.2,
+            place: "example place",
+            start_at: Time.current,
+            end_at: 2.days.since,
+            content: "example content",
+            longitude: 112,
+            latitude: 80,
+            images_attributes: [
+              {file: new_image_attachment},
+              {file: new_image_attachment}
+            ],
+            access_token: token
+      end
+    end
+
+    def create_living(user)
+      with_user(user) do
+        post "api/v1/livings", 
+            title: "hello living",
+            price: 25.2,
+            place: "example place",
+            content: "example content",
+            longitude: 112,
+            latitude: 80,
+            videos_attributes: [
+              {file: new_video_attachment},
+              {file: new_video_attachment}
+            ], 
+            access_token: token
+      end
+    end
+
+    def create_take_along_something(user)
+      with_user(user) do
+        post "api/v1/take_along_somethings", 
+            title: "hello take_along_something",
+            price: 25.2,
+            place: "example place",
+            start_at: Time.current,
+            end_at: 2.days.since,
+            content: "example content",
+            longitude: 112,
+            latitude: 80,
+            sender_attributes: 
+              {name: "gyb", phone: "11234234234", address: "24234234"} ,
+            receiver_attributes: 
+              {name: "ww", phone: "23423424", address: "112312311"} ,
+            images_attributes: [
+              {file: new_image_attachment},
+              {file: new_image_attachment}
+            ], 
+            access_token: token
+      end
+    end
 end

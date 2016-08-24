@@ -47,4 +47,14 @@ class ActiveSupport::TestCase
     user1.be_friends_with(user2)
     user2.be_friends_with(user1)
   end
+
+  def new_image_attachment
+    Rack::Test::UploadedFile.new(Rails.root.join("test/files/sample.jpg"),
+                                                 "image/jpeg")
+  end
+
+  def new_video_attachment
+    Rack::Test::UploadedFile.new(Rails.root.join("test/files/sample.mp4"),
+                                                 "video/mp4")
+  end
 end

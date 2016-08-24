@@ -10,6 +10,7 @@ module Api::Entities
     with_options(format_with: :time) { expose :updated_at }
   
     expose :videos, using: ActionVideoAttachment
+    expose :images, using: ActionImageAttachment
 
     root "livings", "living"
   end

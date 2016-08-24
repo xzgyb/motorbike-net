@@ -62,83 +62,19 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- Name: action_image_attachments; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE action_image_attachments (
-    id integer NOT NULL,
-    file character varying,
-    action_id integer
-);
-
-
---
--- Name: action_image_attachments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE action_image_attachments_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: action_image_attachments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE action_image_attachments_id_seq OWNED BY action_image_attachments.id;
-
-
---
--- Name: action_video_attachments; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE action_video_attachments (
-    id integer NOT NULL,
-    file character varying,
-    action_id integer
-);
-
-
---
--- Name: action_video_attachments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE action_video_attachments_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: action_video_attachments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE action_video_attachments_id_seq OWNED BY action_video_attachments.id;
-
-
---
 -- Name: actions; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE actions (
     id integer NOT NULL,
-    category integer DEFAULT 0,
-    title character varying,
-    place character varying,
-    start_at timestamp without time zone,
-    end_at timestamp without time zone,
-    content text DEFAULT ''::text,
-    price numeric(10,2) DEFAULT 0,
     longitude numeric(9,6) DEFAULT 0,
     latitude numeric(9,6) DEFAULT 0,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    user_id integer
+    actionable_type character varying,
+    actionable_id integer,
+    user_id integer,
+    distance integer DEFAULT 0
 );
 
 
@@ -159,6 +95,46 @@ CREATE SEQUENCE actions_id_seq
 --
 
 ALTER SEQUENCE actions_id_seq OWNED BY actions.id;
+
+
+--
+-- Name: activities; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE activities (
+    id integer NOT NULL,
+    title character varying,
+    place character varying,
+    start_at timestamp without time zone,
+    end_at timestamp without time zone,
+    content text DEFAULT ''::text,
+    longitude numeric(9,6) DEFAULT 0,
+    latitude numeric(9,6) DEFAULT 0,
+    distance integer DEFAULT 0,
+    user_id integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    price numeric(10,2) DEFAULT 0
+);
+
+
+--
+-- Name: activities_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE activities_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: activities_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE activities_id_seq OWNED BY activities.id;
 
 
 --
@@ -293,10 +269,11 @@ CREATE TABLE events (
     distance integer DEFAULT 0,
     event_type integer DEFAULT 0,
     user_id integer,
-    action_id integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    place character varying
+    place character varying,
+    actionable_type character varying,
+    actionable_id integer
 );
 
 
@@ -350,6 +327,77 @@ CREATE SEQUENCE friendships_id_seq
 --
 
 ALTER SEQUENCE friendships_id_seq OWNED BY friendships.id;
+
+
+--
+-- Name: image_attachments; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE image_attachments (
+    id integer NOT NULL,
+    file character varying,
+    imageable_type character varying,
+    imageable_id integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: image_attachments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE image_attachments_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: image_attachments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE image_attachments_id_seq OWNED BY image_attachments.id;
+
+
+--
+-- Name: livings; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE livings (
+    id integer NOT NULL,
+    title character varying,
+    place character varying,
+    content text DEFAULT ''::text,
+    longitude numeric(9,6) DEFAULT 0,
+    latitude numeric(9,6) DEFAULT 0,
+    distance integer DEFAULT 0,
+    user_id integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    price numeric(10,2) DEFAULT 0
+);
+
+
+--
+-- Name: livings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE livings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: livings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE livings_id_seq OWNED BY livings.id;
 
 
 --
@@ -529,6 +577,70 @@ ALTER SEQUENCE oauth_applications_id_seq OWNED BY oauth_applications.id;
 
 
 --
+-- Name: order_takes; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE order_takes (
+    id integer NOT NULL,
+    take_along_something_id integer,
+    user_id integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: order_takes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE order_takes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: order_takes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE order_takes_id_seq OWNED BY order_takes.id;
+
+
+--
+-- Name: participations; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE participations (
+    id integer NOT NULL,
+    activity_id integer,
+    user_id integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: participations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE participations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: participations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE participations_id_seq OWNED BY participations.id;
+
+
+--
 -- Name: passing_locations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -601,7 +713,10 @@ CREATE TABLE receivers (
     name character varying DEFAULT ''::character varying,
     phone character varying DEFAULT ''::character varying,
     address character varying DEFAULT ''::character varying,
-    action_id integer
+    take_along_something_id integer,
+    longitude numeric(9,6) DEFAULT 0,
+    latitude numeric(9,6) DEFAULT 0,
+    place character varying DEFAULT ''::character varying
 );
 
 
@@ -642,7 +757,10 @@ CREATE TABLE senders (
     name character varying DEFAULT ''::character varying,
     phone character varying DEFAULT ''::character varying,
     address character varying DEFAULT ''::character varying,
-    action_id integer
+    take_along_something_id integer,
+    longitude numeric(9,6) DEFAULT 0,
+    latitude numeric(9,6) DEFAULT 0,
+    place character varying DEFAULT ''::character varying
 );
 
 
@@ -697,6 +815,46 @@ CREATE SEQUENCE sms_validation_codes_id_seq
 --
 
 ALTER SEQUENCE sms_validation_codes_id_seq OWNED BY sms_validation_codes.id;
+
+
+--
+-- Name: take_along_somethings; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE take_along_somethings (
+    id integer NOT NULL,
+    title character varying,
+    place character varying,
+    start_at timestamp without time zone,
+    end_at timestamp without time zone,
+    content text DEFAULT ''::text,
+    price numeric(10,2) DEFAULT 0,
+    longitude numeric(9,6) DEFAULT 0,
+    latitude numeric(9,6) DEFAULT 0,
+    distance integer DEFAULT 0,
+    user_id integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: take_along_somethings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE take_along_somethings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: take_along_somethings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE take_along_somethings_id_seq OWNED BY take_along_somethings.id;
 
 
 --
@@ -820,17 +978,35 @@ ALTER SEQUENCE users_id_seq OWNED BY users.id;
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: video_attachments; Type: TABLE; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY action_image_attachments ALTER COLUMN id SET DEFAULT nextval('action_image_attachments_id_seq'::regclass);
+CREATE TABLE video_attachments (
+    id integer NOT NULL,
+    file character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    living_id integer
+);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: video_attachments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY action_video_attachments ALTER COLUMN id SET DEFAULT nextval('action_video_attachments_id_seq'::regclass);
+CREATE SEQUENCE video_attachments_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: video_attachments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE video_attachments_id_seq OWNED BY video_attachments.id;
 
 
 --
@@ -838,6 +1014,13 @@ ALTER TABLE ONLY action_video_attachments ALTER COLUMN id SET DEFAULT nextval('a
 --
 
 ALTER TABLE ONLY actions ALTER COLUMN id SET DEFAULT nextval('actions_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY activities ALTER COLUMN id SET DEFAULT nextval('activities_id_seq'::regclass);
 
 
 --
@@ -879,6 +1062,20 @@ ALTER TABLE ONLY friendships ALTER COLUMN id SET DEFAULT nextval('friendships_id
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY image_attachments ALTER COLUMN id SET DEFAULT nextval('image_attachments_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY livings ALTER COLUMN id SET DEFAULT nextval('livings_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY locations ALTER COLUMN id SET DEFAULT nextval('locations_id_seq'::regclass);
 
 
@@ -908,6 +1105,20 @@ ALTER TABLE ONLY oauth_access_tokens ALTER COLUMN id SET DEFAULT nextval('oauth_
 --
 
 ALTER TABLE ONLY oauth_applications ALTER COLUMN id SET DEFAULT nextval('oauth_applications_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY order_takes ALTER COLUMN id SET DEFAULT nextval('order_takes_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY participations ALTER COLUMN id SET DEFAULT nextval('participations_id_seq'::regclass);
 
 
 --
@@ -949,6 +1160,13 @@ ALTER TABLE ONLY sms_validation_codes ALTER COLUMN id SET DEFAULT nextval('sms_v
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY take_along_somethings ALTER COLUMN id SET DEFAULT nextval('take_along_somethings_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY topics ALTER COLUMN id SET DEFAULT nextval('topics_id_seq'::regclass);
 
 
@@ -967,19 +1185,10 @@ ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regcl
 
 
 --
--- Name: action_image_attachments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY action_image_attachments
-    ADD CONSTRAINT action_image_attachments_pkey PRIMARY KEY (id);
-
-
---
--- Name: action_video_attachments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY action_video_attachments
-    ADD CONSTRAINT action_video_attachments_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY video_attachments ALTER COLUMN id SET DEFAULT nextval('video_attachments_id_seq'::regclass);
 
 
 --
@@ -988,6 +1197,14 @@ ALTER TABLE ONLY action_video_attachments
 
 ALTER TABLE ONLY actions
     ADD CONSTRAINT actions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: activities_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY activities
+    ADD CONSTRAINT activities_pkey PRIMARY KEY (id);
 
 
 --
@@ -1039,6 +1256,22 @@ ALTER TABLE ONLY friendships
 
 
 --
+-- Name: image_attachments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY image_attachments
+    ADD CONSTRAINT image_attachments_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: livings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY livings
+    ADD CONSTRAINT livings_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: locations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1076,6 +1309,22 @@ ALTER TABLE ONLY oauth_access_tokens
 
 ALTER TABLE ONLY oauth_applications
     ADD CONSTRAINT oauth_applications_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: order_takes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY order_takes
+    ADD CONSTRAINT order_takes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: participations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY participations
+    ADD CONSTRAINT participations_pkey PRIMARY KEY (id);
 
 
 --
@@ -1127,6 +1376,14 @@ ALTER TABLE ONLY sms_validation_codes
 
 
 --
+-- Name: take_along_somethings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY take_along_somethings
+    ADD CONSTRAINT take_along_somethings_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: topics_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1151,17 +1408,18 @@ ALTER TABLE ONLY users
 
 
 --
--- Name: index_action_image_attachments_on_action_id; Type: INDEX; Schema: public; Owner: -
+-- Name: video_attachments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-CREATE INDEX index_action_image_attachments_on_action_id ON action_image_attachments USING btree (action_id);
+ALTER TABLE ONLY video_attachments
+    ADD CONSTRAINT video_attachments_pkey PRIMARY KEY (id);
 
 
 --
--- Name: index_action_video_attachments_on_action_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_actions_on_actionable_type_and_actionable_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_action_video_attachments_on_action_id ON action_video_attachments USING btree (action_id);
+CREATE INDEX index_actions_on_actionable_type_and_actionable_id ON actions USING btree (actionable_type, actionable_id);
 
 
 --
@@ -1169,6 +1427,13 @@ CREATE INDEX index_action_video_attachments_on_action_id ON action_video_attachm
 --
 
 CREATE INDEX index_actions_on_user_id ON actions USING btree (user_id);
+
+
+--
+-- Name: index_activities_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_activities_on_user_id ON activities USING btree (user_id);
 
 
 --
@@ -1190,6 +1455,13 @@ CREATE UNIQUE INDEX index_bikes_on_module_id ON bikes USING btree (module_id);
 --
 
 CREATE INDEX index_bikes_on_user_id ON bikes USING btree (user_id);
+
+
+--
+-- Name: index_events_on_actionable_type_and_actionable_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_events_on_actionable_type_and_actionable_id ON events USING btree (actionable_type, actionable_id);
 
 
 --
@@ -1218,6 +1490,20 @@ CREATE INDEX index_friendships_on_status ON friendships USING btree (status);
 --
 
 CREATE INDEX index_friendships_on_user_id ON friendships USING btree (user_id);
+
+
+--
+-- Name: index_image_attachments_on_imageable_type_and_imageable_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_image_attachments_on_imageable_type_and_imageable_id ON image_attachments USING btree (imageable_type, imageable_id);
+
+
+--
+-- Name: index_livings_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_livings_on_user_id ON livings USING btree (user_id);
 
 
 --
@@ -1298,6 +1584,55 @@ CREATE INDEX index_on_actions_location ON actions USING gist (st_geographyfromte
 
 
 --
+-- Name: index_on_activities_location; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_on_activities_location ON activities USING gist (st_geographyfromtext((((('SRID=4326;POINT('::text || longitude) || ' '::text) || latitude) || ')'::text)));
+
+
+--
+-- Name: index_on_livings_location; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_on_livings_location ON livings USING gist (st_geographyfromtext((((('SRID=4326;POINT('::text || longitude) || ' '::text) || latitude) || ')'::text)));
+
+
+--
+-- Name: index_on_take_along_somethings_location; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_on_take_along_somethings_location ON take_along_somethings USING gist (st_geographyfromtext((((('SRID=4326;POINT('::text || longitude) || ' '::text) || latitude) || ')'::text)));
+
+
+--
+-- Name: index_order_takes_on_take_along_something_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_order_takes_on_take_along_something_id ON order_takes USING btree (take_along_something_id);
+
+
+--
+-- Name: index_order_takes_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_order_takes_on_user_id ON order_takes USING btree (user_id);
+
+
+--
+-- Name: index_participations_on_activity_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_participations_on_activity_id ON participations USING btree (activity_id);
+
+
+--
+-- Name: index_participations_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_participations_on_user_id ON participations USING btree (user_id);
+
+
+--
 -- Name: index_passing_locations_on_travel_plan_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1319,17 +1654,24 @@ CREATE INDEX index_posts_on_user_id ON posts USING btree (user_id);
 
 
 --
--- Name: index_receivers_on_action_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_receivers_on_take_along_something_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_receivers_on_action_id ON receivers USING btree (action_id);
+CREATE INDEX index_receivers_on_take_along_something_id ON receivers USING btree (take_along_something_id);
 
 
 --
--- Name: index_senders_on_action_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_senders_on_take_along_something_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_senders_on_action_id ON senders USING btree (action_id);
+CREATE INDEX index_senders_on_take_along_something_id ON senders USING btree (take_along_something_id);
+
+
+--
+-- Name: index_take_along_somethings_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_take_along_somethings_on_user_id ON take_along_somethings USING btree (user_id);
 
 
 --
@@ -1368,11 +1710,50 @@ CREATE UNIQUE INDEX index_users_on_phone ON users USING btree (phone);
 
 
 --
+-- Name: index_video_attachments_on_living_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_video_attachments_on_living_id ON video_attachments USING btree (living_id);
+
+
+--
+-- Name: fk_rails_45f6b6dc45; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY order_takes
+    ADD CONSTRAINT fk_rails_45f6b6dc45 FOREIGN KEY (user_id) REFERENCES users(id);
+
+
+--
+-- Name: fk_rails_7309fb7a55; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY order_takes
+    ADD CONSTRAINT fk_rails_7309fb7a55 FOREIGN KEY (take_along_something_id) REFERENCES take_along_somethings(id);
+
+
+--
 -- Name: fk_rails_732cb83ab7; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY oauth_access_tokens
     ADD CONSTRAINT fk_rails_732cb83ab7 FOREIGN KEY (application_id) REFERENCES oauth_applications(id);
+
+
+--
+-- Name: fk_rails_7497d0a785; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY video_attachments
+    ADD CONSTRAINT fk_rails_7497d0a785 FOREIGN KEY (living_id) REFERENCES livings(id);
+
+
+--
+-- Name: fk_rails_92013479b0; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY participations
+    ADD CONSTRAINT fk_rails_92013479b0 FOREIGN KEY (activity_id) REFERENCES activities(id);
 
 
 --
@@ -1384,11 +1765,19 @@ ALTER TABLE ONLY oauth_access_grants
 
 
 --
+-- Name: fk_rails_e80f5ca3a2; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY participations
+    ADD CONSTRAINT fk_rails_e80f5ca3a2 FOREIGN KEY (user_id) REFERENCES users(id);
+
+
+--
 -- PostgreSQL database dump complete
 --
 
 SET search_path TO "$user", public;
 
-INSERT INTO schema_migrations (version) VALUES ('20160523091904'), ('20160525071248'), ('20160525082438'), ('20160606035233'), ('20160613062612'), ('20160614015218'), ('20160726080254'), ('20160808024844'), ('20160808055827'), ('20160808072134');
+INSERT INTO schema_migrations (version) VALUES ('20160523091904'), ('20160525071248'), ('20160525082438'), ('20160606035233'), ('20160613062612'), ('20160614015218'), ('20160726080254'), ('20160808024844'), ('20160808055827'), ('20160808072134'), ('20160822060130'), ('20160822060641'), ('20160822060908'), ('20160822063724'), ('20160822063741'), ('20160822072047'), ('20160822072115'), ('20160822072620'), ('20160822074629'), ('20160822074719'), ('20160822074903'), ('20160822075347'), ('20160822075429'), ('20160822081855'), ('20160823074345'), ('20160823074410'), ('20160823074419'), ('20160823075554'), ('20160823083109'), ('20160824063747'), ('20160824063809'), ('20160824082547'), ('20160824092957');
 
 

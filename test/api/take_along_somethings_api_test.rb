@@ -30,16 +30,16 @@ class TakeAlongSomethingsApiTest < ActiveSupport::TestCase
     assert_includes result, "paginate_meta"
 
     assert_equal 10, result["take_along_somethings"].count 
-    
+   
     %w[id title place price updated_at start_at end_at images longitude latitude distance sender receiver].each do |field|
       assert_includes result["take_along_somethings"][0], field
     end
 
-    %w[name address phone].each do |field|
+    %w[name address phone longitude latitude place].each do |field|
       assert_includes result["take_along_somethings"][0]["sender"], field
     end
 
-    %w[name address phone].each do |field|
+    %w[name address phone longitude latitude place].each do |field|
       assert_includes result["take_along_somethings"][0]["receiver"], field
     end
 
@@ -173,8 +173,18 @@ class TakeAlongSomethingsApiTest < ActiveSupport::TestCase
         content: "example content",
         longitude: 112,
         latitude: 80,
-        sender_attributes: {name: "gyb", phone: "11234234234", address: "24234234"} ,
-        receiver_attributes: {name: "ww", phone: "23423424", address: "112312311"} ,
+        sender_attributes: {name: "gyb", 
+                            phone: "11234234234",
+                            address: "24234234",
+                            place: "sender place",
+                            longitude: 110,
+                            latitude: 75} ,
+        receiver_attributes: {name: "ww", 
+                              phone: "23423424", 
+                              address: "112312311",
+                              place: "receiver place",
+                              longitude: 110,
+                              latitude: 75}, 
         images_attributes: [
           {file: new_image_attachment},
           {file: new_image_attachment}
@@ -193,8 +203,18 @@ class TakeAlongSomethingsApiTest < ActiveSupport::TestCase
         content: "example content",
         longitude: 112,
         latitude: 80,
-        sender_attributes: {name: "gyb", phone: "11234234234", address: "24234234"} ,
-        receiver_attributes: {name: "ww", phone: "23423424", address: "112312311"} ,
+        sender_attributes: {name: "gyb",
+                            phone: "11234234234", 
+                            address: "24234234",
+                            place: "sender place",
+                            longitude: 110,
+                            latitude: 75},
+        receiver_attributes: {name: "ww", 
+                              phone: "23423424", 
+                              address: "112312311",
+                              place: "receiver place",
+                              longitude: 110,
+                              latitude: 75}, 
         images_attributes: [
           {file: new_image_attachment},
           {file: new_image_attachment}
@@ -208,10 +228,4 @@ class TakeAlongSomethingsApiTest < ActiveSupport::TestCase
     assert_equal "hello take_along_something", take_along_something.title
     assert_equal 2, take_along_something.images.count
   end
-
-  def new_image_attachment
-    Rack::Test::UploadedFile.new(Rails.root.join("test/files/sample.jpg"),
-                                                 "image/jpeg")
-  end
-
 end

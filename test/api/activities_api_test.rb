@@ -4,6 +4,8 @@ class ActivitiesApiTest < ActiveSupport::TestCase
   def setup
     @current_user = create(:user)
     @gyb = create(:user, name: 'gyb')
+    @ww  = create(:user, name: 'ww')
+    @gg  = create(:user, name: 'gg')
 
     login_user(@current_user)
   end
@@ -173,9 +175,103 @@ class ActivitiesApiTest < ActiveSupport::TestCase
     assert_equal 2, activity.images.count
   end
 
-  def new_image_attachment
-    Rack::Test::UploadedFile.new(Rails.root.join("test/files/sample.jpg"),
-                                                 "image/jpeg")
+  test 'POST /api/v1/activities with participations should create a activity' do
+    post "api/v1/activities", 
+        title: "hello activity",
+        price: 25.2,
+        place: "example place",
+        start_at: Time.current,
+        end_at: 2.days.since,
+        content: "example content",
+        longitude: 112,
+        latitude: 80,
+        images_attributes: [
+          {file: new_image_attachment},
+          {file: new_image_attachment}
+        ],
+        participations_attributes: [
+          {user_id: @gyb.id},
+          {user_id: @ww.id}
+        ],
+        access_token: token
+
+    assert last_response.created?
+    assert_equal 2, @current_user.activities.first.participators.count
+    assert_equal @gyb, @current_user.activities.first.participators[0]
+    assert_equal @ww, @current_user.activities.first.participators[1]
+
+  end
+
+  test 'PUT /api/v1/activities/:id with participations should update the specified id activity' do
+    activity = create(:activity_with_images, user: @current_user)
+
+    put "api/v1/activities/#{activity.id}", 
+        participations_attributes: [
+          {user_id: @gyb.id},
+          {user_id: @ww.id}
+        ],
+        access_token: token
+
+
+    assert last_response.ok?
+
+    activity.reload
+
+    assert_equal 2, activity.participators.count
+    assert_equal @gyb, activity.participators[0]
+    assert_equal @ww, activity.participators[1]
+
+    put "api/v1/activities/#{activity.id}", 
+        participations_attributes: [
+          {user_id: @gg.id}
+        ],
+        access_token: token
+
+    assert last_response.ok?
+
+    activity.reload
+
+    assert_equal 3, activity.participators.count
+
+    assert_equal @gyb, activity.participators[0]
+    assert_equal @ww, activity.participators[1]
+    assert_equal @gg, activity.participators[2]
+  end
+
+  test 'GET /api/v1/activities/:id returns a specified id activity with participators' do
+    post "api/v1/activities", 
+        title: "hello activity",
+        price: 25.2,
+        place: "example place",
+        start_at: Time.current,
+        end_at: 2.days.since,
+        content: "example content",
+        longitude: 112,
+        latitude: 80,
+        images_attributes: [
+          {file: new_image_attachment},
+          {file: new_image_attachment}
+        ],
+        participations_attributes: [
+          {user_id: @gyb.id},
+          {user_id: @ww.id}
+        ],
+        access_token: token
+
+    assert last_response.created?
+
+    activity = @current_user.activities.first
+
+    get "api/v1/activities/#{activity.id}", access_token: token
+    
+    assert last_response.ok?
+    result = JSON.parse(last_response.body)
+
+    assert_includes result, "activity"
+    assert_includes result["activity"], "content"
+    assert_includes result["activity"], "participators"
+    assert_includes result["activity"], "organizer"
+    assert_equal activity.id, result["activity"]["id"] 
   end
 
 end
