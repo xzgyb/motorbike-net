@@ -1,5 +1,7 @@
 class Living < ApplicationRecord
-  include Actionable 
+  include GlobalID::Identification
+  include ActionableScopes
+  include ActionableCallbacks
 
   belongs_to :user
 

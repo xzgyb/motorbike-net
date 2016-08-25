@@ -31,6 +31,23 @@ class ActionsApiTest < ActiveSupport::TestCase
     assert_equal 3, result["actions"].count 
   end
 
+  test 'PUT api/v1/activities/:id with longitude and latitude also update action longitude, latitude' do
+    create_activity(@current_user)
+
+    activity = @current_user.activities.first
+   
+    put "api/v1/activities/#{activity.id}", 
+        longitude: 122,
+        latitude: 88,
+        access_token: token
+
+    assert last_response.ok?
+
+    action = @current_user.actions.first
+    assert_equal 122, action.longitude
+    assert_equal 88, action.latitude
+  end
+
   test "GET /api/v1/actions/of_user/:user_id returns the sepcified user's actions list" do
     create_activity(@gyb)
     create_living(@gyb)

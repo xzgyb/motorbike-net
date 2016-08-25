@@ -72,24 +72,6 @@ module Api::V1
 
         activity = current_user.activities.new(activity_params)
         activity.save!
-
-        # addd a event for current user
-        event = current_user.events.new(event_type: :activity,
-                                        start_at: activity.start_at,
-                                        end_at: activity.end_at,
-                                        actionable: activity)
-        event.save!
-
-        # add a action for current user
-        action = current_user.actions.new(longitude: activity.longitude,
-                                          latitude: activity.latitude,
-                                          actionable: activity)
-        action.save!
-
-        ActionPushJob.perform_later(current_user, 
-                                    activity, 
-                                    ActionPushJob::ACTION_ADD)
-
         respond_ok
       end
 
@@ -111,11 +93,6 @@ module Api::V1
       delete ':id' do
         activity = current_user.activities.find(params[:id])
         activity.destroy!
-
-        ActionPushJob.perform_later(current_user, 
-                                    activity, 
-                                    ActionPushJob::ACTION_DELETE)
-
         respond_ok
       end
 
@@ -131,18 +108,6 @@ module Api::V1
         normalize_uploaded_file_attributes(params[:images_attributes])
 
         activity.update!(activity_params)
-
-        if activity.action.present?
-          if params[:longitude].present? or params[:latitude].present? 
-            activity.action.update!(longitude: params[:longitude],
-                                    latitude: params[:latitude])
-          end
-        end
-
-        ActionPushJob.perform_later(current_user, 
-                                    activity, 
-                                    ActionPushJob::ACTION_UPDATE)
-
         respond_ok
       end
     end

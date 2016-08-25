@@ -10,13 +10,9 @@ module Api::Entities
 
     expose :id, :user_id
 
-    expose(:type) do |instance, _| 
-      case instance.actionable
-      when Activity then 0
-      when Living then 1
-      when TakeAlongSomething then 2
-      end
-    end
+    expose(:type) { |instance, _| 
+      ::Action.type_code(instance.actionable)
+    }
 
     expose(:title) { |instance, _| instance.actionable.title }
     expose(:place) { |instance, _| instance.actionable.place }

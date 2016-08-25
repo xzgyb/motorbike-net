@@ -1,9 +1,7 @@
-module Actionable
+module ActionableScopes
   extend ActiveSupport::Concern
 
   included do
-    include GlobalID::Identification
-
 
     scope :latest, -> { order(updated_at: :desc) }
     scope :by_distance, -> { order('distance') }
@@ -37,6 +35,5 @@ module Actionable
     scope :circle_for, -> (user) {
       where(user_id: user.friend_ids + [user.id])
     }
-
   end
 end

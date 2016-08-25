@@ -76,23 +76,6 @@ module Api::V1
           take_along_something_params)
 
         take_along_something.save!
-
-        # addd a event for current user
-        event = current_user.events.new(event_type: :take_along_something,
-                                        start_at: take_along_something.start_at,
-                                        end_at: take_along_something.end_at,
-                                        actionable: take_along_something)
-        event.save!
-
-        # add a action for current user
-        action = current_user.actions.new(longitude: take_along_something.longitude,
-                                          latitude: take_along_something.latitude,
-                                          actionable: take_along_something)
-        action.save!
-
-        ActionPushJob.perform_later(current_user, 
-                                    take_along_something, 
-                                    ActionPushJob::ACTION_ADD)
         respond_ok
       end
 
@@ -113,10 +96,6 @@ module Api::V1
       delete ':id' do
         take_along_something = current_user.take_along_somethings.find(params[:id])
         take_along_something.destroy!
-
-        ActionPushJob.perform_later(current_user, 
-                                    take_along_something, 
-                                    ActionPushJob::ACTION_DELETE)
         respond_ok
       end
 
@@ -134,18 +113,6 @@ module Api::V1
         normalize_uploaded_file_attributes(params[:images_attributes])
 
         take_along_something.update!(take_along_something_params)
-
-        if take_along_something.action.present?
-          if params[:longitude].present? or params[:latitude].present? 
-            take_along_something.action.update!(longitude: params[:longitude],
-                                                latitude: params[:latitude])
-          end
-        end
-
-        ActionPushJob.perform_later(current_user, 
-                                    take_along_something, 
-                                    ActionPushJob::ACTION_UPDATE)
-
         respond_ok
       end
     end

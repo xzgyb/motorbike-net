@@ -70,21 +70,6 @@ module Api::V1
 
         living = current_user.livings.new(living_params)
         living.save!
-
-        # addd a event for current user
-        event = current_user.events.new(event_type: :living,
-                                        actionable: living)
-        event.save!
-
-        # add a action for current user
-        action = current_user.actions.new(longitude: living.longitude,
-                                          latitude: living.latitude,
-                                          actionable: living)
-        action.save!
-
-        ActionPushJob.perform_later(current_user, 
-                                    living, 
-                                    ActionPushJob::ACTION_ADD)
         respond_ok
       end
 
@@ -106,10 +91,6 @@ module Api::V1
       delete ':id' do
         living = current_user.livings.find(params[:id])
         living.destroy!
-
-        ActionPushJob.perform_later(current_user, 
-                                    living, 
-                                    ActionPushJob::ACTION_DELETE)
         respond_ok
       end
 
@@ -127,17 +108,6 @@ module Api::V1
         normalize_uploaded_file_attributes(params[:images_attributes])
 
         living.update!(living_params)
-
-        if living.action.present?
-          if params[:longitude].present? or params[:latitude].present? 
-            living.action.update!(longitude: params[:longitude],
-                                  latitude: params[:latitude])
-          end
-        end
-
-        ActionPushJob.perform_later(current_user, 
-                                    living, 
-                                    ActionPushJob::ACTION_UPDATE)
         respond_ok
       end
     end
