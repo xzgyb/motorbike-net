@@ -4,6 +4,7 @@ class TakeAlongSomethingsApiTest < ActiveSupport::TestCase
   def setup
     @current_user = create(:user)
     @gyb = create(:user, name: 'gyb')
+    @gg  = create(:user, name: 'gg')
 
     login_user(@current_user)
   end
@@ -228,4 +229,110 @@ class TakeAlongSomethingsApiTest < ActiveSupport::TestCase
     assert_equal "hello take_along_something", take_along_something.title
     assert_equal 2, take_along_something.images.count
   end
+
+  test 'POST /api/v1/take_along_somethings with order taker should create a take along something' do
+    post "api/v1/take_along_somethings", 
+        title: "hello take_along_something",
+        price: 25.2,
+        place: "example place",
+        start_at: Time.current,
+        end_at: 2.days.since,
+        content: "example content",
+        longitude: 112,
+        latitude: 80,
+        sender_attributes: {name: "gyb",
+                            phone: "11234234234", 
+                            address: "24234234",
+                            place: "sender place",
+                            longitude: 110,
+                            latitude: 75},
+        receiver_attributes: {name: "ww", 
+                              phone: "23423424", 
+                              address: "112312311",
+                              place: "receiver place",
+                              longitude: 110,
+                              latitude: 75}, 
+        order_take_attributes: { user_id: @gyb.id },
+        images_attributes: [
+          {file: new_image_attachment},
+          {file: new_image_attachment}
+        ], 
+        access_token: token
+
+    assert last_response.created?
+    assert @current_user.take_along_somethings.first.order_taker
+    assert_equal @gyb, @current_user.take_along_somethings.first.order_taker
+  end
+
+  test 'PUT /api/v1/take_along_somethings/:id with order taker should update the specified id take along something' do
+    take_along_something = create(:take_along_something_with_images, user: @current_user)
+
+    put "api/v1/take_along_somethings/#{take_along_something.id}", 
+        order_take_attributes: { user_id: @gyb.id },
+        access_token: token
+
+
+    assert last_response.ok?
+
+    take_along_something.reload
+
+    assert_equal @gyb, take_along_something.order_taker
+
+    put "api/v1/take_along_somethings/#{take_along_something.id}", 
+        order_take_attributes: { user_id: @gg.id },
+        access_token: token
+
+    assert last_response.ok?
+
+    take_along_something.reload
+
+    assert_equal @gg, take_along_something.order_taker
+  end
+
+  test 'GET /api/v1/take_along_somethings/:id returns a specified id take along something with order taker' do
+    post "api/v1/take_along_somethings", 
+        title: "hello take_along_something",
+        price: 25.2,
+        place: "example place",
+        start_at: Time.current,
+        end_at: 2.days.since,
+        content: "example content",
+        longitude: 112,
+        latitude: 80,
+        sender_attributes: {name: "gyb",
+                            phone: "11234234234", 
+                            address: "24234234",
+                            place: "sender place",
+                            longitude: 110,
+                            latitude: 75},
+        receiver_attributes: {name: "ww", 
+                              phone: "23423424", 
+                              address: "112312311",
+                              place: "receiver place",
+                              longitude: 110,
+                              latitude: 75}, 
+        order_take_attributes: { user_id: @gyb.id },
+        images_attributes: [
+          {file: new_image_attachment},
+          {file: new_image_attachment}
+        ], 
+        access_token: token
+
+    assert last_response.created?
+
+    take_along_something = @current_user.take_along_somethings.first
+
+    get "api/v1/take_along_somethings/#{take_along_something.id}", access_token: token
+    
+    assert last_response.ok?
+    result = JSON.parse(last_response.body)
+
+    assert_includes result, "take_along_something"
+    assert_includes result["take_along_something"], "content"
+    assert_includes result["take_along_something"], "order_taker"
+    assert result["take_along_something"]["order_taker"]
+
+    assert_equal take_along_something.id, result["take_along_something"]["id"] 
+  end
+
 end

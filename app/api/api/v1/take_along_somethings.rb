@@ -67,7 +67,7 @@ module Api::V1
         optional :images_attributes, type: Array
         optional :sender_attributes, type: Hash
         optional :receiver_attributes, type: Hash
-        optional :order_take_attributes, type: Array
+        optional :order_take_attributes, type: Hash
       end
       post do
         normalize_uploaded_file_attributes(params[:images_attributes])
@@ -105,7 +105,7 @@ module Api::V1
         take_along_something = TakeAlongSomething.select_all_with_distance(
           params[:longitude], params[:latitude]).find(params[:id])
 
-        present take_along_something, with: Api::Entities::TakeAlongSomething, export_content: true
+        present take_along_something, with: Api::Entities::TakeAlongSomething, export_detail: true
         respond_ok
       end
 
@@ -127,7 +127,7 @@ module Api::V1
         optional :images_attributes, type: Array
         optional :sender_attributes, type: Hash
         optional :receiver_attributes, type: Hash
-        optional :order_take_attributes, type: Array
+        optional :order_take_attributes, type: Hash
       end
       put ':id' do
         take_along_something = current_user.take_along_somethings.find(params[:id])

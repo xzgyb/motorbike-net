@@ -1,5 +1,5 @@
-require 'api/entities/action_image_attachment'
-require 'api/entities/action_video_attachment'
+require 'api/entities/image_attachment'
+require 'api/entities/video_attachment'
 
 module Api::Entities
   class Action < Grape::Entity
@@ -40,13 +40,13 @@ module Api::Entities
     } 
 
     expose(:images, 
-           using: ActionImageAttachment, 
+           using: ImageAttachment, 
            if: HAS_IMAGES_IF_LAMBDA) { |instance, _|
       instance.actionable.images
     } 
            
     expose(:videos,
-           using: ActionVideoAttachment,
+           using: VideoAttachment,
            if: HAS_VIDEOS_IF_LAMBDA) { |instance, _|
       instance.actionable.videos
     } 

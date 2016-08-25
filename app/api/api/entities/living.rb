@@ -1,4 +1,5 @@
-require 'api/entities/action_video_attachment'
+require 'api/entities/video_attachment'
+require 'api/entities/image_attachment'
 
 module Api::Entities
   class Living < Grape::Entity
@@ -9,8 +10,8 @@ module Api::Entities
 
     with_options(format_with: :time) { expose :updated_at }
   
-    expose :videos, using: ActionVideoAttachment
-    expose :images, using: ActionImageAttachment
+    expose :videos, using: VideoAttachment
+    expose :images, using: ImageAttachment
 
     root "livings", "living"
   end
