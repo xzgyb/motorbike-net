@@ -58,6 +58,16 @@ module Api::V1
       desc 'Upload bike data with the module id'
       put 'upload/:module_id' do
         bike = current_user.bikes.find_by!(module_id: params[:module_id])
+        
+        # convert diag_info keys and values encoding, from gb2312 to utf-8
+        if params[:diag_info]
+          diag_info_pairs = params[:diag_info].map { |k, v|
+            [k.to_s.encode('utf-8', 'gb2312'), v.to_s.encode('utf-8', 'gb2312')]
+          } 
+
+          params[:diag_info] = Hash[diag_info_pairs]
+        end
+
         bike.update!(bike_params)
 
         if params.has_key?(:longitude) && params.has_key?(:latitude)

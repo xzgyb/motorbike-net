@@ -61,6 +61,7 @@ class BikesApiTest < ActiveSupport::TestCase
     put "/api/v1/bikes/upload/#{module_id}", 
         longitude: 112.5,
         latitude: 88.2,
+        diag_info: { "hello": "ok" },
         access_token: token
 
     assert last_response.ok?
