@@ -17,6 +17,7 @@ module Api::V1
         actions = Action.select_all_with_distance(params[:longitude],
                                                   params[:latitude])
                         .circle_for(current_user)
+                        .sponsor
 
         if params[:max_distance].present?
           actions = actions.near(params[:longitude],
@@ -33,9 +34,21 @@ module Api::V1
       end
 
       desc "get the specified user's actions list"
+      params do
+        optional :action_type, type: String
+      end
       get '/of_user/:user_id' do
         actions = Action.select_all_with_distance(nil, nil)
                         .where(user_id: params[:user_id])
+
+        if params[:action_type].present?
+          if params[:action_type] == "sponsor"
+            actions = actions.sponsor
+          elsif params[:action_type] == "participant"
+            actions = actions.participant
+          end
+        end
+
         actions = paginate(actions.latest)
 
         present actions, with: Api::Entities::Action

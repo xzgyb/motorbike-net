@@ -6,7 +6,8 @@ class ActionCallbacks
 
       action = user.actions.new(longitude:  actionable_object.longitude,
                                 latitude:   actionable_object.latitude,
-                                actionable: actionable_object)
+                                actionable: actionable_object,
+                                action_type: :sponsor)
       action.save!
     end
 
