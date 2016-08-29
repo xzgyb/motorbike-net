@@ -53,7 +53,6 @@ class ActionsApiTest < ActiveSupport::TestCase
     create_living(@gyb)
     create_take_along_something(@gyb)
 
-    first_action = @gyb.actions.first
     get "/api/v1/actions/of_user/#{@gyb.id}", access_token: token
 
     assert last_response.ok?
@@ -64,6 +63,78 @@ class ActionsApiTest < ActiveSupport::TestCase
     assert_includes result, "paginate_meta"
 
     assert_equal 3, result["actions"].count 
+  end
+
+  test "GET /api/v1/actions/of_user/:user_id?action_type=sponsor returns the sepcified user's sponsor actions list" do
+    create_activity(@gyb)
+    create_living(@gyb)
+    create_take_along_something(@gyb)
+
+    get "/api/v1/actions/of_user/#{@gyb.id}?action_type=sponsor", access_token: token
+
+    assert last_response.ok?
+
+    result = JSON.parse(last_response.body)
+
+    assert_includes result, "actions"
+    assert_includes result, "paginate_meta"
+
+    assert_equal 2, result["actions"].count 
+  end
+
+  test "GET /api/v1/actions/of_user/:user_id?action_type=participant returns the sepcified user's participant actions list" do
+    create_activity(@gyb)
+    create_take_along_something(@gyb)
+
+    get "/api/v1/actions/of_user/#{@gyb.id}?action_type=participant", access_token: token
+
+    assert last_response.ok?
+
+    result = JSON.parse(last_response.body)
+
+    assert_includes result, "actions"
+    assert_includes result, "paginate_meta"
+
+    assert_equal 0, result["actions"].count 
+
+    login_user(@gyb)
+
+    activity = @gyb.activities.first
+    take_along_something = @gyb.take_along_somethings.first
+
+    put "api/v1/activities/#{activity.id}", 
+        participations_attributes: [
+          {user_id: @gyb.id},
+          {user_id: @ww.id}
+        ],
+        access_token: token
+
+    put "api/v1/take_along_somethings/#{take_along_something.id}", 
+        order_take_attributes: { user_id: @gyb.id },
+        access_token: token
+
+    get "/api/v1/actions/of_user/#{@gyb.id}?action_type=participant", access_token: token
+
+    assert last_response.ok?
+
+    result = JSON.parse(last_response.body)
+
+    assert_includes result, "actions"
+    assert_includes result, "paginate_meta"
+
+    assert_equal 2, result["actions"].count 
+
+    get "/api/v1/actions/of_user/#{@ww.id}?action_type=participant", access_token: token
+
+    assert last_response.ok?
+
+    result = JSON.parse(last_response.body)
+
+    assert_includes result, "actions"
+    assert_includes result, "paginate_meta"
+
+    assert_equal 1, result["actions"].count 
+
   end
 
   test 'GET /api/v1/actions with max_distance returns a nearby actions list' do

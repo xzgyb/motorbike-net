@@ -17,7 +17,6 @@ module Api::V1
         actions = Action.select_all_with_distance(params[:longitude],
                                                   params[:latitude])
                         .circle_for(current_user)
-                        .sponsor
 
         if params[:max_distance].present?
           actions = actions.near(params[:longitude],

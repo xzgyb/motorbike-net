@@ -4,7 +4,7 @@ class Action < ApplicationRecord
   belongs_to :user
   belongs_to :actionable, polymorphic: true
 
-  enum action_type: [:sponsor, :participant]
+  enum action_type: { sponsor: 1, participant: 2 }
    
   def self.type_code(actionable_object)
     case actionable_object 

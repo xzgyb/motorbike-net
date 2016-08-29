@@ -4,10 +4,17 @@ class ActionCallbacks
     def after_create(actionable_object)
       user   = actionable_object.user
 
-      action = user.actions.new(longitude:  actionable_object.longitude,
-                                latitude:   actionable_object.latitude,
-                                actionable: actionable_object,
-                                action_type: :sponsor)
+      if actionable_object.is_a? Living
+        action = user.actions.new(longitude:  actionable_object.longitude,
+                                  latitude:   actionable_object.latitude,
+                                  actionable: actionable_object)
+      else
+        action = user.actions.new(longitude:  actionable_object.longitude,
+                                  latitude:   actionable_object.latitude,
+                                  actionable: actionable_object,
+                                  action_type: :sponsor)
+      end
+
       action.save!
     end
 
