@@ -20,4 +20,9 @@ class Message < ApplicationRecord
   def self.unread_count_for(user)
     user.messages.unread.count
   end
+
+  after_create do |message|
+    user = message.user
+    MessagesPushJob.perform_later(user, Message.unread_count_for(user))
+  end
 end
