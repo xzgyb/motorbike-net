@@ -15,7 +15,7 @@ class UsersApiTest < ActiveSupport::TestCase
   end
 
   test "GET /api/v1/users/validation_code should work" do
-    get '/api/v1/users/validation_code?phone=13811111111&type=1'
+    get '/api/v1/users/validation_code?phone=13889210325&type=1'
     assert last_response.ok?
   end
 

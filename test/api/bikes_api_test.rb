@@ -1,6 +1,8 @@
 require 'test_helper'
 
 class BikesApiTest < ActiveSupport::TestCase
+  include ActiveJob::TestHelper
+
   def setup
     @current_user = create(:user_with_bikes)
     @gyb = create(:user)
@@ -31,7 +33,7 @@ class BikesApiTest < ActiveSupport::TestCase
   test "PUT /api/v1/bikes/:id should update the specified id bike info of  current user" do
     bike = @current_user.bikes.first
     put "/api/v1/bikes/#{bike.id}", name: "123g", 
-                                    diag_info: {"hello":"gg", "dsf":"333"},
+                                    diag_info: {"notify":1,"hello":"gg", "dsf":"333"},
                                     access_token: token
     assert last_response.ok?
   end
@@ -78,5 +80,15 @@ class BikesApiTest < ActiveSupport::TestCase
     assert_includes result, "locations"
 
     assert_equal bike.locations.count, result["locations"].count
+  end
+
+  test "PUT /api/v1/bikes/:id with diag_info which contains notify field should perform BikeExceptionNotifyJob " do
+    bike = @current_user.bikes.first
+
+    assert_performed_jobs 1 do
+      put "/api/v1/bikes/#{bike.id}", name: "123g", 
+                                      diag_info: {"notify":1,"hello":"gg", "dsf":"333"},
+                                      access_token: token
+    end
   end
 end

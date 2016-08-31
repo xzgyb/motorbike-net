@@ -1,4 +1,5 @@
 # encoding: utf-8
+require 'sms_sender'
 
 module Api::V1
   class Users < Grape::API
@@ -52,9 +53,7 @@ module Api::V1
         validation_code_object = SmsValidationCode.generate(phone, type)
         sms_content = SMS_CONTENTS[type] % [validation_code_object.validation_code]
 
-        ChinaSMS.use(:yunxin, username: 'mhkjcf', password: 'mhkjcf467')
-        result = ChinaSMS.to(phone, sms_content)
-        #result = {success: true, code: '1231232132'}
+        result = ::SMSSender.send(phone, sms_content)
 
         if result[:success]
           respond_ok

@@ -4,7 +4,7 @@ FactoryGirl.define do
     sequence(:email) { |n| "email#{n}@hello.com" }
     password 'password'
     password_confirmation 'password'
-    phone            { |n| "138#{n}".ljust(11, '0') }
+    sequence(:phone)  { |n| "138#{n}".ljust(11, '0') }
     avatar File.open(Rails.root.join("test/files/sample.jpg"))
 
     factory :user_with_bikes do
