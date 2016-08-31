@@ -236,6 +236,40 @@ class ActivitiesApiTest < ActiveSupport::TestCase
     assert_equal @gyb, activity.participators[0]
     assert_equal @ww, activity.participators[1]
     assert_equal @gg, activity.participators[2]
+
+    put "api/v1/activities/#{activity.id}",
+         participations_attributes: [
+          {id: activity.participations[0].id, _destroy: '1'}
+        ],
+        access_token: token
+    assert last_response.ok?
+
+    activity.reload
+    assert_equal 2, activity.participators.count
+
+  end
+
+  test 'PUT /api/v1/activities/:id/participate should participate the specified id activity' do
+    activity = create(:activity_with_images, user: @current_user)
+
+    login_user(@gyb)
+
+    put "api/v1/activities/#{activity.id}/participate",
+        access_token: token
+    assert last_response.ok?
+
+    login_user(@ww)
+
+    put "api/v1/activities/#{activity.id}/participate",
+        access_token: token
+    assert last_response.ok?
+
+    
+    activity.reload
+
+    assert_equal 2, activity.participators.count
+    assert_equal @gyb, activity.participators[0]
+    assert_equal @ww, activity.participators[1]
   end
 
   test 'GET /api/v1/activities/:id returns a specified id activity with participators' do
@@ -269,9 +303,15 @@ class ActivitiesApiTest < ActiveSupport::TestCase
 
     assert_includes result, "activity"
     assert_includes result["activity"], "content"
-    assert_includes result["activity"], "participators"
+    assert_includes result["activity"], "participations"
     assert_includes result["activity"], "organizer"
+
     assert_equal activity.id, result["activity"]["id"] 
+    assert_equal 2, result["activity"]["participations"].count
+
+    %w[id user_id user_name user_avatar_url].each do |field|
+      assert_includes result["activity"]["participations"][0], field
+    end
   end
 
 end

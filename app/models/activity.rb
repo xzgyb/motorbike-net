@@ -5,7 +5,7 @@ class Activity < ApplicationRecord
 
   belongs_to :user
 
-  has_many :images, as: :imageable, class_name: 'ImageAttachment', dependent: :destroy
+  has_many :images, as: :imageable, class_name: 'ImageAttachment', dependent: :delete_all
   has_many :participations, dependent: :destroy
   has_many :participators, through: :participations, source: :user
 

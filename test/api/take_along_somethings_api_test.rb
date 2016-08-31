@@ -289,6 +289,26 @@ class TakeAlongSomethingsApiTest < ActiveSupport::TestCase
     assert_equal @gg, take_along_something.order_taker
   end
 
+  test 'PUT /api/v1/take_along_somethings/:id/take_order should take the specified id take_along_something order' do
+    take_along_something = create(:take_along_something_with_images, user: @current_user)
+
+    login_user(@gyb)
+
+    put "api/v1/take_along_somethings/#{take_along_something.id}/take_order",
+        access_token: token
+    assert last_response.ok?
+
+    login_user(@gg)
+
+    put "api/v1/take_along_somethings/#{take_along_something.id}/take_order",
+        access_token: token
+    assert last_response.ok?
+
+    take_along_something.reload
+
+    assert_equal @gg, take_along_something.order_taker
+  end
+
   test 'GET /api/v1/take_along_somethings/:id returns a specified id take along something with order taker' do
     post "api/v1/take_along_somethings", 
         title: "hello take_along_something",
@@ -329,8 +349,12 @@ class TakeAlongSomethingsApiTest < ActiveSupport::TestCase
 
     assert_includes result, "take_along_something"
     assert_includes result["take_along_something"], "content"
-    assert_includes result["take_along_something"], "order_taker"
-    assert result["take_along_something"]["order_taker"]
+    assert_includes result["take_along_something"], "order_take"
+    assert result["take_along_something"]["order_take"]
+
+    %w[id user_id user_name user_avatar_url].each do |field|
+      assert_includes result["take_along_something"]["order_take"], field
+    end
 
     assert_equal take_along_something.id, result["take_along_something"]["id"] 
   end

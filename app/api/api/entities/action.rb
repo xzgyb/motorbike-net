@@ -19,7 +19,7 @@ module Api::Entities
     expose(:price) { |instance, _| instance.actionable.price }
 
     expose :longitude, :latitude
-    expose(:content, if: :export_content) { |instance, _| 
+    expose(:content, if: :export_detail) { |instance, _| 
       instance.actionable.content 
     }
 

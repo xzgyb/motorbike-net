@@ -110,6 +110,14 @@ module Api::V1
         activity.update!(activity_params)
         respond_ok
       end
+
+      desc 'participate a activity'
+      put ':id/participate' do
+        activity = Activity.find(params[:id])
+        activity.update!(participations_attributes: [{user_id: current_user.id}])
+
+        respond_ok
+      end
     end
   end
 end

@@ -115,6 +115,14 @@ module Api::V1
         take_along_something.update!(take_along_something_params)
         respond_ok
       end
+
+      desc 'take order a take along something'
+      put ':id/take_order' do
+        activity = TakeAlongSomething.find(params[:id])
+        activity.update!(order_take_attributes: {user_id: current_user.id})
+
+        respond_ok
+      end
     end
   end
 end

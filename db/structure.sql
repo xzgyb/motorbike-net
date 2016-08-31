@@ -468,6 +468,40 @@ ALTER SEQUENCE media_id_seq OWNED BY media.id;
 
 
 --
+-- Name: messages; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE messages (
+    id integer NOT NULL,
+    user_id integer,
+    message_object_type character varying,
+    message_object_id integer,
+    is_read boolean DEFAULT false,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: messages_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE messages_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: messages_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE messages_id_seq OWNED BY messages.id;
+
+
+--
 -- Name: oauth_access_grants; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1091,6 +1125,13 @@ ALTER TABLE ONLY media ALTER COLUMN id SET DEFAULT nextval('media_id_seq'::regcl
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY messages ALTER COLUMN id SET DEFAULT nextval('messages_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY oauth_access_grants ALTER COLUMN id SET DEFAULT nextval('oauth_access_grants_id_seq'::regclass);
 
 
@@ -1286,6 +1327,14 @@ ALTER TABLE ONLY locations
 
 ALTER TABLE ONLY media
     ADD CONSTRAINT media_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: messages_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY messages
+    ADD CONSTRAINT messages_pkey PRIMARY KEY (id);
 
 
 --
@@ -1519,6 +1568,20 @@ CREATE INDEX index_locations_on_bike_id ON locations USING btree (bike_id);
 --
 
 CREATE INDEX index_media_on_user_id ON media USING btree (user_id);
+
+
+--
+-- Name: index_messages_on_message_object_type_and_message_object_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_messages_on_message_object_type_and_message_object_id ON messages USING btree (message_object_type, message_object_id);
+
+
+--
+-- Name: index_messages_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_messages_on_user_id ON messages USING btree (user_id);
 
 
 --
@@ -1779,6 +1842,6 @@ ALTER TABLE ONLY participations
 
 SET search_path TO "$user", public;
 
-INSERT INTO schema_migrations (version) VALUES ('20160523091904'), ('20160525071248'), ('20160525082438'), ('20160606035233'), ('20160613062612'), ('20160614015218'), ('20160726080254'), ('20160808024844'), ('20160808055827'), ('20160808072134'), ('20160822060130'), ('20160822060641'), ('20160822060908'), ('20160822063724'), ('20160822063741'), ('20160822072047'), ('20160822072115'), ('20160822072620'), ('20160822074629'), ('20160822074719'), ('20160822074903'), ('20160822075347'), ('20160822075429'), ('20160822081855'), ('20160823074345'), ('20160823074410'), ('20160823074419'), ('20160823075554'), ('20160823083109'), ('20160824063747'), ('20160824063809'), ('20160824082547'), ('20160824092957'), ('20160826082432');
+INSERT INTO schema_migrations (version) VALUES ('20160523091904'), ('20160525071248'), ('20160525082438'), ('20160606035233'), ('20160613062612'), ('20160614015218'), ('20160726080254'), ('20160808024844'), ('20160808055827'), ('20160808072134'), ('20160822060130'), ('20160822060641'), ('20160822060908'), ('20160822063724'), ('20160822063741'), ('20160822072047'), ('20160822072115'), ('20160822072620'), ('20160822074629'), ('20160822074719'), ('20160822074903'), ('20160822075347'), ('20160822075429'), ('20160822081855'), ('20160823074345'), ('20160823074410'), ('20160823074419'), ('20160823075554'), ('20160823083109'), ('20160824063747'), ('20160824063809'), ('20160824082547'), ('20160824092957'), ('20160826082432'), ('20160830022613'), ('20160830024040');
 
 

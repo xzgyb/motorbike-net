@@ -8,8 +8,8 @@ class Living < ApplicationRecord
   has_one :event, as: :actionable, dependent: :destroy
   has_one :action, as: :actionable, dependent: :destroy
 
-  has_many :videos, class_name: 'VideoAttachment', dependent: :destroy
-  has_many :images, as: :imageable, class_name: 'ImageAttachment', dependent: :destroy
+  has_many :videos, class_name: 'VideoAttachment', dependent: :delete_all
+  has_many :images, as: :imageable, class_name: 'ImageAttachment', dependent: :delete_all
 
   accepts_nested_attributes_for :videos, :images, allow_destroy: true
 

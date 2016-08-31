@@ -2,26 +2,33 @@ class Participation < ApplicationRecord
   belongs_to :activity
   belongs_to :user
 
-  after_create do |participation|
-    user     = participation.user
-    activity = participation.activity
+  has_one :message, as: :message_object, dependent: :destroy
 
-    action = user.actions.new(longitude: activity.longitude,
-                              latitude:  activity.latitude,
-                              actionable: activity,
-                              action_type: :participant)
+  after_create do |participation|
+    participator = participation.user
+    activity     = participation.activity
+
+    action = participator.actions.new(longitude: activity.longitude,
+                                      latitude:  activity.latitude,
+                                      actionable: activity,
+                                      action_type: :participant)
     action.save! 
   end
 
   after_destroy do |participation|
-    user     = participation.user
-    activity = participation.activity
+    participator = participation.user
+    activity     = participation.activity
 
-    action = user.actions.participant.where(
-      longitude:  activity.longitude,
-      latitude:   activity.latitude,
+    action = participator.actions.participant.where(
       actionable: activity).first
 
     action.destroy! if action
+  end
+
+  after_create do |participation|
+    activity  = participation.activity
+    sponsor   = activity.user
+
+    sponsor.messages.create!(message_object: participation)
   end
 end

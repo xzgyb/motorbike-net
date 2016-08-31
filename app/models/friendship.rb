@@ -9,9 +9,17 @@ class Friendship < ApplicationRecord
   scope :pending,   -> { where(status: 'pending') }
   scope :accepted,  -> { where(status: 'accepted') }
   scope :requested, -> { where(status: 'requested') }
-  
+
+  after_create do |friendship|
+    if friendship.pending?
+      user = friendship.user
+      user.messages.create!(message_object: friendship)
+    end 
+  end
+
   # associations
   belongs_to :user
+  has_one :message, as: :message_object, dependent: :delete
   
   def pending?
     status == 'pending'
@@ -27,5 +35,9 @@ class Friendship < ApplicationRecord
 
   def accept!
     update_attribute(:status, 'accepted')
+  end
+
+  def friend
+    @friend ||= User.find(self.friend_id)
   end
 end

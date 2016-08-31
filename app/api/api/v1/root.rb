@@ -15,5 +15,6 @@ module Api::V1
     mount Actions
     mount Friends
     mount Events
+    mount Messages
   end
 end

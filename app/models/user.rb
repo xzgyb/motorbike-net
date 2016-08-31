@@ -25,14 +25,15 @@ class User < ApplicationRecord
   has_many :topics, dependent: :delete_all
   has_many :posts, dependent: :delete_all
   has_many :medias, dependent: :delete_all
+  has_many :messages, dependent: :delete_all
 
-  has_many :actions
-  has_many :activities
-  has_many :livings
-  has_many :take_along_somethings
+  has_many :actions, dependent: :delete_all
+  has_many :activities, dependent: :delete_all
+  has_many :livings, dependent: :delete_all
+  has_many :take_along_somethings, dependent: :delete_all
 
   has_many :oauth_applications, class_name: 'Doorkeeper::Application', as: :owner
-  has_many :events
+  has_many :events, dependent: :delete_all
 
   scope :name_ordered,  -> { order(:name) }
   scope :email_ordered, -> { order(:email) }
