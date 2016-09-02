@@ -1,4 +1,6 @@
 require 'api/entities/image_attachment'
+require 'api/entities/something_receiver'
+require 'api/entities/something_sender'
 require 'api/entities/order_take'
 
 module Api::Entities
