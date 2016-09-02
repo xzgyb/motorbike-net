@@ -361,3 +361,31 @@ user_id    | 是       | 指定用户id
 ------|--------------
 成功  | `{"result":1","livings":[<living>, ...],"paginate_meta":<paginate_meta>}`, 其中`livings`为一数组，元素类型为living, paginate_meta为分页相关数据。
 失败  | `{"result":0,"error":"错误原因"}`
+
+## 删除所有直播记录
+
+> 调用实例:
+
+```shell
+curl --request DELETE http://localhost:3000/api/v1/livings/reset
+```
+
+> 返回:
+
+```json
+{"result":1}
+```
+
+### HTTP请求
+
+`DELETE /api/v1/livings/reset`
+
+### DELETE请求参数
+无
+
+### 返回结果
+
+结果  | 内容
+------|--------------
+成功  | `{"result":1}`
+失败  | `{"result":0,"error":"错误原因"}`

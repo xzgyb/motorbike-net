@@ -87,6 +87,12 @@ module Api::V1
         respond_ok
       end
 
+      desc 'reset livings'
+      delete 'reset' do
+        current_user.livings.destroy_all
+        respond_ok
+      end
+
       desc 'delete a living'
       delete ':id' do
         living = current_user.livings.find(params[:id])

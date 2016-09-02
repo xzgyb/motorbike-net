@@ -359,4 +359,12 @@ class TakeAlongSomethingsApiTest < ActiveSupport::TestCase
     assert_equal take_along_something.id, result["take_along_something"]["id"] 
   end
 
+  test 'DELETE /api/v1/take_along_somethings/reset should work' do
+    create_list(:take_along_something_with_images, 5, user: @current_user)
+
+    delete "api/v1/take_along_somethings/reset", access_token: token
+
+    assert last_response.ok?
+    assert_equal 0, @current_user.take_along_somethings.count
+  end
 end

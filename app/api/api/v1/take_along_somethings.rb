@@ -92,6 +92,12 @@ module Api::V1
         respond_ok
       end
 
+      desc 'reset take along somethings'
+      delete 'reset' do
+        current_user.take_along_somethings.destroy_all
+        respond_ok
+      end
+
       desc 'delete a take_along_something'
       delete ':id' do
         take_along_something = current_user.take_along_somethings.find(params[:id])

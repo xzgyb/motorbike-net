@@ -463,3 +463,31 @@ id         | 是       | 报名参加的活动记录的id
 ------|--------------
 成功  | `{"result":1}`
 失败  | `{"result":0,"error":"错误原因"}`
+
+## 删除所有活动记录
+
+> 调用实例:
+
+```shell
+curl --request DELETE http://localhost:3000/api/v1/activities/reset
+```
+
+> 返回:
+
+```json
+{"result":1}
+```
+
+### HTTP请求
+
+`DELETE /api/v1/activities/reset`
+
+### DELETE请求参数
+无
+
+### 返回结果
+
+结果  | 内容
+------|--------------
+成功  | `{"result":1}`
+失败  | `{"result":0,"error":"错误原因"}`

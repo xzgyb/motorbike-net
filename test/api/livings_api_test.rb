@@ -173,4 +173,13 @@ class LivingsApiTest < ActiveSupport::TestCase
     assert_equal "hello living", living.title
     assert_equal 2, living.videos.count
   end
+
+  test 'DELETE /api/v1/livings/reset should work' do
+    create_list(:living_with_videos_images, 5, user: @current_user)
+
+    delete "api/v1/livings/reset", access_token: token
+
+    assert last_response.ok?
+    assert_equal 0, @current_user.livings.count
+  end
 end

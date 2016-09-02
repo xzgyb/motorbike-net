@@ -314,4 +314,13 @@ class ActivitiesApiTest < ActiveSupport::TestCase
     end
   end
 
+  test 'DELETE /api/v1/activities/reset should work' do
+    create_list(:activity_with_images, 5, user: @current_user)
+
+    delete "api/v1/activities/reset", access_token: token
+
+    assert last_response.ok?
+    assert_equal 0, @current_user.activities.count
+  end
+
 end

@@ -89,6 +89,12 @@ module Api::V1
         respond_ok
       end
 
+      desc 'reset activities'
+      delete 'reset' do
+        current_user.activities.destroy_all
+        respond_ok
+      end
+
       desc 'delete a activity'
       delete ':id' do
         activity = current_user.activities.find(params[:id])
@@ -118,6 +124,7 @@ module Api::V1
 
         respond_ok
       end
+
     end
   end
 end
