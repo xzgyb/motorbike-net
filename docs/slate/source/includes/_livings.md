@@ -136,7 +136,7 @@ curl -H 'Content-Type:application/json'
 title      | 是      | 标题
 place      | 是      | 地点名称
 price      | 是      | 价格
-content    | 是      | 详细内容
+content    | 否      | 详细内容
 longitude  | 是      | 经度, 范围为-180.0至180.0
 latitude   | 是      | 纬度, 范围为-90.0至90.0
 videos_attributes | 否      | 上传的视频数据

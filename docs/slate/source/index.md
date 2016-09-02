@@ -16,6 +16,7 @@ includes:
   - friends
   - circle_info_updates
   - events
+  - messages
 
 search: true
 ---

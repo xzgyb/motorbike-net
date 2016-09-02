@@ -28,12 +28,18 @@ curl --request GET  http://localhost:3000/api/v1/take_along_somethings?longitude
        "name":"ggg",
        "phone":"13811111111",
        "adress":"sgsfgsdfgsfg"
+       "longitude":"33.5",
+       "latitude":"44.0",
+       "place":"asdfasdf"
      },
      "receiver":{
        "id":2,
        "name":"fff",
        "phone":"13911111111",
        "adress":"sgsfgsdfgsfg"
+       "longitude":"33.5",
+       "latitude":"44.0",
+       "place":"asdfasdf"
      },
      "images":[{"url":"http://115.29.110.82/public/uploads/sample.jpg",
                 "thumb_url":"http://115.29.110.82/public/uploads/sample.jpg",
@@ -105,6 +111,9 @@ id                   | 整数 | 发件人记录的id
 name                 | 字符串 | 发件人姓名
 phone                | 字符串 | 发件人电话
 address              | 字符串 | 发件人地址
+longitude            | 字符串 | 经度
+latitude             | 字符串 | 纬度
+place                | 字符串 | 地点名称
 
 #### receiver类型说明
 
@@ -114,6 +123,9 @@ id                   | 整数 | 收件人记录的id
 name                 | 字符串 | 收件人姓名
 phone                | 字符串 | 收件人电话
 address              | 字符串 | 收件人地址
+longitude            | 字符串 | 经度
+latitude             | 字符串 | 纬度
+place                | 字符串 | 地点名称
 
 #### paginate_meta类型说明
 
@@ -144,12 +156,19 @@ curl -H 'Content-Type:application/json'
              "name":"ggg",
              "phone":"13811111111",
              "address":"sgsfgsdfgsfg"
+             "longitude":"33.5",
+             "latitude":"44.0",
+             "place":"asdfasdf"
            },
            "receiver_attributes":{
              "name":"fff",
              "phone":"13911111111",
              "adress":"sgsfgsdfgsfg"
+             "longitude":"33.5",
+             "latitude":"44.0",
+             "place":"asdfasdf"
            },
+          order_take_attributes: { user_id: 3 },
           "images_attributes":[
             {"file":"图片文件数据"},
             {"file":"图片文件数据"}
@@ -183,6 +202,7 @@ end_at     | 是      | 结束时间
 images_attributes | 否 | 上传的图片数据
 sender_attributes | 否 | 发件人信息
 receiver_attributes | 否 | 收件人信息
+order_take_attributes | 否 | 接单人信息
 
 ### 返回结果
 
@@ -234,6 +254,8 @@ end_at     | 是       | 结束时间
 images_attributes | 否 | 上传的图片数据
 sender_attributes | 否 | 发件人信息
 receiver_attributes | 否 | 收件人信息
+order_take_attributes | 否 | 接单人信息
+
 
 
 ### 返回结果
@@ -341,12 +363,25 @@ curl --request GET http://localhost:3000/api/v1/take_along_somethings/1
        "name":"ggg",
        "phone":"13811111111",
        "adress":"sgsfgsdfgsfg"
+       "longitude":"33.5",
+       "latitude":"44.0",
+       "place":"asdfasdf"
      },
      "receiver":{
        "id":1,
        "name":"fff",
        "phone":"13911111111",
        "adress":"sgsfgsdfgsfg"
+       "longitude":"33.5",
+       "latitude":"44.0",
+       "place":"asdfasdf"
+
+     },
+     "order_take":{
+       "id":381, 
+       "user_id":8793,
+       "user_avatar_url":"http://115.29.110.82/uploads/user/avatar/8793/sample.jpg",      
+       "user_name":"gyb"
      },
      "images":[
         {"url":"http://115.29.110.82/public/uploads/sample.jpg",
@@ -371,8 +406,39 @@ latitude   | 否       | 指定当前位置的纬度, 范围为-90.0至90.0
 
 结果  | 内容
 ------|--------------
-成功  | `{"result":1,"take_along_something":<take_along_something>}`, 其中`take_along_something`为一捎东西类型的记录
+成功  | `{"result":1,"take_along_something":<take_along_something>}`, 其中`take_along_something`为一take_along_something_detail类型的记录
 失败  | `{"result":0,"error":"错误原因"}`
+
+#### take_along_something_detail类型说明
+
+名称               | 类型   | 描述
+---------------------|--------|------
+id                   | 整数 | 一条捎东西记录的id
+user_id              | 整数 | 表示创建该条记录的用户id
+title                | 字符串 | 标题
+place                | 字符串 | 地点名称
+price                | 字符串 | 价格
+longitude            | 字符串 | 经度
+latitude             | 字符串 | 纬度
+distance             | 浮点数 | 与当前位置的距离, 单位为米
+updated_at           | 字符串 | 更新时间
+start_at             | 字符串 | 开始时间
+end_at               | 字符串 | 结束时间
+content              | 字符串 | 具体的内容
+images               | image类型的数组 | 图片相关信息, 如果没有图片,为[]
+sender               | sender类型的对象 | 发件人信息, 可能为null
+receiver             | receiver类型的对象 | 收件人信息, 可能为null
+order_take           | order_take类型的对象 | 接单人信息, 可能为null
+
+#### order_take类型说明
+
+名称               | 类型   | 描述
+---------------------|--------|------
+id                   | 整型   | 该order_take记录id
+user_id              | 整型   | 该接单人用户id
+user_name            | 字符串 | 该接单人用户名称
+user_avatar_url      | 字符串 | 该接单人用户头像url
+take_along_someting_id | 整型 | 接单的捎东西记录id
 
 ## 获取一个指定用户id的捎东西的列表
 
@@ -403,12 +469,18 @@ curl --request GET  http://localhost:3000/api/v1/take_along_somethings/of_user/2
        "name":"ggg",
        "phone":"13811111111",
        "adress":"sgsfgsdfgsfg"
+       "longitude":"33.5",
+       "latitude":"44.0",
+       "place":"asdfasdf"
      },
      "receiver":{
        "id":2,
        "name":"fff",
        "phone":"13911111111",
        "adress":"sgsfgsdfgsfg"
+       "longitude":"33.5",
+       "latitude":"44.0",
+       "place":"asdfasdf"
      },
      "images":[{"url":"http://115.29.110.82/public/uploads/sample.jpg",
                 "thumb_url":"http://115.29.110.82/public/uploads/sample.jpg",
@@ -442,3 +514,34 @@ user_id    | 是       | 指定的用户id
 成功  | `{"result":1","take_along_somethings":[<take_along_something>, ...],"paginate_meta":<paginate_meta>}`, 其中`take_along_somethings`为一数组，元素类型为take_along_something, paginate_meta为分页相关数据。
 失败  | `{"result":0,"error":"错误原因"}`
 
+## 接单 
+
+> 调用实例:
+
+```shell
+curl --request PUT http://localhost:3000/api/v1/take_along_somethings/1/take_order
+```
+
+> 返回:
+
+```json
+{"result":1}
+```
+
+### HTTP请求
+
+`PUT /api/v1/take_along_somethings/<id>/take_order`
+
+### PUT请求参数
+
+参数名     | 是否必需 | 描述
+-----------|----------|------
+id         | 是       | 要接单的捎东西记录的id
+
+
+### 返回结果
+
+结果  | 内容
+------|--------------
+成功  | `{"result":1}`
+失败  | `{"result":0,"error":"错误原因"}`

@@ -4,12 +4,12 @@ class BikeExceptionNotifyJob < ActiveJob::Base
   queue_as :default
 
   SMS_NOTIFY_CONTENT = <<-CONTENT
-您好，您的爱车%s发生异常状况，如下:
+【美行科技】验证码：您的爱车%s发生异常状况，如下:
 %s
   CONTENT
 
   def perform(bike)
-    send_sms(bike)
+#    send_sms(bike)
     broadcast_bike_exception(bike)
   end
 

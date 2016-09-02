@@ -138,7 +138,14 @@ total_count          | 整型   | 总共记录数
 > 调用实例:
 
 ```shell
+返回用户的所用活动
 curl --request GET  http://localhost:3000/api/v1/actions/of_user/2
+
+返回用户发起的活动
+curl --request GET  http://localhost:3000/api/v1/actions/of_user/2?action_type=sponsor
+
+返回用户参加的活动
+curl --request GET  http://localhost:3000/api/v1/actions/of_user/2?action_type=participant
 ```
 
 > 返回:
@@ -211,6 +218,7 @@ curl --request GET  http://localhost:3000/api/v1/actions/of_user/2
 page       | 否       | 要获取第几页数据
 per_page   | 否       | 指定每页多少条记录
 user_id    | 是       | 指定用户id 
+action_type | 否      | 指定返回用户活动的类型，如果为sponsor, 则返回用户发起的活动，如果为participant, 则返回用户参与的活动。
 
 ### 返回结果
 

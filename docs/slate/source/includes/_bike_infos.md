@@ -279,3 +279,20 @@ diag_info  | 否       | 车辆的诊断信息
 成功  | `{"result":1}`
 失败  | `{"result":0,"error":"错误原因"}`
 
+## 电动车异常信息通知
+
+当模块端调用上传电动车信息api的diag_info字段中，含有notify为1的键值时，表示车辆发生异常信息，网站端将把diag_info信息用短信形式发送给用户的手机, 同时通过BikeChannel通道通知app端.
+
+### BikeChannel通道
+
+通道名  | 含义
+------|--------------
+BikeChannel  | 电动车异常消息通知的通道名, 通知的内容为`{"bike":<bike_message>}`, bike为bike_message类型
+
+### bike_message类型
+
+名称               | 类型   | 描述
+---------------------|--------|------
+name                 | 字符串 | 电动车名称
+status               | 整型   | 状态值，-1表示出现异常状态 
+diag_info            | 字典类型 | 硬件模块传递的异常诊断信息，app端可以根据此内容进行界面显示. 

@@ -38,10 +38,10 @@ gem 'carrierwave-video-thumbnailer'
 gem 'pg'
 gem 'figaro'
 gem 'savon'
+gem 'byebug'
 
 group :development, :test do
   gem "awesome_print", require:"ap"
-  gem 'byebug'
   gem 'listen', '~> 3.0.5'
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'

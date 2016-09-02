@@ -75,27 +75,117 @@ validation_code | 是       | 手机上收到的短信校验码, 这个校验码
 
 ## oauth登录
 
-> 调用实例:
+网站api的调用是使用OAuth access_token的方式，app端和硬件模块端最好用统一的方式使用。 基本的流程如下：
+
+  1. 获取access_token.
+
+  2. 第1步返回的结果中，取出access_token, refresh_token, expires_in, 保存起来，使用access_token调用网站api.
+
+  3. 当使用access_token 超时导致调用网站api失败时，使用refresh_token换取新的access_token, 这会返回个
+        新的access_token和refresh_token, 然后保存起来，使用这个新的access_token调用网站api.
+
+  4. 在获取access_token 返回的结果中，还有个expires_in字段，表示多少秒后超时，
+      客户端也可以使用这个值来判断access_token 是否超时.
+
+
+## 使用oauth登录码获取token
+
+使用手机号作为username, oauth登录码作为password获取token.  (目前主要用这种方式).
 
 ```shell
-curl -H 'Content-Type:application/json' --request POST -d '{"grant_type":"password","username":"13889210325","password":"7274e2fcbbcc402f0abb","client_id":"3a1ef442","client_secret":"14bd5fd3ef8dbd0e3e28cfa959c72a6549824aa0632a74bbb6bf8ab76ab298b4"}' http://localhost:3000/oauth/token
+使用注册用户api (POST /api/v1/users/register) 或
+用户登录api (POST /api/v1/users/login),
+会返回 {"result":1,oauth_login_code:"7274e2fcbbcc402f0abb"} 
+这个oauth_login_code即 为oauth登录码
 
-curl -H 'Content-Type:application/json' --request POST -d '{"grant_type":"password","username":"gg","password":"11111111","client_id":"3a1ef442","client_secret":"14bd5fd3ef8dbd0e3e28cfa959c72a6549824aa0632a74bbb6bf8ab76ab298b4"}' http://localhost:3000/oauth/token
+curl -H 'Content-Type:application/json'
+     --request POST
+     -d '{"grant_type":"password",
+          "username":"13889210325",
+          "password":"7274e2fcbbcc402f0abb",
+          "client_id":"3a1ef442",
+          "client_secret":"14bd5fd3ef8dbd0e3e28cfa959c72a6549824aa0632a74bbb6bf8ab76ab298b4"}'
+     http://localhost:3000/oauth/token
+
+这里的username为手机号，
+password为oauth登录码, 
+client_id, client_secret 为通过网站创建oauth application返回的
+application id, application secret,
+跟Android版app的client_id, client_secret相同。
+
+调用成功后返回
+       
+{"access_token":"9ae1324adf000f7a8a39903381daf92a4793db0170e38f4c109b41d5db3854b4",
+ "token_type":"bearer",
+ "expires_in":86400,
+ "refresh_token":"d59d00b92c2120da9a5e3ad9606bcdf283ee380610ebec36b0c66b63226e329c",
+ "created_at":1472442551}
+
+使用这个access_token进行网站api的调用.
+另外这个expires_in字段，表示这个access_token多少秒后超时，
+当前值为 86400秒,24小时后过期.
+
 ```
 
-使用`创建oauth应用`步骤获取的Application Id和Secret， 用手机号作为oauth密码登录方式的用户名， 用`注册用户`步骤获取的oauth_login_code作为oauth密码登录方式的密码, 进行oauth登录，具体用法可参见相关的第三方库使用说明.
+## 使用用户名，email，手机号获取token
 
-如果oauth登录成功，则返回token，refresh_token，expires_in，expires_in为超时时间，服务器端设置为1天.
+使用用户名，email，手机号作为username，使用实际的密码作为password获取token.
 
-如果oauth登录失败，返回{"error":"错误原因"}.
+```shell
+1. 使用用户名， 密码获取
+curl -H 'Content-Type:application/json'
+     --request POST
+     -d '{"grant_type":"password",
+          "username":"gyb",
+          "password":"11111111",
+          "client_id":"3a1ef442",
+          "client_secret":"14bd5fd3ef8dbd0e3e28cfa959c72a6549824aa0632a74bbb6bf8ab76ab298b4"}'
+     http://localhost:3000/oauth/token
 
-另外也可以使用用户名，email，手机号作为oauth密码登录方式的用户名，使用账户的密码作为oauth密码登录方式的密码。
+2. 使用手机号， 密码获取
+curl -H 'Content-Type:application/json'
+    --request POST
+    -d '{"grant_type":"password",
+         "username":"13889210325",
+         "password":"11111111",
+         "client_id":"3a1ef442",
+         "client_secret":"14bd5fd3ef8dbd0e3e28cfa959c72a6549824aa0632a74bbb6bf8ab76ab298b4"}'
+    http://localhost:3000/oauth/token
 
-## 使用oauth的token访问资源
+3. 使用email， 密码获取
+curl -H 'Content-Type:application/json'
+    --request POST
+    -d '{"grant_type":"password",
+         "username":"xzgaoyanbing@163.com",
+         "password":"11111111",
+         "client_id":"3a1ef442",
+         "client_secret":"14bd5fd3ef8dbd0e3e28cfa959c72a6549824aa0632a74bbb6bf8ab76ab298b4"}'
+    http://localhost:3000/oauth/token
+```
 
-使用`oauth登录`步骤获取的token，来访问服务器的资源，具体用法可参见相关的第三方库使用说明.
+## refresh token换取access token 
 
-如果token超时，则使用refresh_token重新获取新的token进行资源访问。
+OAuth access token 有超时设定，默认是1天, 当使用这个access_token调用网站api失败时，需要 使用refresh_token获取新的 access token: 
+
+```shell
+curl -H 'Content-Type:application/json'
+     --request POST
+     -d '{"grant_type":"refresh_token",
+          "refresh_token":"d59d00b92c2120da9a5e3ad9606bcdf283ee380610ebec36b0c66b63226e329c",
+          "client_id":"1dc42851",
+          "client_secret":"3a0b4e498f235b2d401b8f425b104a68bdfb2057321d3dbe6dd7b416fc6eef7a"}'
+     http://localhost:3000/oauth/token
+
+调用成功后，会返回
+
+{"access_token":"1d725643db780d65951347b1c046771d89e88cd35598378a2a96ea3587fecf62",
+"token_type":"bearer",
+"expires_in":86400,
+"refresh_token":"ffea94a92a92d23aac1f45bfb2c19d229043bd47fb305396c6b369c97c7dfb04",
+ "created_at":1472442613}
+
+在使用这个新的access_token来调用网站api.
+```
 
 ## 设置用户信息
 

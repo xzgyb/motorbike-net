@@ -112,7 +112,11 @@ curl -H 'Content-Type:application/json'
           "images_attributes":[
             {"file":"图片文件数据"},
             {"file":"图片文件数据"}
-            ]
+            ],
+          "participations_attributes":[
+            {"user_id":3},
+            {"user_id":4}
+           ],
           }'
      http://localhost:3000/api/v1/activities
 ```
@@ -140,6 +144,7 @@ latitude   | 是      | 纬度, 范围为-90.0至90.0
 start_at   | 是      | 开始时间
 end_at     | 是      | 结束时间
 images_attributes | 否      | 上传的图片数据
+participations_attributes | 否 | 活动参与者的id数组
 
 
 ### 返回结果
@@ -184,6 +189,7 @@ latitude   | 是       | 纬度, 范围为-90.0至90.0
 start_at   | 是       | 开始时间
 end_at     | 是       | 结束时间
 images_attributes | 否 | 上传的图片数据
+participations_attributes | 否 | 活动参与者的id数组
 
 
 ### 返回结果
@@ -286,6 +292,24 @@ curl --request GET http://localhost:3000/api/v1/activities/1
      "updated_at":"2016-04-20 14:49:56",
      "start_at":"2016-04-18 14:49:56",
      "end_at":"2016-04-19 00:49:56",
+     "organizer":{
+        "id":2,
+        "avatar_url":"http://115.29.110.82/uploads/user/avatar/8743/sample.jpg", 
+        "name":"name5", 
+        "title":"3级飞车党", 
+        "level":"LV.3"},
+      "participations": [
+          {"id":511, 
+           "user_id": 8744, 
+            "user_avatar_url":"http://115.29.110.82/uploads/user/avatar/8744/sample.jpg", 
+            "user_name":"gyb",
+            "activity_id":1}, 
+          {"id":512, 
+           "user_id":8745, 
+           "user_avatar_url":"http://115.29.110.82/uploads/user/avatar/8745/sample.jpg",
+           "user_name":"ww",
+           "activity_id":1}
+       ],
      "images":[
         {"url":"http://115.29.110.82/public/uploads/sample.jpg",
          "thumb_url":"http://115.29.110.82/public/uploads/sample.jpg",
@@ -309,10 +333,51 @@ latitude   | 否       | 指定当前位置的纬度, 范围为-90.0至90.0
 
 结果  | 内容
 ------|--------------
-成功  | `{"result":1,"activity":<activity>}`, 其中`activity`为一活动类型的记录
+成功  | `{"result":1,"activity":<activity>}`, 其中`activity`为activity_detail类型的记录
 失败  | `{"result":0,"error":"错误原因"}`
 
+#### activity_detail类型说明
+
+名称               | 类型   | 描述
+---------------------|--------|------
+id                   | 整型 | 一条活动记录的id
+user_id              | 整型 | 表示创建该条记录的用户id
+title                | 字符串 | 标题
+place                | 字符串 | 地点名称
+price                | 字符串 | 价格
+longitude            | 字符串 | 经度
+latitude             | 字符串 | 纬度
+distance             | 浮点数 | 与当前位置的距离, 单位为米
+updated_at           | 字符串 | 更新时间
+start_at             | 字符串 | 开始时间
+end_at               | 字符串 | 结束时间
+content              | 字符串 | 具体的内容
+images               | image类型的数组 | 图片相关信息， 如果没有图片，为[]
+organizer            | organizer类型   | 为该活动的组织者信息
+participations       | participation类型的数组 | 为该活动的参与者信息的数组
+
+#### organizer类型说明
+
+名称               | 类型   | 描述
+---------------------|--------|------
+id                   | 整型   | 用户id
+name                 | 字符串 | 用户名称
+title                | 字符串 | 用户头衔
+level                | 字符串 | 用户级别 
+avatar_url           | 字符串 | 用户头像url
+
+#### participation类型说明
+
+名称               | 类型   | 描述
+---------------------|--------|------
+id                   | 整型   | 该participation记录id
+user_id              | 整型   | 该参与者用户id
+user_name            | 字符串 | 该参与者用户名称
+user_avatar_url      | 字符串 | 该参与者用户头像url
+activity_id          | 整型   | 参与的活动id
+
 ## 获取指定用户id活动的列表
+
 > 调用实例:
 
 ```shell
@@ -367,3 +432,34 @@ user_id    | 是       | 指定用户id
 成功  | `{"result":1","activities":[<activity>, ...],"paginate_meta":<paginate_meta>}`, 其中`activities`为一数组，元素类型为activity, paginate_meta为分页相关数据。
 失败  | `{"result":0,"error":"错误原因"}`
 
+## 报名参加活动 
+
+> 调用实例:
+
+```shell
+curl --request PUT http://localhost:3000/api/v1/activities/1/participate
+```
+
+> 返回:
+
+```json
+{"result":1}
+```
+
+### HTTP请求
+
+`PUT /api/v1/activities/<id>/participate`
+
+### PUT请求参数
+
+参数名     | 是否必需 | 描述
+-----------|----------|------
+id         | 是       | 报名参加的活动记录的id
+
+
+### 返回结果
+
+结果  | 内容
+------|--------------
+成功  | `{"result":1}`
+失败  | `{"result":0,"error":"错误原因"}`
