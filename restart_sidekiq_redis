@@ -1,0 +1,6 @@
+sudo service redis_6379 stop
+sudo stop sidekiq
+
+sudo service redis_6379 start
+sudo start sidekiq
+

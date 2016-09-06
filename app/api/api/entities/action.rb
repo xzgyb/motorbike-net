@@ -15,7 +15,8 @@ module Api::Entities
 
     format_with(:time) { |dt| dt.strftime("%Y-%m-%d %H:%M:%S") }
 
-    expose :id, :user_id
+    expose(:id) { |instance, _| instance.actionable.id }
+    expose :user_id
 
     expose(:type) { |instance, _| 
       ::Action.type_code(instance.actionable)
