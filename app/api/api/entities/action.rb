@@ -3,8 +3,15 @@ require 'api/entities/video_attachment'
 
 module Api::Entities
   class Action < Grape::Entity
-    HAS_IMAGES_IF_LAMBDA = lambda { |obj, _| has_images?(obj) }
-    HAS_VIDEOS_IF_LAMBDA = lambda { |obj, _| has_videos?(obj) }
+
+    HAS_START_END_TIME_IF_LAMBDA = lambda do |obj, _| 
+        obj.actionable.is_a?(::Activity) or 
+          obj.actionable.is_a?(::TakeAlongSomething)
+    end 
+    
+    HAS_VIDEOS_IF_LAMBDA = lambda { |obj, _| 
+      obj.actionable.is_a?(::Living)
+    }
 
     format_with(:time) { |dt| dt.strftime("%Y-%m-%d %H:%M:%S") }
 
@@ -27,17 +34,15 @@ module Api::Entities
       instance.actionable.updated_at.strftime("%Y-%m-%d %H:%M:%S")
     }
 
-    expose(:start_at, if: HAS_IMAGES_IF_LAMBDA) { |instance, _|
+    expose(:start_at, if: HAS_START_END_TIME_IF_LAMBDA) { |instance, _|
       instance.actionable.start_at.strftime("%Y-%m-%d %H:%M:%S")
     } 
 
-    expose(:end_at, if: HAS_IMAGES_IF_LAMBDA) { |instance, _|
+    expose(:end_at, if: HAS_START_END_TIME_IF_LAMBDA) { |instance, _|
       instance.actionable.end_at.strftime("%Y-%m-%d %H:%M:%S")
     } 
 
-    expose(:images, 
-           using: ImageAttachment, 
-           if: HAS_IMAGES_IF_LAMBDA) { |instance, _|
+    expose(:images, using: ImageAttachment) { |instance, _|
       instance.actionable.images
     } 
            
@@ -46,15 +51,6 @@ module Api::Entities
            if: HAS_VIDEOS_IF_LAMBDA) { |instance, _|
       instance.actionable.videos
     } 
-
-    private
-      def has_images?(obj)
-        obj.actionable.is_a?(Activity) or obj.actionable.is_a?(TakeAlongSomething)
-      end
-
-      def has_videos?(obj)
-        obj.actionable.is_a?(Living)
-      end
 
     root "actions", "action"
   end
