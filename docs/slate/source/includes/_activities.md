@@ -4,7 +4,14 @@
 > 调用实例:
 
 ```shell
+
+返回全部activity
+
 curl --request GET  http://localhost:3000/api/v1/activities?longitude=32.3&latitude=62.9
+
+返回朋友圈内的activity
+
+curl --request GET  http://localhost:3000/api/v1/activities?circle=1&longitude=32.3&latitude=62.9
 ```
 
 > 返回:
@@ -49,6 +56,7 @@ per_page   | 否       | 指定每页多少条记录
 longitude  | 否       | 指定当前位置的经度, 范围为-180.0至180.0
 latitude   | 否       | 指定当前位置的纬度, 范围为-90.0至90.0
 max_distance | 否     | 获取指定max_distance距离内的活动列表
+circle     | 否       | 整型，如果为1，只返回朋友圈内的所有activity.
 
 ### 返回结果
 
