@@ -28,6 +28,17 @@ class ActionsApiTest < ActiveSupport::TestCase
     assert_includes result, "actions"
     assert_includes result, "paginate_meta"
 
+    assert_equal 4, result["actions"].count 
+
+    get '/api/v1/actions?circle=1', longitude: first_action.longitude, latitude: first_action.latitude, access_token: token
+
+    assert last_response.ok?
+
+    result = JSON.parse(last_response.body)
+
+    assert_includes result, "actions"
+    assert_includes result, "paginate_meta"
+
     assert_equal 3, result["actions"].count 
   end
 

@@ -26,6 +26,17 @@ class LivingsApiTest < ActiveSupport::TestCase
     assert_includes result, "livings"
     assert_includes result, "paginate_meta"
 
+    assert_equal 15, result["livings"].count 
+
+    get '/api/v1/livings?circle=1', longitude: first_living.longitude, latitude: first_living.latitude, access_token: token
+
+    assert last_response.ok?
+
+    result = JSON.parse(last_response.body)
+
+    assert_includes result, "livings"
+    assert_includes result, "paginate_meta"
+
     assert_equal 10, result["livings"].count 
     
     %w[id title place price updated_at videos images longitude latitude distance].each do |field|

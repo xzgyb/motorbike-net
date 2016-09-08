@@ -30,6 +30,20 @@ class TakeAlongSomethingsApiTest < ActiveSupport::TestCase
     assert_includes result, "take_along_somethings"
     assert_includes result, "paginate_meta"
 
+    assert_equal 15, result["take_along_somethings"].count 
+
+    get '/api/v1/take_along_somethings?circle=1',
+      longitude: first_take_along_something.longitude,
+      latitude: first_take_along_something.latitude,
+      access_token: token
+
+    assert last_response.ok?
+
+    result = JSON.parse(last_response.body)
+
+    assert_includes result, "take_along_somethings"
+    assert_includes result, "paginate_meta"
+
     assert_equal 10, result["take_along_somethings"].count 
    
     %w[id title place price updated_at start_at end_at images longitude latitude distance sender receiver].each do |field|
@@ -307,6 +321,16 @@ class TakeAlongSomethingsApiTest < ActiveSupport::TestCase
     take_along_something.reload
 
     assert_equal @gg, take_along_something.order_taker
+  end
+
+  test 'PUT /api/v1/take_along_somethings/:id/take_order should work oneself' do
+    take_along_something = create(:take_along_something_with_images, user: @current_user)
+
+    put "api/v1/take_along_somethings/#{take_along_something.id}/take_order",
+        access_token: token
+    assert last_response.ok?
+
+    assert_equal @current_user, take_along_something.reload.order_taker
   end
 
   test 'GET /api/v1/take_along_somethings/:id returns a specified id take along something with order taker' do

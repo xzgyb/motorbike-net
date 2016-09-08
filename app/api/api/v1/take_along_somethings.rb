@@ -23,10 +23,15 @@ module Api::V1
         optional :page,      type: Integer
         optional :per_page,  type: Integer
         optional :max_distance, type: Integer
+        optional :circle,    type: Integer
       end
       get do
         take_along_somethings = TakeAlongSomething.select_all_with_distance(
-          params[:longitude], params[:latitude]).circle_for(current_user)
+          params[:longitude], params[:latitude])
+
+        if params[:circle].present? && params[:circle] == 1
+          take_along_somethings = take_along_somethings.circle_for(current_user)
+        end
 
         if params[:max_distance].present?
           take_along_somethings = take_along_somethings.near(params[:longitude],
@@ -124,8 +129,9 @@ module Api::V1
 
       desc 'take order a take along something'
       put ':id/take_order' do
-        activity = TakeAlongSomething.find(params[:id])
-        activity.update!(order_take_attributes: {user_id: current_user.id})
+        take_along_something = TakeAlongSomething.find(params[:id])
+        take_along_something.update!(order_take_attributes: 
+                                       {user_id: current_user.id})
 
         respond_ok
       end

@@ -22,11 +22,15 @@ module Api::V1
         optional :page,      type: Integer
         optional :per_page,  type: Integer
         optional :max_distance, type: Integer
+        optional :circle,    type: Integer
       end
       get do
         activities = Activity.select_all_with_distance(params[:longitude],
                                                        params[:latitude])
-                             .circle_for(current_user)
+
+        if params[:circle].present? && params[:circle] == 1
+          activities = activities.circle_for(current_user)
+        end
 
         if params[:max_distance].present?
           activities = activities.near(params[:longitude],

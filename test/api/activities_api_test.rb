@@ -28,6 +28,17 @@ class ActivitiesApiTest < ActiveSupport::TestCase
     assert_includes result, "activities"
     assert_includes result, "paginate_meta"
 
+    assert_equal 15, result["activities"].count
+
+    get '/api/v1/activities?circle=1', longitude: first_activity.longitude, latitude: first_activity.latitude, access_token: token
+
+    assert last_response.ok?
+
+    result = JSON.parse(last_response.body)
+
+    assert_includes result, "activities"
+    assert_includes result, "paginate_meta"
+
     assert_equal 10, result["activities"].count
 
     %w[id title place price updated_at start_at end_at images longitude latitude distance].each do |field|
