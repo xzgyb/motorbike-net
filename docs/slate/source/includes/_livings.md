@@ -397,3 +397,268 @@ curl --request DELETE http://localhost:3000/api/v1/livings/reset
 ------|--------------
 成功  | `{"result":1}`
 失败  | `{"result":0,"error":"错误原因"}`
+
+## 获取某一条直播的点赞用户列表
+> 调用实例:
+
+```shell
+
+curl --request GET  http://localhost:3000/api/v1/livings/1/likes
+
+
+> 返回:
+
+```json
+{ "result":1,
+  "likes":[
+    {"id":1,
+     "user_id":2,
+     "user_name":"ggg"},
+    {"id":2,
+     "user_id":3,
+     "user_name":"www"},
+     ...],
+
+  "paginate_meta":{"current_page":1,
+                   "next_page":null,
+                   "prev_page":null,
+                   "total_pages":1,
+                   "total_count":17}
+}
+```
+
+### HTTP请求
+
+`GET /api/v1/livings/<id>/likes`
+
+### 请求参数
+
+参数名     | 是否必需 | 描述
+-----------|----------|------
+id         | 是       | 直播记录id
+page       | 否       | 要获取第几页数据
+per_page   | 否       | 指定每页多少条记录
+
+### 返回结果
+
+结果  | 内容
+------|--------------
+成功  | `{"result":1","likes":[<like>, ...],"paginate_meta":<paginate_meta>}`, 其中`likes`为一数组，元素类型为like, paginate_meta为分页相关数据。
+失败  | `{"result":0,"error":"错误原因"}`
+
+#### like类型说明
+
+名称               | 类型   | 描述
+---------------------|--------|------
+id                   | 整型 | 一条点赞记录的id
+user_id              | 整型 | 表示点赞的用户id
+user_name            | 字符串 | 表示点赞的用户名
+
+## 给某一个直播记录点赞 
+
+> 调用实例:
+
+```shell
+curl -H 'Content-Type:application/json'
+     --request POST
+     http://localhost:3000/api/v1/livings/1/likes
+```
+
+> 返回:
+
+```json
+{"result":1}
+```
+
+### HTTP请求
+
+`POST /api/v1/livings/<id>/likes`
+
+### POST请求参数
+
+参数名     | 是否必需 | 描述
+-----------|----------|------
+id         | 是       | 一条直播记录的id
+
+### 返回结果
+
+结果  | 内容
+------|--------------
+成功  | `{"result":1}`
+失败  | `{"result":0,"error":"错误原因"}`
+
+注意: 如果调用该请求进行多次点赞，只有第一次有效.
+
+## 删除一个直播记录的点赞
+
+> 调用实例:
+
+```shell
+curl --request DELETE http://localhost:3000/api/v1/livings/likes/1
+```
+
+> 返回:
+
+```json
+{"result":1}
+```
+
+### HTTP请求
+
+`DELETE /api/v1/livings/likes/<id>`
+
+### DELETE请求参数
+
+参数名     | 是否必需 | 描述
+-----------|----------|------
+id         | 是       | 一条点赞记录的id
+
+
+### 返回结果
+
+结果  | 内容
+------|--------------
+成功  | `{"result":1}`
+失败  | `{"result":0,"error":"错误原因"}`
+
+## 获取某一条直播的评论列表
+
+> 调用实例:
+
+```shell
+
+curl --request GET  http://localhost:3000/api/v1/livings/1/comments
+
+
+> 返回:
+
+```json
+{ "result":1,
+  "comments":[
+    {"id":1,
+     "user_id":2,
+     "user_name":"ggg",
+     "content": "hello"},
+    {"id":2,
+     "user_id":3,
+     "user_name":"www",
+     "content": "world",
+     "reply_to_user_id": 1,
+     "reply_to_user_name": "ggg"},
+     ...],
+
+  "paginate_meta":{"current_page":1,
+                   "next_page":null,
+                   "prev_page":null,
+                   "total_pages":1,
+                   "total_count":17}
+}
+```
+
+### HTTP请求
+
+`GET /api/v1/livings/<id>/comments`
+
+### 请求参数
+
+参数名     | 是否必需 | 描述
+-----------|----------|------
+id         | 是       | 直播记录id
+page       | 否       | 要获取第几页数据
+per_page   | 否       | 指定每页多少条记录
+
+### 返回结果
+
+结果  | 内容
+------|--------------
+成功  | `{"result":1","comments":[<comment>, ...],"paginate_meta":<paginate_meta>}`, 其中`comments`为一数组，元素类型为comment, paginate_meta为分页相关数据。
+失败  | `{"result":0,"error":"错误原因"}`
+
+#### comment类型说明
+
+名称               | 类型   | 描述
+---------------------|--------|------
+id                   | 整型 | 一条评论记录的id
+user_id              | 整型 | 发表评论的用户id
+user_name            | 字符串 | 发表评论的用户名
+reply_to_user_id              | 整型 | 回复某个用户的id, 当该条评论是回复某个用户时，才有该字段.
+reply_to_user_name            | 字符串 | 回复某个用户的名称, 当该条评论是回复某个用户时，才有该字段.
+
+## 给某一个直播记录添加评论 
+
+> 调用实例:
+
+```shell
+
+1. 添加评论
+
+curl -H 'Content-Type:application/json'
+     --request POST
+     -d '{"content":"hello"}'
+     http://localhost:3000/api/v1/livings/1/comments
+
+2. 回复某个用户评论
+
+curl -H 'Content-Type:application/json'
+     --request POST
+     -d '{"content":"hello", "reply_to_user_id":2}'
+     http://localhost:3000/api/v1/livings/1/comments
+
+```
+
+> 返回:
+
+```json
+{"result":1}
+```
+
+### HTTP请求
+
+`POST /api/v1/livings/<id>/comments`
+
+### POST请求参数
+
+参数名     | 是否必需 | 描述
+-----------|---------|------
+content    | 是      | 评论内容 
+reply_to_user_id   | 否      | 回复某个用户的id 
+
+### 返回结果
+
+结果  | 内容
+------|--------------
+成功  | `{"result":1}`
+失败  | `{"result":0,"error":"错误原因"}`
+
+
+## 删除一个直播记录的评论
+
+> 调用实例:
+
+```shell
+curl --request DELETE http://localhost:3000/api/v1/livings/comments/1
+```
+
+> 返回:
+
+```json
+{"result":1}
+```
+
+### HTTP请求
+
+`DELETE /api/v1/livings/comments/<id>`
+
+### DELETE请求参数
+
+参数名     | 是否必需 | 描述
+-----------|----------|------
+id         | 是       | 一条评论记录的id
+
+
+### 返回结果
+
+结果  | 内容
+------|--------------
+成功  | `{"result":1}`
+失败  | `{"result":0,"error":"错误原因"}`
