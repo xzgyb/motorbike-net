@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.5.3
--- Dumped by pg_dump version 9.5.3
+-- Dumped from database version 9.5.4
+-- Dumped by pg_dump version 9.5.4
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -256,6 +256,38 @@ ALTER SEQUENCE bikes_id_seq OWNED BY bikes.id;
 
 
 --
+-- Name: comments; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE comments (
+    id integer NOT NULL,
+    living_id integer,
+    user_id integer,
+    reply_to_user_id integer,
+    content text DEFAULT ''::text
+);
+
+
+--
+-- Name: comments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE comments_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: comments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE comments_id_seq OWNED BY comments.id;
+
+
+--
 -- Name: events; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -361,6 +393,36 @@ CREATE SEQUENCE image_attachments_id_seq
 --
 
 ALTER SEQUENCE image_attachments_id_seq OWNED BY image_attachments.id;
+
+
+--
+-- Name: likes; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE likes (
+    id integer NOT NULL,
+    living_id integer,
+    user_id integer
+);
+
+
+--
+-- Name: likes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE likes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: likes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE likes_id_seq OWNED BY likes.id;
 
 
 --
@@ -1083,6 +1145,13 @@ ALTER TABLE ONLY bikes ALTER COLUMN id SET DEFAULT nextval('bikes_id_seq'::regcl
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY comments ALTER COLUMN id SET DEFAULT nextval('comments_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY events ALTER COLUMN id SET DEFAULT nextval('events_id_seq'::regclass);
 
 
@@ -1098,6 +1167,13 @@ ALTER TABLE ONLY friendships ALTER COLUMN id SET DEFAULT nextval('friendships_id
 --
 
 ALTER TABLE ONLY image_attachments ALTER COLUMN id SET DEFAULT nextval('image_attachments_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY likes ALTER COLUMN id SET DEFAULT nextval('likes_id_seq'::regclass);
 
 
 --
@@ -1282,6 +1358,14 @@ ALTER TABLE ONLY bikes
 
 
 --
+-- Name: comments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY comments
+    ADD CONSTRAINT comments_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: events_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1303,6 +1387,14 @@ ALTER TABLE ONLY friendships
 
 ALTER TABLE ONLY image_attachments
     ADD CONSTRAINT image_attachments_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: likes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY likes
+    ADD CONSTRAINT likes_pkey PRIMARY KEY (id);
 
 
 --
@@ -1508,6 +1600,20 @@ CREATE INDEX index_bikes_on_user_id ON bikes USING btree (user_id);
 
 
 --
+-- Name: index_comments_on_living_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_comments_on_living_id ON comments USING btree (living_id);
+
+
+--
+-- Name: index_comments_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_comments_on_user_id ON comments USING btree (user_id);
+
+
+--
 -- Name: index_events_on_actionable_type_and_actionable_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1547,6 +1653,20 @@ CREATE INDEX index_friendships_on_user_id ON friendships USING btree (user_id);
 --
 
 CREATE INDEX index_image_attachments_on_imageable_type_and_imageable_id ON image_attachments USING btree (imageable_type, imageable_id);
+
+
+--
+-- Name: index_likes_on_living_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_likes_on_living_id ON likes USING btree (living_id);
+
+
+--
+-- Name: index_likes_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_likes_on_user_id ON likes USING btree (user_id);
 
 
 --
@@ -1781,6 +1901,30 @@ CREATE INDEX index_video_attachments_on_living_id ON video_attachments USING btr
 
 
 --
+-- Name: fk_rails_03de2dc08c; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY comments
+    ADD CONSTRAINT fk_rails_03de2dc08c FOREIGN KEY (user_id) REFERENCES users(id);
+
+
+--
+-- Name: fk_rails_1e09b5dabf; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY likes
+    ADD CONSTRAINT fk_rails_1e09b5dabf FOREIGN KEY (user_id) REFERENCES users(id);
+
+
+--
+-- Name: fk_rails_431da59358; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY comments
+    ADD CONSTRAINT fk_rails_431da59358 FOREIGN KEY (living_id) REFERENCES livings(id);
+
+
+--
 -- Name: fk_rails_45f6b6dc45; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1829,6 +1973,14 @@ ALTER TABLE ONLY oauth_access_grants
 
 
 --
+-- Name: fk_rails_e40c4ecbfa; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY likes
+    ADD CONSTRAINT fk_rails_e40c4ecbfa FOREIGN KEY (living_id) REFERENCES livings(id);
+
+
+--
 -- Name: fk_rails_e80f5ca3a2; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1842,6 +1994,6 @@ ALTER TABLE ONLY participations
 
 SET search_path TO "$user", public;
 
-INSERT INTO schema_migrations (version) VALUES ('20160523091904'), ('20160525071248'), ('20160525082438'), ('20160606035233'), ('20160613062612'), ('20160614015218'), ('20160726080254'), ('20160808024844'), ('20160808055827'), ('20160808072134'), ('20160822060130'), ('20160822060641'), ('20160822060908'), ('20160822063724'), ('20160822063741'), ('20160822072047'), ('20160822072115'), ('20160822072620'), ('20160822074629'), ('20160822074719'), ('20160822074903'), ('20160822075347'), ('20160822075429'), ('20160822081855'), ('20160823074345'), ('20160823074410'), ('20160823074419'), ('20160823075554'), ('20160823083109'), ('20160824063747'), ('20160824063809'), ('20160824082547'), ('20160824092957'), ('20160826082432'), ('20160830022613'), ('20160830024040');
+INSERT INTO schema_migrations (version) VALUES ('20160523091904'), ('20160525071248'), ('20160525082438'), ('20160606035233'), ('20160613062612'), ('20160614015218'), ('20160726080254'), ('20160808024844'), ('20160808055827'), ('20160808072134'), ('20160822060130'), ('20160822060641'), ('20160822060908'), ('20160822063724'), ('20160822063741'), ('20160822072047'), ('20160822072115'), ('20160822072620'), ('20160822074629'), ('20160822074719'), ('20160822074903'), ('20160822075347'), ('20160822075429'), ('20160822081855'), ('20160823074345'), ('20160823074410'), ('20160823074419'), ('20160823075554'), ('20160823083109'), ('20160824063747'), ('20160824063809'), ('20160824082547'), ('20160824092957'), ('20160826082432'), ('20160830022613'), ('20160830024040'), ('20160920052608'), ('20160920075205');
 
 

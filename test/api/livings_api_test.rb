@@ -3,7 +3,11 @@ require 'test_helper'
 class LivingsApiTest < ActiveSupport::TestCase
   def setup
     @current_user = create(:user)
+
     @gyb = create(:user, name: 'gyb')
+    @john  = create(:user, name: 'john')
+    @peter = create(:user, name: 'peter')
+    @mike  = create(:user, name: 'mike')
 
     login_user(@current_user)
   end
@@ -193,4 +197,187 @@ class LivingsApiTest < ActiveSupport::TestCase
     assert last_response.ok?
     assert_equal 0, @current_user.livings.count
   end
+
+  test 'POST /api/v1/livings/:id/likes should work' do
+    living = create(:living_with_videos_images, user: @current_user)
+
+    create_like(living, @gyb)
+    create_like(living, @john)
+    create_like(living, @peter)
+    create_like(living, @mike)
+
+    assert_equal 4, living.likes.count 
+  end
+
+  test 'POST /api/v1/livings/:id/likes repeatedly should create a like only' do
+    living = create(:living_with_videos_images, user: @current_user)
+
+    create_like(living, @gyb)
+    create_like(living, @gyb)
+    create_like(living, @gyb)
+
+    assert_equal 1, living.likes.count 
+    assert_equal @gyb, living.likes.first.user
+  end
+
+  test 'GET /api/v1/livings/:id/likes should work' do
+    living = create(:living_with_videos_images, user: @current_user)
+
+    create_like(living, @gyb)
+    create_like(living, @john)
+    create_like(living, @peter)
+    create_like(living, @mike)
+    
+    get "api/v1/livings/#{living.id}/likes", 
+         access_token: token
+
+    assert last_response.ok?
+    result = JSON.parse(last_response.body)
+
+    assert_includes result, "likes"
+    assert_includes result, "paginate_meta"
+
+    assert_equal 4, result["likes"].count 
+
+    %w[id user_id user_name].each do |field|
+      assert_includes result["likes"][0], field
+    end
+
+    %w[current_page next_page prev_page total_pages total_count].each do |field|
+      assert_includes result["paginate_meta"], field
+    end
+
+  end
+
+  test 'DELETE /api/v1/livings/likes/:id should work' do
+    living = create(:living_with_videos_images, user: @current_user)
+
+    create_like(living, @gyb)
+   
+    login_user(@gyb) 
+
+    delete "api/v1/livings/likes/#{living.likes.first.id}", 
+            access_token: token
+
+    login_user(@current_user)
+
+    assert last_response.ok?
+
+    assert_equal 0, living.likes.count 
+  end
+
+  test 'POST /api/v1/livings/:id/comments should work' do
+    living = create(:living_with_videos_images, user: @current_user)
+
+    create_comment(living, @gyb)
+    create_comment(living, @john)
+    create_comment(living, @peter)
+    create_comment(living, @mike)
+
+    assert_equal 4, living.comments.count 
+  end
+
+  test 'GET /api/v1/livings/:id/comments should work' do
+    living = create(:living_with_videos_images, user: @current_user)
+
+    create_comment(living, @gyb)
+    create_comment(living, @john)
+    create_comment(living, @peter)
+    create_comment(living, @mike)
+    
+    get "api/v1/livings/#{living.id}/comments", 
+         access_token: token
+
+    assert last_response.ok?
+    result = JSON.parse(last_response.body)
+
+    assert_includes result, "comments"
+    assert_includes result, "paginate_meta"
+
+    assert_equal 4, result["comments"].count 
+
+    %w[id user_id user_name content].each do |field|
+      assert_includes result["comments"][0], field
+    end
+
+    %w[current_page next_page prev_page total_pages total_count].each do |field|
+      assert_includes result["paginate_meta"], field
+    end
+
+  end
+
+  test 'DELETE /api/v1/livings/comments/:id should work' do
+    living = create(:living_with_videos_images, user: @current_user)
+
+    create_comment(living, @gyb)
+   
+    login_user(@gyb) 
+
+    delete "api/v1/livings/comments/#{living.comments.first.id}", 
+            access_token: token
+
+    login_user(@current_user)
+
+    assert last_response.ok?
+
+    assert_equal 0, living.comments.count 
+  end
+
+  test 'POST /api/v1/livings/:id/comments with reply_to_user_id should work' do
+    living = create(:living_with_videos_images, user: @current_user)
+
+    create_comment(living, @gyb)
+    create_comment(living, @john, @gyb)
+    create_comment(living, @gyb, @john)
+
+    assert_equal 3, living.comments.count 
+
+    get "api/v1/livings/#{living.id}/comments", 
+         access_token: token
+
+    assert last_response.ok?
+
+    result = JSON.parse(last_response.body)
+
+    assert_equal 3, result["comments"].count 
+
+    %w[reply_to_user_id reply_to_user_name].each do |field|
+      assert_not_includes result["comments"][0], field
+    end
+
+    %w[reply_to_user_id reply_to_user_name].each do |field|
+      assert_includes result["comments"][1], field
+      assert_includes result["comments"][2], field
+    end
+  end
+
+  private
+    def create_like(living, user)
+      login_user(user)
+
+      post "api/v1/livings/#{living.id}/likes", 
+           access_token: token
+      assert last_response.created?
+
+      login_user(@current_user)
+    end
+
+    def create_comment(living, user, reply_to_user = nil)
+      login_user(user)
+
+      if reply_to_user
+        post "api/v1/livings/#{living.id}/comments", 
+             content: "hello",
+             reply_to_user_id: reply_to_user.id,
+             access_token: token
+      else
+        post "api/v1/livings/#{living.id}/comments", 
+             content: "hello",
+             access_token: token
+      end
+
+      assert last_response.created?
+
+      login_user(@current_user)
+    end
 end

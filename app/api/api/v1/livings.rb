@@ -120,6 +120,74 @@ module Api::V1
         living.update!(living_params)
         respond_ok
       end
+
+      desc 'create a like'
+      post ':id/likes' do
+        living = Living.find(params[:id])
+        living.likes.find_or_create_by!(user: current_user)
+        respond_ok
+      end
+
+      desc 'get likes'
+      get ':id/likes' do
+        living = current_user.livings.find(params[:id])
+
+        likes = paginate(living.likes)
+
+        present likes, with: Api::Entities::Like
+        present paginate_record_for(likes), with: Api::Entities::Paginate
+       
+        respond_ok
+      end
+
+      desc 'delete a like'
+      delete 'likes/:id' do
+        like = current_user.likes.find(params[:id])
+
+        like.destroy!
+        respond_ok
+      end
+
+      desc 'create a comment'
+      params do
+        requires :content, type: String
+        optional :reply_to_user_id,  type: Integer
+      end
+      post ':id/comments' do
+        living = Living.find(params[:id])
+
+        attrs = { user: current_user,
+                  content: params[:content] }
+
+        if params[:reply_to_user_id].present?
+          attrs[:reply_to_user_id] = params[:reply_to_user_id]
+        end
+
+        living.comments.create!(attrs)
+
+        respond_ok
+      end
+
+      desc 'get comments'
+      get ':id/comments' do
+        living = current_user.livings.find(params[:id])
+
+        comments = paginate(living.comments)
+
+        present comments, with: Api::Entities::Comment
+        present paginate_record_for(comments), with: Api::Entities::Paginate
+       
+        respond_ok
+      end
+
+      desc 'delete a comment'
+      delete 'comments/:id' do
+        comment = current_user.comments.find(params[:id])
+
+        comment.destroy!
+        respond_ok
+        
+      end
     end
   end
 end
