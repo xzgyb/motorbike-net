@@ -30,7 +30,19 @@ curl --request GET  http://localhost:3000/api/v1/livings?circle=1&longitude=32.3
      "updated_at":"2016-04-20 14:49:56",
      "videos":[{"url":"http://115.29.110.82/public/uploads/sample.mp4",
                 "thumb_url":"http://115.29.110.82/public/uploads/sample.jpg",
-                "id":2}]},
+                "id":2}],
+     "likes":[
+        {"id":1, "user_id":2, "user_name":"ggg"},
+        {"id":2, "user_id":3, "user_name":"www"}
+     ],
+     "total_likes_count":2,
+     "comments":[
+        {"id":1, "user_id":2, "user_name":"ggg", "content": "hello"},
+        {"id":2, "user_id":3, "user_name":"www",
+            "content": "world", "reply_to_user_id": 1, "reply_to_user_name": "ggg"}     ],
+     "total_comments_count":2
+      },
+     
      ...],
 
   "paginate_meta":{"current_page":1,
@@ -51,6 +63,8 @@ curl --request GET  http://localhost:3000/api/v1/livings?circle=1&longitude=32.3
 -----------|----------|------
 page       | 否       | 要获取第几页数据
 per_page   | 否       | 指定每页多少条记录
+per_like_page   | 否       | 指定每次最多返回多少条点赞记录
+per_comment_page   | 否       | 指定每次最多返回多少条评论记录
 longitude  | 否       | 指定当前位置的经度, 范围为-180.0至180.0
 latitude   | 否       | 指定当前位置的纬度, 范围为-90.0至90.0
 max_distance | 否     | 获取指定max_distance距离内的直播列表
@@ -79,6 +93,11 @@ updated_at           | 字符串 | 更新时间
 content              | 字符串 | 具体的内容
 videos               | video类型的数组 | 视频相关信息, 如果没有视频，可能为[]
 images               | image类型的数组 | 图片相关信息, 如果没有图片，可能为[]
+likes                | like类型的数组  | 该条直播的点赞用户列表，如果没有，为[]
+total_likes_count    | 整数            | 该条直播的所有点赞记录总数
+comments             | comment类型的数组  | 该条视频的评论列表，如果没有，为[]
+total_comments_count    | 整数            | 该条直播的所有评论记录总数
+
 
 #### video类型说明
 
@@ -96,6 +115,25 @@ id                   | 字符串 | 一条图片记录的id
 url                  | 字符串 | 图片的url
 thumb_url            | 字符串 | thumb图片的url，用于显示缩略图
 
+#### like类型说明
+
+名称               | 类型   | 描述
+---------------------|--------|------
+id                   | 整型 | 一条点赞记录的id
+user_id              | 整型 | 表示点赞的用户id
+user_name            | 字符串 | 表示点赞的用户名
+
+#### comment类型说明
+
+名称               | 类型   | 描述
+---------------------|--------|------
+id                   | 整型 | 一条评论记录的id
+user_id              | 整型 | 发表评论的用户id
+user_name            | 字符串 | 发表评论的用户名
+reply_to_user_id              | 整型 | 回复某个用户的id, 当该条评论是回复某个用户时，才有该字段.
+reply_to_user_name            | 字符串 | 回复某个用户的名称, 当该条评论是回复某个用户时，才有该字段.
+
+
 #### paginate_meta类型说明
 
 名称               | 类型   | 描述
@@ -106,6 +144,11 @@ prev_page            | 整型   | 前一个页面号, 可能为null
 total_pages          | 整型   | 总共页面数
 total_count          | 整型   | 总共记录数
 
+### 对于每条直播记录中的点赞用户列表和评论列表，目前是缺省最多返回20条，这个值可以通过per_like_page和per_comment_page指定, 如果要取更多的数据，操作如下:
+
+  1. 对于点赞列表，可以调用获取某条直播的点赞用户列表api，即`curl --request GET http://localhost:3000/api/v1/livings/1/likes?page=2&per_page=20`, 具体的page值可以基于total_likes_count和per_like_page算出.
+
+  2. 对于评论列表，可以调用获取某条直播的评论列表api，即`curl --request GET http://localhost:3000/api/v1/livings/1/comments?page=2&per_page=20`, 具体的page值可以基于total_comments_count和per_comment_page算出.
 
 ## 添加一个直播记录
 
@@ -446,13 +489,6 @@ per_page   | 否       | 指定每页多少条记录
 成功  | `{"result":1","likes":[<like>, ...],"paginate_meta":<paginate_meta>}`, 其中`likes`为一数组，元素类型为like, paginate_meta为分页相关数据。
 失败  | `{"result":0,"error":"错误原因"}`
 
-#### like类型说明
-
-名称               | 类型   | 描述
----------------------|--------|------
-id                   | 整型 | 一条点赞记录的id
-user_id              | 整型 | 表示点赞的用户id
-user_name            | 字符串 | 表示点赞的用户名
 
 ## 给某一个直播记录点赞 
 
@@ -573,16 +609,6 @@ per_page   | 否       | 指定每页多少条记录
 ------|--------------
 成功  | `{"result":1","comments":[<comment>, ...],"paginate_meta":<paginate_meta>}`, 其中`comments`为一数组，元素类型为comment, paginate_meta为分页相关数据。
 失败  | `{"result":0,"error":"错误原因"}`
-
-#### comment类型说明
-
-名称               | 类型   | 描述
----------------------|--------|------
-id                   | 整型 | 一条评论记录的id
-user_id              | 整型 | 发表评论的用户id
-user_name            | 字符串 | 发表评论的用户名
-reply_to_user_id              | 整型 | 回复某个用户的id, 当该条评论是回复某个用户时，才有该字段.
-reply_to_user_name            | 字符串 | 回复某个用户的名称, 当该条评论是回复某个用户时，才有该字段.
 
 ## 给某一个直播记录添加评论 
 

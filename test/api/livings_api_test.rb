@@ -351,6 +351,44 @@ class LivingsApiTest < ActiveSupport::TestCase
     end
   end
 
+  test 'GET /api/v1/livings should get a livings list which contains likes and comments when create likes and comments' do
+    living = create(:living_with_videos_images, user: @current_user)
+
+    create_like(living, @gyb)
+    create_like(living, @john)
+    create_like(living, @peter)
+    create_like(living, @mike)
+
+    create_comment(living, @gyb)
+    create_comment(living, @john, @gyb)
+    create_comment(living, @gyb, @john)
+    
+    get "api/v1/livings", access_token: token
+
+    assert last_response.ok?
+    result = JSON.parse(last_response.body)
+
+    assert_includes result["livings"][0], "likes"
+    assert_includes result["livings"][0], "total_likes_count"
+
+    assert_equal 4, result["livings"][0]["likes"].count 
+    assert_equal 4, result["livings"][0]["total_likes_count"]
+
+    %w[id user_id user_name].each do |field|
+      assert_includes result["livings"][0]["likes"][0], field
+    end
+
+    assert_includes result["livings"][0], "comments"
+    assert_includes result["livings"][0], "total_comments_count"
+
+    assert_equal 3, result["livings"][0]["comments"].count 
+    assert_equal 3, result["livings"][0]["total_comments_count"]
+
+    %w[id user_id user_name content].each do |field|
+      assert_includes result["livings"][0]["comments"][0], field
+    end
+  end
+
   private
     def create_like(living, user)
       login_user(user)

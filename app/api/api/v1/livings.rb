@@ -20,6 +20,8 @@ module Api::V1
         optional :latitude,  type: Float, values: -90.0..+90.0
         optional :page,      type: Integer
         optional :per_page,  type: Integer
+        optional :per_like_page,  type: Integer
+        optional :per_comment_page,  type: Integer
         optional :max_distance, type: Integer
         optional :circle,    type: Integer
       end
@@ -39,7 +41,14 @@ module Api::V1
 
         livings = paginate(livings.latest)
 
-        present livings, with: Api::Entities::Living
+        per_like_page    = params[:per_like_page] || 20
+        per_comment_page = params[:per_comment_page] || 20
+
+        present livings, 
+                with: Api::Entities::Living, 
+                per_like_page: per_like_page,
+                per_comment_page: per_comment_page 
+
         present paginate_record_for(livings), with: Api::Entities::Paginate
        
         respond_ok
@@ -132,7 +141,7 @@ module Api::V1
       get ':id/likes' do
         living = current_user.livings.find(params[:id])
 
-        likes = paginate(living.likes)
+        likes = paginate(living.likes.order(:id))
 
         present likes, with: Api::Entities::Like
         present paginate_record_for(likes), with: Api::Entities::Paginate
@@ -172,7 +181,7 @@ module Api::V1
       get ':id/comments' do
         living = current_user.livings.find(params[:id])
 
-        comments = paginate(living.comments)
+        comments = paginate(living.comments.order(:id))
 
         present comments, with: Api::Entities::Comment
         present paginate_record_for(comments), with: Api::Entities::Paginate
