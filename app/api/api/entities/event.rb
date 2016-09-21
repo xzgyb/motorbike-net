@@ -26,6 +26,10 @@ module Api::Entities
       event.event? ? event.place : event.actionable.place
     end 
 
+    expose :price do |event, _| 
+      event.event? ? "" : event.actionable.price
+    end 
+
     expose(:image_url) do |event, _|
       if event.activity? || event.take_along_something?
         event.actionable.images.empty? ? ""

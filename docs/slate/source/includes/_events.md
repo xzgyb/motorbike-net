@@ -15,6 +15,7 @@ curl --request GET  http://localhost:3000/api/v1/events?start_at=2016-08-08%2012
     {"id":1,
      "title":"example title",
      "place":"example place",
+     "price":"22.5",
      "longitude":"32.5",
      "latitude":"62.8",
      "type":3,
@@ -55,6 +56,7 @@ id                   | 整型 | 一条记录的id
 title                | 字符串 | 标题
 content              | 字符串 | 备注 
 place                | 字符串 | 地点名称
+price                | 字符串 | 价格, 如果是event类型，则为空
 longitude            | 字符串 | 经度
 latitude             | 字符串 | 纬度
 image_url            | 字符串 | 图片的url, 如果是event类型，则为空

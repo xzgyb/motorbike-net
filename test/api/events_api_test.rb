@@ -64,7 +64,7 @@ class EventsApiTest < ActiveSupport::TestCase
 
     assert_equal 3, result["events"].count 
 
-    %w[id title content place start_at end_at longitude latitude image_url type].each do |field|
+    %w[id title content place start_at end_at price longitude latitude image_url type].each do |field|
       assert_includes result["events"][0], field
     end
 
