@@ -43,7 +43,7 @@ class LivingsApiTest < ActiveSupport::TestCase
 
     assert_equal 10, result["livings"].count 
     
-    %w[id title place price updated_at videos images longitude latitude distance].each do |field|
+    %w[id title place price user_id user_name user_avatar_url updated_at videos images longitude latitude distance].each do |field|
       assert_includes result["livings"][0], field
     end
 

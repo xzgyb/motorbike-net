@@ -7,7 +7,17 @@ module Api::Entities
   class Living < Grape::Entity
     format_with(:time) { |dt| dt.strftime("%Y-%m-%d %H:%M:%S") }
 
-    expose :id, :user_id, :title, :place, :price, :longitude, :latitude, :distance
+    expose :id
+    expose :user_id
+    expose(:user_name) do |living, _|
+      living.user.name
+    end
+
+    expose(:user_avatar_url) do |living, _|
+      living.user.avatar_url
+    end
+
+    expose :title, :place, :price, :longitude, :latitude, :distance
     expose :content, if: :export_content
 
     with_options(format_with: :time) { expose :updated_at }

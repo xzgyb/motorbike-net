@@ -21,6 +21,8 @@ curl --request GET  http://localhost:3000/api/v1/livings?circle=1&longitude=32.3
   "livings":[
     {"id":1,
      "user_id":2,
+     "user_name":"user1",
+     "user_avatar_url":"http://localhost:3000/upload/avatar/1.png",
      "title":"example title",
      "place":"example place",
      "price":"0.0",
@@ -83,6 +85,8 @@ circle     | 否       | 整型，如果为1，只返回朋友圈内的所有liv
 ---------------------|--------|------
 id                   | 整型 | 一条直播记录的id
 user_id              | 整型 | 表示创建该条记录的用户id
+user_name            | 字符串 | 表示创建该条记录的用户名
+user_avatar_url      | 整型 | 表示创建该条记录的用户头像url
 title                | 字符串 | 标题
 place                | 字符串 | 地点名称
 price                | 字符串 | 价格
