@@ -507,7 +507,7 @@ curl -H 'Content-Type:application/json'
 > 返回:
 
 ```json
-{"result":1}
+{"result":1,"id":2}
 ```
 
 ### HTTP请求
@@ -524,7 +524,7 @@ id         | 是       | 一条直播记录的id
 
 结果  | 内容
 ------|--------------
-成功  | `{"result":1}`
+成功  | `{"result":1,"id":<id>}`, id为整型， 为添加成功的like id.
 失败  | `{"result":0,"error":"错误原因"}`
 
 注意: 如果调用该请求进行多次点赞，只有第一次有效.
@@ -639,7 +639,7 @@ curl -H 'Content-Type:application/json'
 > 返回:
 
 ```json
-{"result":1}
+{"result":1,"id":2}
 ```
 
 ### HTTP请求
@@ -657,7 +657,7 @@ reply_to_user_id   | 否      | 回复某个用户的id
 
 结果  | 内容
 ------|--------------
-成功  | `{"result":1}`
+成功  | `{"result":1,"id":<id>}`, id为整型，为添加成功的comment id.
 失败  | `{"result":0,"error":"错误原因"}`
 
 

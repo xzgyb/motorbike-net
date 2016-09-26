@@ -133,7 +133,10 @@ module Api::V1
       desc 'create a like'
       post ':id/likes' do
         living = Living.find(params[:id])
-        living.likes.find_or_create_by!(user: current_user)
+
+        like = living.likes.find_or_create_by!(user: current_user)
+        present :id, like.id
+
         respond_ok
       end
 
@@ -172,7 +175,8 @@ module Api::V1
           attrs[:reply_to_user_id] = params[:reply_to_user_id]
         end
 
-        living.comments.create!(attrs)
+        comment = living.comments.create!(attrs)
+        present :id, comment.id
 
         respond_ok
       end

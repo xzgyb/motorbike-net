@@ -202,6 +202,10 @@ class LivingsApiTest < ActiveSupport::TestCase
     living = create(:living_with_videos_images, user: @current_user)
 
     create_like(living, @gyb)
+
+    result = JSON.parse(last_response.body)
+    assert_includes result, "id"
+
     create_like(living, @john)
     create_like(living, @peter)
     create_like(living, @mike)
@@ -270,6 +274,10 @@ class LivingsApiTest < ActiveSupport::TestCase
     living = create(:living_with_videos_images, user: @current_user)
 
     create_comment(living, @gyb)
+
+    result = JSON.parse(last_response.body)
+    assert_includes result, "id"
+
     create_comment(living, @john)
     create_comment(living, @peter)
     create_comment(living, @mike)
