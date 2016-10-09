@@ -10,6 +10,10 @@ module Api::V1
             if params[:diag_info]
               whitelisted[:diag_info] = params[:diag_info]
             end
+
+            if params[:commands]
+              whitelisted[:commands] = params[:commands]
+            end
           end
         end
       end
@@ -45,6 +49,13 @@ module Api::V1
         bike = current_user.bikes.find(params[:id])
 
         bike.destroy!
+        respond_ok
+      end
+
+      desc 'get a bike for current user by module id'
+      get 'by_module_id/:module_id' do
+        bike = current_user.bikes.find_by!(module_id: params[:module_id])
+        present bike, with: Api::Entities::Bike
         respond_ok
       end
 

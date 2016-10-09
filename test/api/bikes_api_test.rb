@@ -47,10 +47,21 @@ class BikesApiTest < ActiveSupport::TestCase
     assert_equal old_bikes_count - 1, @current_user.bikes.count
   end
 
-  test 'GET /api/v1/bikes/:id should workd' do
+  test 'GET /api/v1/bikes/:id should work' do
     bike = @current_user.bikes.first
 
     get "/api/v1/bikes/#{bike.id}", access_token: token
+    assert last_response.ok?
+
+    result = JSON.parse(last_response.body)
+
+    assert_includes result, 'bike'
+  end
+
+  test 'GET /api/v1/bikes/by_module_id/:module_id should work' do
+    bike = @current_user.bikes.first
+
+    get "/api/v1/bikes/by_module_id/#{bike.module_id}", access_token: token
     assert last_response.ok?
 
     result = JSON.parse(last_response.body)
@@ -67,6 +78,24 @@ class BikesApiTest < ActiveSupport::TestCase
         access_token: token
 
     assert last_response.ok?
+  end
+
+  test 'PUT /api/v1/bikes/upload/:module_id with commands should work' do
+    module_id = @current_user.bikes.first.module_id
+    put "/api/v1/bikes/upload/#{module_id}", 
+        commands: { "lock": 1 },
+        access_token: token
+
+    assert last_response.ok?
+
+    get "/api/v1/bikes/by_module_id/#{module_id}", access_token: token
+    assert last_response.ok?
+
+    result = JSON.parse(last_response.body)
+
+    assert_includes result, 'bike'
+    assert_includes result['bike'], "commands"
+    assert_includes result['bike']["commands"], "lock"
   end
 
   test 'GET /api/v1/bikes/:id/locations returns a locations list' do

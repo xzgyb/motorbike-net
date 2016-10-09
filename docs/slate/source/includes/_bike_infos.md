@@ -182,6 +182,7 @@ curl --request GET http://localhost:3000/api/v1/bikes/2
      "latitude":"318.5",
      "battery":"12.5",
      "travel_mileage":"0.0",
+     "commands":{},
      "diag_info":{"sdf":"234"}}
 ```
 
@@ -247,6 +248,11 @@ curl -H 'Content-Type:application/json'
      --request PUT
      -d '{"longitude":"134.5", "latitude":"5", "diag_info":{"sdf":"234"}}'
      http://localhost:3000/api/v1/bikes/upload/123123123`
+
+curl -H 'Content-Type:application/json'
+     --request PUT
+     -d '{"commands":{"lock":1}}'
+     http://localhost:3000/api/v1/bikes/upload/123123123`
 ```
 
 > 返回:
@@ -270,6 +276,7 @@ latitude   | 否       | 纬度
 battery    | 否       | 电量
 travel_mileage | 否   | 行驶里程数 
 diag_info  | 否       | 车辆的诊断信息 
+commands   | 否       | 车辆的控制信息
 
 
 ### 返回结果
@@ -277,6 +284,48 @@ diag_info  | 否       | 车辆的诊断信息
 结果  | 内容
 ------|--------------
 成功  | `{"result":1}`
+失败  | `{"result":0,"error":"错误原因"}`
+
+## 获取一条指定bike module id的电动车信息
+
+> 调用实例:
+
+```shell
+curl --request GET http://localhost:3000/api/v1/bikes/by_module_id/11112233
+```
+
+> 返回:
+
+```json
+{ "result":1,
+  "bike":
+   {"id":2,
+     "name":"rensheng1234",
+     "module_id":"123123123",
+     "longitude":"112.5",
+     "latitude":"318.5",
+     "battery":"12.5",
+     "travel_mileage":"0.0",
+     "commands":{},
+     "diag_info":{"sdf":"234"}}
+```
+
+### HTTP请求
+
+`GET /api/v1/bikes/by_module_id/<module_id>`
+
+### 请求参数
+
+参数名     | 是否必需 | 描述
+-----------|----------|------
+module_id         | 是       | 模块id
+
+
+### 返回结果
+
+结果  | 内容
+------|--------------
+成功  | `{"result":1,"bike":<bike>}`, 其中`bike`为一bike类型的记录，表示该条车辆信息
 失败  | `{"result":0,"error":"错误原因"}`
 
 ## 电动车异常信息通知

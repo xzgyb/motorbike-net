@@ -7,7 +7,8 @@ module Api::Entities
            :latitude,
            :battery,
            :travel_mileage,
-           :diag_info
+           :diag_info,
+           :commands
 
     root "bikes", "bike"
   end
