@@ -4,7 +4,7 @@ class AvatarUploader < CarrierWave::Uploader::Base
 
   include CarrierWave::MiniMagick
 
-  process resize_to_fit: [52, 52]
+  process resize_to_fit: [72 * 3, 72 * 3]
   storage :file
 
   def store_dir

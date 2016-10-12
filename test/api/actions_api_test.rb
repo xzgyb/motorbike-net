@@ -148,6 +148,36 @@ class ActionsApiTest < ActiveSupport::TestCase
 
   end
 
+  test "Delete a take along something should delete a action" do
+    create_take_along_something(@gyb)
+
+    get "/api/v1/actions/of_user/#{@gyb.id}", access_token: token
+    assert last_response.ok?
+
+    result = JSON.parse(last_response.body)
+
+    assert_includes result, "actions"
+    assert_includes result, "paginate_meta"
+
+    assert_equal 1, result["actions"].count 
+
+    login_user(@gyb)
+
+    take_along_something = @gyb.take_along_somethings.first
+    delete "api/v1/take_along_somethings/#{take_along_something.id}", 
+      access_token: token
+
+    get "/api/v1/actions/of_user/#{@gyb.id}", access_token: token
+    assert last_response.ok?
+
+    result = JSON.parse(last_response.body)
+
+    assert_includes result, "actions"
+    assert_includes result, "paginate_meta"
+
+    assert_equal 0, result["actions"].count 
+  end
+
   test 'GET /api/v1/actions with max_distance returns a nearby actions list' do
     create_activity(@current_user)
     create_living(@gyb)
