@@ -1,7 +1,7 @@
 require 'china_unicom_iot_api'
 
 class BikeDecorator < ApplicationDecorator 
-  delegate :module_id, :iccid, :diag_info
+  delegate :module_id, :iccid, :diag_info, :user
 
   def name
     object.name.blank? ? I18n.t("none") : object.name
