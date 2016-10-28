@@ -9,22 +9,22 @@ module Api
 
     # Handle errors.
     rescue_from :all do |e|
+      byebug
       case e
         when ActiveRecord::RecordNotFound
           error!({result: 0, error: '数据不存在'}, 404)
         when ActiveRecord::RecordInvalid
           message = e.record.errors.full_messages.join(', ')
-          error!({result: 0, error: message}, 200)
+          error!({result: 0, error: message})
         when Grape::Exceptions::ValidationErrors
           error!({result: 0,
                   error: '参数不符合要求，请检查参数是否按照 API 要求传输',
                   validation_errors: e.errors}, 400)
         when Api::Errors::RespondErrors
-          error!({result: 0,
-                  error: e.message}, 200)
+          error!({result: 0, error: e.message})
         else
           Rails.logger.error "Api error: #{e}\n#{e.backtrace.join("\n")}"
-          error!({result: 0, error: 'API 接口异常'}, 500)
+          error!({result: 0, error: 'API 接口异常'})
       end
     end
 
