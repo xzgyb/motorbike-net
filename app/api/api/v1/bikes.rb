@@ -69,6 +69,7 @@ module Api::V1
       desc 'Upload bike data with the module id'
       put 'upload/:module_id' do
         bike = current_user.bikes.find_by!(module_id: params[:module_id])
+        byebug
         
         # convert diag_info keys and values encoding, from gb2312 to utf-8
         if params[:diag_info]
@@ -79,18 +80,21 @@ module Api::V1
           params[:diag_info] = Hash[diag_info_pairs]
         end
 
-        bike.update!(bike_params)
+        ActiveRecord::Base.transaction do
 
-        if params.has_key?(:longitude) && params.has_key?(:latitude)
-          current_user.update!(longitude: params[:longitude],
-                               latitude: params[:latitude])
-
-          bike.locations.create!(longitude: params[:longitude],
+          bike.update!(bike_params)
+          if params.has_key?(:longitude) && params.has_key?(:latitude)
+            current_user.update!(longitude: params[:longitude],
                                  latitude: params[:latitude])
 
-          FriendLocationPushJob.perform_later(current_user, 
-                                              params[:longitude],
-                                              params[:latitude])
+            bike.locations.create!(longitude: params[:longitude],
+                                   latitude: params[:latitude])
+
+            FriendLocationPushJob.perform_later(current_user, 
+                                                params[:longitude],
+                                                params[:latitude])
+          end
+
         end
 
         respond_ok
