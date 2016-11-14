@@ -22,7 +22,7 @@ div.container-fluid
   div.row
     div.col-sm-4
       div.bike-info
-        = bike_info_panel('诊断信息', bike.diag_info)
+        = bike_info_panel('诊断信息', bike.diag_info, bike.updated_at)
 
     div.col-sm-8
       div#map-tabs
