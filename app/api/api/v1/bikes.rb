@@ -69,7 +69,6 @@ module Api::V1
       desc 'Upload bike data with the module id'
       put 'upload/:module_id' do
         bike = current_user.bikes.find_by!(module_id: params[:module_id])
-        byebug
         
         # convert diag_info keys and values encoding, from gb2312 to utf-8
         if params[:diag_info]
