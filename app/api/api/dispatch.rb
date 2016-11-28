@@ -9,7 +9,6 @@ module Api
 
     # Handle errors.
     rescue_from :all do |e|
-      byebug
       case e
         when ActiveRecord::RecordNotFound
           error!({result: 0, error: '数据不存在'}, 404)
