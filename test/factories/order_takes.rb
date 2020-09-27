@@ -1,6 +1,6 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :order_take do
-    take_along_something nil
-    user nil
+    take_along_something { nil }
+    user { nil }
   end
 end

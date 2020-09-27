@@ -1,19 +1,21 @@
 ENV['RAILS_ENV'] ||= 'test'
 require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
-require 'mocha/mini_test'
+
 require 'minitest/hooks/test'
 
 DatabaseCleaner.strategy = :transaction
 
 class ActiveSupport::TestCase
   include Rack::Test::Methods  
-  include FactoryGirl::Syntax::Methods
+  include FactoryBot::Syntax::Methods
   include Minitest::Hooks
 
   def app; Rails.application; end
 
   def before_setup
+    super
+
     ActionImageUploader.any_instance.stubs(:move_to_cache).returns(false)
     ActionImageUploader.any_instance.stubs(:move_to_store).returns(false)
 
@@ -21,9 +23,11 @@ class ActiveSupport::TestCase
     ActionVideoUploader.any_instance.stubs(:move_to_store).returns(false)
 
     DatabaseCleaner.start
+
   end
 
   def after_teardown
+    super
     DatabaseCleaner.clean
   end
 
@@ -58,3 +62,5 @@ class ActiveSupport::TestCase
                                                  "video/mp4")
   end
 end
+
+require 'mocha/minitest'

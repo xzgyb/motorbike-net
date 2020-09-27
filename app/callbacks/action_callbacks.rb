@@ -23,8 +23,8 @@ class ActionCallbacks
     
     private
       def need_update_action?(actionable_object)
-        actionable_object.changes.include?("longitude") || 
-          actionable_object.changes.include?("latitude") 
+        actionable_object.saved_change_to_longitude? ||
+            actionable_object.saved_change_to_latitude?
       end
   end
 end

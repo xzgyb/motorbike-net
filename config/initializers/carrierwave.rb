@@ -13,6 +13,9 @@ class NullStorage
     true
   end
 
+  def cache!(*args)
+  end
+
   def retrieve!(_identifier)
     return NullFile.new
   end

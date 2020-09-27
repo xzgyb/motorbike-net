@@ -17,6 +17,12 @@ Doorkeeper.configure do
     end
   end
 
+  admin_authenticator do
+    unless current_user && current_user.admin?
+      redirect_to  '/'
+    end
+  end
+
   enable_application_owner confirmation: true
 
   access_token_expires_in 24.hours
@@ -25,6 +31,5 @@ Doorkeeper.configure do
   force_ssl_in_redirect_uri Rails.env.production?
   realm 'Meixing Tech'
 
+  grant_flows %w[authorization_code client_credentials password]
 end
-
-Doorkeeper.configuration.token_grant_types << 'password'

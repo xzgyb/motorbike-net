@@ -1,10 +1,10 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :activity do
 
-    title       "example title"
-    place       "example place"
-    longitude    32.5
-    latitude     62.8
+    title       { "example title" }
+    place       { "example place" }
+    longitude   { 32.5 }
+    latitude    { 62.8 }
     user
 
     start_at { Time.current     }
@@ -12,7 +12,7 @@ FactoryGirl.define do
 
     factory :activity_with_images do
       transient do
-        images_count 1
+        images_count { 1 }
       end
 
       after(:create) do |activity, evaluator|

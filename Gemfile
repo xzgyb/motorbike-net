@@ -1,31 +1,32 @@
 source 'https://rubygems.org'
 
-gem 'rails', '>= 5.0.0.beta3', '< 5.1'
+gem 'rails'
 gem 'sqlite3'
-gem 'sass-rails', '~> 5.0'
-gem 'uglifier', '>= 1.3.0'
-gem 'coffee-rails', '~> 4.1.0'
+gem 'sass-rails'
+gem 'uglifier'
+gem 'coffee-rails'
 gem 'jquery-rails'
-gem 'turbolinks', :git => 'https://github.com/turbolinks/turbolinks-classic.git'
-gem 'jbuilder', '~> 2.0'
-gem 'redis', '~> 3.0'
+gem 'turbolinks'
+gem 'jbuilder'
+gem 'redis'
 gem 'sidekiq'
-gem 'sdoc', '~> 0.4.0', group: :doc
+gem 'sdoc', group: :doc
 gem 'slim'
-gem 'bootstrap-sass', '~> 3.3.5'
-gem 'devise', '~> 4.0.0.rc1'
+gem 'bootstrap-sass'
+gem 'devise'
 gem 'bson_ext'
 gem 'devise-bootstrap-views'
 gem 'grape'
-gem 'kaminari', github: 'amatsuda/kaminari'
+gem 'kaminari'
 gem 'simple_form'
 gem 'redcarpet'
 gem 'cancancan'
 gem 'activemodel-serializers-xml'
-gem 'draper', :git => 'https://github.com/xzgyb/draper.git'
+gem 'draper'
 gem 'puma'
 gem 'gon'
-gem 'doorkeeper', '4.0.0.rc2'
+gem 'doorkeeper'
+gem 'doorkeeper-i18n'
 gem 'china_sms', :git => 'https://github.com/xzgyb/china_sms.git'
 gem 'carrierwave'
 gem 'versionomy'
@@ -42,11 +43,11 @@ gem 'byebug'
 
 group :development, :test do
   gem "awesome_print", require:"ap"
-  gem 'listen', '~> 3.0.5'
+  gem 'listen'
   gem 'spring'
-  gem 'spring-watcher-listen', '~> 2.0.0'
+  gem 'spring-watcher-listen'
   gem 'better_errors'
-  gem 'factory_girl_rails'
+  gem 'factory_bot_rails'
   gem 'pry'
   gem 'pry-byebug'
   gem 'pry-alias'
@@ -54,9 +55,9 @@ group :development, :test do
 end
 
 group :development do
-  gem 'web-console', '~> 3.0'
+  gem 'web-console'
   gem 'mina'
-  gem 'mina-puma', :git => 'https://github.com/xzgyb/mina-puma.git', :require => false
+  gem 'mina-puma'
   gem 'guard'
   gem 'guard-minitest'
   gem 'guard-ctags-bundler'
@@ -66,6 +67,6 @@ end
 
 group :test do
   gem 'mocha'
-  gem 'database_cleaner', :git => 'https://github.com/DatabaseCleaner/database_cleaner.git'
+  gem 'database_cleaner'
   gem 'minitest-hooks'
 end
