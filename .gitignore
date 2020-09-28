@@ -26,7 +26,6 @@ tags
 dump.rdb
 /config/master.key
 /config/credentials.yml.enc
-/config/puma.rb
 
 # Ignore application configuration
 /config/application.yml
