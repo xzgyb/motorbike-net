@@ -24,6 +24,7 @@ gems.tags
 tags
 /public/docs
 dump.rdb
+/config/master.key
 
 # Ignore application configuration
 /config/application.yml
