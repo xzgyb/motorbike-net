@@ -20,6 +20,8 @@ class BikeDecorator < ApplicationDecorator
   end
 
   def remaining_data_usage
+    return 0
+=begin    
     return 0 if object.iccid.blank?
 
     api = ChinaUnicomIotApi.new(api_server:  ENV['CHINA_UNICOM_IOT_API_SERVER'],
@@ -28,5 +30,6 @@ class BikeDecorator < ApplicationDecorator
                                 license_key: ENV['CHINA_UNICOM_IOT_LICENSE_KEY'])
 
     api.get_remaining_data_usage(object.iccid)
+=end
   end
 end
