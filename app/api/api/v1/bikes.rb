@@ -37,7 +37,7 @@ module Api::V1
       end
 
       desc 'update a bike for current user'
-      put ':id' do
+      post ':id' do
         bike = current_user.bikes.find(params[:id])
 
         bike.update!(bike_params)
@@ -67,7 +67,7 @@ module Api::V1
       end
 
       desc 'Upload bike data with the module id'
-      put 'upload/:module_id' do
+      post 'upload/:module_id' do
         bike = current_user.bikes.find_by!(module_id: params[:module_id])
         
         # convert diag_info keys and values encoding, from gb2312 to utf-8
