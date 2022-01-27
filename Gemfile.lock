@@ -114,7 +114,7 @@ GEM
       execjs
     coffee-script-source (1.12.2)
     concurrent-ruby (1.1.7)
-    connection_pool (2.2.3)
+    connection_pool (2.2.5)
     crass (1.0.6)
     database_cleaner (1.8.5)
     debug_inspector (0.0.3)
@@ -358,7 +358,7 @@ GEM
     sdoc (1.1.0)
       rdoc (>= 5.0)
     shellany (0.0.1)
-    sidekiq (6.1.2)
+    sidekiq (6.4.0)
       connection_pool (>= 2.2.2)
       rack (~> 2.0)
       redis (>= 4.2.0)
